@@ -147,7 +147,7 @@ ru:{h1:"Бесплатные AI-модели по API",
 };
 
 /* ---------- Daten: alle kostenlosen Einträge ---------- */
-function slug(k){ return String(k).replace(/^media-/, "").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, ""); }
+function slug(k){ return String(k).replace(/:free$/, "").replace(/^media-/, "").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, ""); }
 function sauber(n){ return String(n || "").replace(/^[^:]{1,30}:\s*/, "").replace(/\s*\((free|kostenlos)\)\s*$/i, "").replace(/\s{2,}/g, " "); }
 const Z = [];
 Object.keys(QUELLEN).forEach(function(q){

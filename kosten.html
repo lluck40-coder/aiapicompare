@@ -156,7 +156,7 @@ ru:{titel:"Калькулятор: сколько стоит мой AI-прое�
 };
 
 /* ---------- Daten ---------- */
-function slug(k){ return String(k).replace(/^media-/, "").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, ""); }
+function slug(k){ return String(k).replace(/:free$/, "").replace(/^media-/, "").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, ""); }
 function sauber(n){ return String(n || "").replace(/^[^:]{1,30}:\s*/, ""); }
 const Z = [];
 Object.keys(QUELLEN).forEach(function(q){

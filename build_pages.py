@@ -231,7 +231,7 @@ for q, (qname, farbe, base, env) in ANBIETER.items():
         ab = v.get("price") if inp is None and isinstance(v.get("price"), (int, float)) else None
         mp = v.get("media_preis") if isinstance(v.get("media_preis"), (int, float)) else None
         typ = v.get("typ") or ["text"]
-        z = dict(q=q, quelle=qname, farbe=farbe, kanon=k, slug=slug(k), name=v.get("name") or v.get("roh_id") or k,
+        z = dict(q=q, quelle=qname, farbe=farbe, kanon=k, slug=slug(re.sub(r":free$", "", k)), name=v.get("name") or v.get("roh_id") or k,
                  roh=v.get("roh_id") or k, entw=v.get("entwickler") or "", ctx=ctx_zahl(v.get("context")),
                  inp=inp, out=out, ab=ab, mp=mp, einheit=v.get("einheit") or "", typ=typ,
                  faeh=v.get("faeh") or [], aufl=v.get("aufl") or "", dauer=v.get("dauer") or 0,
@@ -456,16 +456,22 @@ def modellseite(info, lang):
     else:
         h += f'<th>{t["th_anbieter"]}</th><th class="num">{t["th_in"]}</th><th class="num">{t["th_out"]}</th><th class="num">{t["th_ctx"]}</th><th></th>'
     h += "</tr></thead><tbody>"
+    bezahlt = [z["preis"] for z in info["zeilen"] if 0 < z["preis"] < float("inf")]
+    min_bez = min(bezahlt) if bezahlt else None
+    def aufschlag(z):
+        if min_bez and 0 < z["preis"] < float("inf") and z["preis"] > min_bez:
+            return f' <span class="diff">+{round((z["preis"] / min_bez - 1) * 100)} %</span>'
+        return ""
     for i, z in enumerate(info["zeilen"]):
         anb = f'<span class="dot" style="background:{z["farbe"]}"></span>{esc(z["quelle"])}<br><small style="color:var(--dim);font-family:var(--mono)">{esc(z["roh"])}</small>'
         einr = f' <a class="btn" href="{rel}anbindung.html#anbieter={z["q"]}&amp;modell={esc(z["roh"])}">{t["einrichten"]}</a>' if not z["media"] else ""
         cls = ' class="best"' if i == 0 and len(info["zeilen"]) > 1 else ""
         if info["media"]:
-            h += f'<tr{cls}><td>{anb}</td><td class="num price">{esc(preis_text(z, t))}</td><td>{caps_html(z, lang)}</td><td class="num">{go_link(z, t)}</td></tr>'
+            h += f'<tr{cls}><td>{anb}</td><td class="num price">{esc(preis_text(z, t))}{aufschlag(z)}</td><td>{caps_html(z, lang)}</td><td class="num">{go_link(z, t)}</td></tr>'
         else:
             pin = t["gratis"] if z["gratis"] else fmt(z["inp"] if z["inp"] is not None else z["ab"])
             pout = t["gratis"] if z["gratis"] else fmt(z["out"])
-            h += f'<tr{cls}><td>{anb}</td><td class="num price">{esc(pin)}</td><td class="num price">{esc(pout)}</td><td class="num">{fmt_ctx(z["ctx"])}</td><td class="num" style="white-space:nowrap">{go_link(z, t)}{einr}</td></tr>'
+            h += f'<tr{cls}><td>{anb}</td><td class="num price">{esc(pin)}{aufschlag(z)}</td><td class="num price">{esc(pout)}</td><td class="num">{fmt_ctx(z["ctx"])}</td><td class="num" style="white-space:nowrap">{go_link(z, t)}{einr}</td></tr>'
     h += f'</tbody></table></div>\n<p class="hint" style="font-size:.78rem;color:var(--dim)">{t["ranking"]} {t["stand"].format(d=esc(STAND))}</p>\n'
 
     # Preisverlauf

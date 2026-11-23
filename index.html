@@ -144,6 +144,12 @@
   tbody tr.row:hover td{background:rgba(255,255,255,.025)}
   .mname{font-weight:600;text-decoration:none}
   .mname:hover{color:var(--accent)}
+  .mname[data-cmp]{cursor:pointer}
+  .mname[data-cmp]:hover{text-decoration:underline}
+  tbody tr.row.klick{cursor:pointer}
+  .card-top.klick{cursor:pointer}
+  a.mpage{margin-left:.3rem;font-size:.8rem;color:var(--dim);text-decoration:none}
+  a.mpage:hover{color:var(--accent)}
   .mid{display:block;font-family:var(--mono);font-size:.72rem;color:var(--dim);margin-top:.1rem;word-break:break-all}
   .tags{display:inline-flex;gap:.25rem;margin-left:.35rem;vertical-align:middle}
   .tag{font-size:.62rem;padding:.05rem .35rem;border-radius:.3rem;background:var(--panel2);color:var(--muted);border:1px solid var(--border2)}
@@ -363,7 +369,7 @@ const I18N = {
     leer:"Keine Treffer. Filter lockern oder Suche ändern.",
     veraltet:function(n){ return "nicht aktualisiert: "+n; },
     meta:function(t){ return "Stand der Daten: "+t+" · Preise in USD pro 1 Mio. Token · Preise ändern sich laufend – ohne Gewähr"; },
-    cmp_titel:"Preise dieses Modells bei allen Anbietern",
+    cmp_titel:"Preise dieses Modells bei allen Anbietern", modellseite:"Modellseite mit Preisverlauf",
     teurer:function(p){ return "+"+p+" %"; },
     footer:"„günstigster“ = niedrigster Preis für dieses Modell über alle Anbieter (bei Medien nur innerhalb derselben Abrechnungseinheit). „ab“ = ab-Preis (AnyModel: kein Input/Output-Split; Bild/Video/Audio: Preis pro Einheit statt pro Token). Tastenkürzel: / = Suche. Filter und Sortierung stehen in der Adresszeile und lassen sich als Link teilen.",
     einheiten:{image:"/Bild",second:"/s","1k_chars":"/1k Zeichen",generation:"/Generierung",minute:"/Min.","1k_bytes":"/1 kB"},
@@ -396,7 +402,7 @@ const I18N = {
     leer:"No results. Loosen the filters or change your search.",
     veraltet:function(n){ return "not updated: "+n; },
     meta:function(t){ return "Data as of: "+t+" · prices in USD per 1M tokens · prices change constantly – no guarantee"; },
-    cmp_titel:"Prices for this model across all providers",
+    cmp_titel:"Prices for this model across all providers", modellseite:"Model page with price history",
     teurer:function(p){ return "+"+p+" %"; },
     footer:"“cheapest” = lowest price for this model across all providers (for media only within the same billing unit). “from” = starting price (AnyModel: no input/output split; image/video/audio: price per unit instead of per token). Shortcut: / = search. Filters and sorting are kept in the address bar and can be shared as a link.",
     einheiten:{image:"/image",second:"/s","1k_chars":"/1k chars",generation:"/generation",minute:"/min","1k_bytes":"/1 kB"},
@@ -429,7 +435,7 @@ const I18N = {
     leer:"没有结果。请放宽筛选条件或修改搜索内容。",
     veraltet:function(n){ return "未更新："+n; },
     meta:function(t){ return "数据时间："+t+" · 价格单位为每百万 Token 美元 · 价格随时变化，仅供参考"; },
-    cmp_titel:"该模型在所有提供商处的价格",
+    cmp_titel:"该模型在所有提供商处的价格", modellseite:"模型页面（含价格走势）",
     teurer:function(p){ return "+"+p+"%"; },
     footer:"“最便宜” = 该模型在所有提供商中的最低价格（媒体模型仅在相同计费单位内比较）。“起” = 起步价（AnyModel：不区分输入/输出；图像/视频/音频：按单位而非 Token 计价）。快捷键：/ = 搜索。筛选和排序会保存在地址栏中，可作为链接分享。",
     einheiten:{image:"/张",second:"/秒","1k_chars":"/千字符",generation:"/次",minute:"/分钟","1k_bytes":"/1 kB"},
@@ -462,7 +468,7 @@ const I18N = {
     leer:"Ничего не найдено. Ослабьте фильтры или измените поиск.",
     veraltet:function(n){ return "не обновлено: "+n; },
     meta:function(t){ return "Данные от: "+t+" · цены в USD за 1 млн токенов · цены меняются – без гарантии"; },
-    cmp_titel:"Цены этой модели у всех поставщиков",
+    cmp_titel:"Цены этой модели у всех поставщиков", modellseite:"Страница модели с историей цен",
     teurer:function(p){ return "+"+p+" %"; },
     footer:"«дешевле всех» = самая низкая цена входа для этой модели среди всех поставщиков. «от» = минимальная цена (AnyModel: без разделения вход/выход; картинки/видео/аудио: цена за единицу). Клавиша / = поиск. Фильтры и сортировка сохраняются в адресе страницы.",
     einheiten:{image:"/карт.",second:"/сек","1k_chars":"/1k зн.",generation:"/ген.",minute:"/мин.","1k_bytes":"/1 кБ"},
@@ -518,12 +524,15 @@ function sprachPfad(){ return lang === "en" ? "" : lang + "/"; }
 // Gruppen je Modell (kanon) – für "günstigster" und Vergleich
 const gruppen = {};
 // Medien nur innerhalb derselben Abrechnungseinheit vergleichen (pro Sekunde ≠ pro Video)
-zeilen.forEach(function(z){ z.gkey = z.kanon + (z.inp === null && z.ab === null && z.mp !== null ? "|" + (z.ps !== null ? "second" : z.einheit) : ""); });
+zeilen.forEach(function(z){ z.basis = z.kanon.replace(/:free$/, ""); });
+zeilen.forEach(function(z){ z.gkey = z.basis + (z.inp === null && z.ab === null && z.mp !== null ? "|" + (z.ps !== null ? "second" : z.einheit) : ""); });
 zeilen.forEach(function(z){ (gruppen[z.gkey] = gruppen[z.gkey] || []).push(z); });
 Object.keys(gruppen).forEach(function(k){
   const g = gruppen[k].filter(function(z){ return z.preis !== Infinity; });
   const min = g.length ? Math.min.apply(null, g.map(function(z){ return z.preis; })) : Infinity;
-  gruppen[k].forEach(function(z){ z.anz = gruppen[k].length; z.minPreis = min; z.best = z.preis !== Infinity && z.preis === min && g.length > 1; });
+  const bez = g.filter(function(z){ return z.preis > 0; });
+  const minBez = bez.length ? Math.min.apply(null, bez.map(function(z){ return z.preis; })) : Infinity;   // Bezug für "+x %" (ohne Gratis-Angebote)
+  gruppen[k].forEach(function(z){ z.anz = gruppen[k].length; z.minPreis = min; z.minBezahlt = minBez; z.best = z.preis !== Infinity && z.preis === min && g.length > 1; });
 });
 const MAXCTX = 2000000;
 
@@ -706,9 +715,13 @@ function goLink(z, mitText){
   return C.linkHtml(z.qkey, z.url, mitText ? T().zum_anbieter + " ↗" : "↗", mitText ? "gotolink" : "extlink", z.quelle);
 }
 function mnameHtml(z){
+  // Klick auf den Namen klappt den Anbieter-Vergleich auf (wenn es mehrere Anbieter gibt)
+  const name = z.anz > 1
+    ? '<span class="mname" role="button" tabindex="0" data-cmp="'+esc(z.id)+'" title="'+esc(T().cmp_titel)+'">'+esc(z.name)+'</span>'
+    : '<span class="mname">'+esc(z.name)+'</span>';
   // Modellseiten gibt es nur in der zusammengebauten Website (build_pages.py setzt MODELLSEITEN)
-  if (window.OHNE_MODELLSEITEN || !window.MODELLSEITEN) return '<span class="mname">'+esc(z.name)+'</span>';
-  return '<a class="mname" href="'+sprachPfad()+'models/'+modellSlug(z.kanon)+'.html">'+esc(z.name)+'</a>';
+  if (window.OHNE_MODELLSEITEN || !window.MODELLSEITEN) return name;
+  return name + '<a class="mpage" href="'+sprachPfad()+'models/'+modellSlug(z.basis)+'.html" title="'+esc(T().modellseite)+'">ⓘ</a>';
 }
 function tagsHtml(z, t){
   let h = "";
@@ -732,7 +745,7 @@ function vergleichHtml(z, t){
     '<table class="cmptable"><thead><tr><th>'+t.cols.anbieter+'</th><th class="num">'+t.cols.preis+'</th>'+
       (medien ? '<th>'+t.spalte_faeh+'</th>' : '<th class="num">'+t.cols.output+'</th><th class="num">'+t.cols.kontext+'</th>')+'<th></th></tr></thead><tbody>'+
     g.map(function(x){
-      const diff = (x.preis !== Infinity && x.minPreis > 0 && x.preis > x.minPreis) ? '<span class="diff">'+t.teurer(Math.round((x.preis/x.minPreis - 1)*100))+'</span>' : "";
+      const diff = (x.preis !== Infinity && x.preis > 0 && x.minBezahlt > 0 && x.minBezahlt !== Infinity && x.preis > x.minBezahlt) ? '<span class="diff">'+t.teurer(Math.round((x.preis/x.minBezahlt - 1)*100))+'</span>' : "";
       return '<tr class="'+(x.id===z.id?"self":"")+'"><td>'+provZelle(x)+' <small class="unit">'+esc(x.name)+'</small></td>'+
         '<td class="num">'+preisZelle(x,t)+diff+'</td>'+
         (medien ? '<td>'+(capsHtml(x,t) || '<span class="unit">—</span>')+'</td>' :
@@ -753,7 +766,7 @@ function renderResults(){
 
   if (S.view === "list"){
     box.innerHTML = '<div class="cards">'+sicht.map(function(z){
-      return '<div class="card"><div class="card-top"><div>'+
+      return '<div class="card"><div class="card-top'+(z.anz > 1 ? ' klick" data-cmp="'+esc(z.id) : '')+'"><div>'+
         mnameHtml(z)+tagsHtml(z,t)+
         '<span class="mid">'+esc(z.roh)+(z.hinweis?' · '+esc(z.hinweis):'')+'</span>'+capsHtml(z,t)+'</div><div>'+provZelle(z)+'</div></div>'+
         '<div class="card-stats"><span>'+t.cols.preis+' <b class="'+(z.best?"best":"")+'">'+(z.inp!==null?fmtPreis(z.inp):(z.ab!==null?t.ab+" "+fmtPreis(z.ab):(z.mp!==null?(z.est?"≈ ":"")+t.ab+" "+fmtPreis(z.mp)+(t.einheiten[z.einheit]||""):"—")))+'</b></span>'+
@@ -779,7 +792,7 @@ function renderResults(){
       '<th class="num">'+t.cols.cmp+'</th><th></th></tr></thead><tbody>'+
     sicht.map(function(z){
       const breite = z.context ? Math.max(4, Math.min(100, (Math.log10(z.context) - 3) / (maxLog - 3) * 100)) : 0;
-      return '<tr class="row"><td>'+mnameHtml(z)+tagsHtml(z,t)+
+      return '<tr class="row'+(z.anz > 1 ? ' klick" data-cmp="'+esc(z.id) : '')+'"><td>'+mnameHtml(z)+tagsHtml(z,t)+
           '<span class="mid">'+esc(z.roh)+(z.entw?' · '+esc(z.entw):"")+(z.hinweis?' · '+esc(z.hinweis):"")+'</span>'+capsHtml(z,t)+'</td>'+
         '<td>'+provZelle(z)+'</td>'+
         '<td class="num"><span class="ctx">'+fmtCtx(z.context)+'</span><span class="ctxbar"><i style="width:'+breite+'%"></i></span></td>'+
@@ -905,9 +918,16 @@ $("results").addEventListener("click", function(e){
     else { S.sort = k; S.dir = (k === "kontext") ? "desc" : "asc"; }
     render(true); return;
   }
+  if (e.target.closest("a")) return;   // Links (Anbieter, Modellseite, Zum Anbieter) nicht abfangen
+  if (window.getSelection && String(window.getSelection()).length > 2) return;   // Text markieren erlaubt
   const cb = e.target.closest("[data-cmp]");
   if (cb){ const id = cb.dataset.cmp; offen[id] = !offen[id]; renderResults(); return; }
   if (e.target.id === "more"){ limit += 100; renderResults(); }
+});
+
+$("results").addEventListener("keydown", function(e){
+  const cb = e.target.closest(".mname[data-cmp]");
+  if (cb && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); offen[cb.dataset.cmp] = !offen[cb.dataset.cmp]; renderResults(); }
 });
 
 ladeZustand();

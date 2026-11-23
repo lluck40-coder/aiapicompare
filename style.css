@@ -67,3 +67,6 @@ th{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.
 .themebtn .ti-d{display:none}
 [data-theme=light] .themebtn .ti-l{display:none}
 [data-theme=light] .themebtn .ti-d{display:inline}
+
+/* Preisaufschlag gegenüber dem günstigsten Anbieter (Modellseiten) */
+.diff{font-size:.72rem;color:#f59e0b;margin-left:.3rem;white-space:nowrap}
