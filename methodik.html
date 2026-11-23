@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How we compare AI API prices – aiapicompare</title>
+<meta name="description" content="Where our AI API prices come from, how often they are updated, how reference prices work and why some offers are flagged as far below the reference price.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:image" content="https://aiapicompare.com/og-image.png">
+<link rel="stylesheet" href="style.css">
+<script src="theme.js"></script>
+<style>
+  .inhalt{max-width:820px}
+  .inhalt h2{margin-top:1.8rem}
+  .inhalt p,.inhalt li{line-height:1.7}
+  .inhalt ul{padding-left:1.2rem}
+  .live{border:1px solid var(--border);background:var(--panel);border-radius:.6rem;padding:.7rem .9rem;font-size:.88rem;margin:.8rem 0}
+  .beispiel{display:inline-flex;gap:.3rem;align-items:center;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="index.html" aria-label="aiapicompare"><img class="logo-d" src="logo/logo.svg" alt="aiapicompare" width="166" height="30"><img class="logo-l" src="logo/logo-hell.svg" alt="aiapicompare" width="166" height="30"></a>
+  <nav class="nav">
+    <a href="index.html" data-t="nav_vergleich"></a>
+    <a href="kosten.html" data-t="nav_kosten"></a>
+    <a href="finder.html" data-t="nav_finder"></a>
+    <a href="free.html" data-t="nav_gratis"></a>
+    <a href="bestenliste.html" data-t="nav_best"></a>
+    <a href="news.html" data-t="nav_news"></a>
+    <a href="anbindung.html" data-t="nav_anbindung"></a>
+  </nav>
+  <button class="themebtn" title="Light / dark"><span class="ti-l">☀</span><span class="ti-d">☾</span></button>
+  <div class="langbtns">
+    <button data-lang="de">DE</button><button data-lang="en">EN</button><button data-lang="zh">中文</button><button data-lang="ru">RU</button>
+  </div>
+</div>
+
+<div class="wrap inhalt">
+  <h1 data-t="h1"></h1>
+  <p class="lead" data-t="lead"></p>
+  <div id="inhalt"></div>
+  <div class="legal">
+    <a href="index.html" data-t="nav_vergleich"></a><a href="impressum.html" data-t="impressum"></a><a href="datenschutz.html" data-t="datenschutz"></a>
+  </div>
+</div>
+
+<script src="out/data.js"></script>
+<script src="referenz.js"></script>
+<script>
+"use strict";
+const D = window.API_DATEN || {};
+const META = D.meta || {};
+const RF = window.REFERENZ || null;
+const DATASET = "https://huggingface.co/datasets/lmarena-ai/leaderboard-dataset", LIZENZ = "https://creativecommons.org/licenses/by/4.0/";
+const MAIL = '<a href="mailto:kontakt@aiapicompare.com">kontakt@aiapicompare.com</a>';
+
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function anbieterListe(){ return Object.keys(META.quellen || {}).join(", ") || "—"; }
+function tag(cls, text){ return '<span class="tag '+cls+'">'+esc(text)+'</span>'; }
+
+const L10N = {
+de:{h1:"So vergleichen wir", lead:"Woher unsere Preise kommen, wie wir sie vergleichen und warum manche Angebote gekennzeichnet sind.",
+  nav_vergleich:"Preisvergleich", nav_kosten:"Kostenrechner", nav_finder:"Modell-Finder", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
+  inhalt:function(x){ return ''+
+  '<h2>Woher die Preise kommen</h2>'+
+  '<p>Jede Nacht ruft ein automatisches Programm die Preise direkt bei den Anbietern ab – aus ihren öffentlichen Modelllisten und Schnittstellen. Derzeit: '+esc(x.anbieter)+'. Letzte Aktualisierung: '+esc(x.stand)+'.</p>'+
+  '<p>Angezeigt werden Listenpreise in US-Dollar ohne Steuern. Nicht berücksichtigt sind Rabatte (z. B. für Prompt-Caching oder große Mengen), Mindestaufladungen, Gebühren für das Aufladen und Wechselkurse. Maßgeblich ist immer der Preis auf der Seite des Anbieters.</p>'+
+  '<h2>Einheiten</h2><ul>'+
+  '<li><b>Text:</b> Preis pro 1 Mio. Token, getrennt für Input (was du sendest) und Output (was das Modell antwortet).</li>'+
+  '<li><b>Pauschalpreis:</b> ein Preis für Input und Output.</li>'+
+  '<li><b>Bilder:</b> pro Bild. <b>Videos:</b> pro Sekunde – Preise pro Video rechnen wir anhand der Videolänge auf die Sekunde um.</li>'+
+  '<li><b>Kostenlos:</b> Angebote ohne Tokenpreis, meist mit Nutzungslimits.</li>'+
+  '<li>'+tag("batch","Batch")+' Varianten, bei denen Anfragen gesammelt und verzögert verarbeitet werden – meist günstiger, aber nicht für Chat oder Echtzeit.</li></ul>'+
+  '<h2>Referenzpreis und '+tag("warn","⚠ … unter Referenz")+'</h2>'+
+  '<p>Für jedes Textmodell bestimmen wir einen Referenzpreis. Verglichen wird ein gemischter Preis aus 3 Teilen Input und 1 Teil Output; ein Pauschalpreis zählt für beides.</p><ul>'+
+  '<li><b>Geschlossene Modelle</b> (Gewichte nicht öffentlich, z. B. GPT, Claude, Gemini, Grok): Den Preis legt der Hersteller fest. Referenz ist der Preis bei OpenRouter, der bei diesen Modellen in der Regel dem Listenpreis des Herstellers entspricht. Wir kennzeichnen Angebote, die <b>mehr als 50 %</b> darunter liegen. Varianten wie „… Uncensored“ oder „… Thinking“ ohne eigenen Referenzpreis vergleichen wir mit dem Grundmodell.</li>'+
+  '<li><b>Offene Modelle</b> (z. B. DeepSeek, Qwen, Llama, GLM): Jeder Anbieter kann sie selbst betreiben, Preisunterschiede sind normal. Referenz ist der Median aller Anbieter (bei mindestens drei Angeboten, sonst OpenRouter). Wir kennzeichnen Angebote, die <b>mehr als 80 %</b> darunter liegen – nur wenn die Referenz mindestens $0.20 pro 1 Mio. Token beträgt.</li></ul>'+
+  '<p>Die Kennzeichnung ist <b>keine Bewertung des Anbieters</b> und kein Vorwurf. Sie bedeutet: Wir können nicht nachvollziehen, wie ein so niedriger Preis zustande kommt, und nicht prüfen, welches Modell tatsächlich geliefert wird. Prüfe vor der Nutzung Bedingungen, Datenschutz und Zuverlässigkeit und teste zunächst mit kleinem Guthaben.</p>'+
+  '<p>Im Preisvergleich bleiben solche Angebote sichtbar und gekennzeichnet; „★ günstigster“ berücksichtigt sie nicht. Im Modell-Finder, in der Bestenliste, im Kostenrechner, in den Vergleichen A vs. B und im Widget werden sie standardmäßig nicht berücksichtigt.</p>'+
+  (x.stats ? '<div class="live">Aktuell: <b>'+x.stats.auffaellig+'</b> von '+x.stats.geprueft+' geprüften Textangeboten sind gekennzeichnet.</div>' : '')+
+  '<h2>Veraltete Daten '+tag("alt","⏱ Stand …")+'</h2>'+
+  '<p>Schlägt der Abruf bei einem Anbieter fehl, zeigen wir die zuletzt abgerufenen Preise mit Datum an. Sind sie älter als drei Tage, verwenden wir sie nicht mehr für Empfehlungen.</p>'+
+  '<div class="live">'+(x.alt.length ? 'Aktuell betroffen: '+esc(x.alt.join(", ")) : 'Aktuell sind die Daten aller Anbieter auf dem neuesten Stand.')+'</div>'+
+  '<h2>Platzierungen (Bestenliste)</h2>'+
+  '<p>Die Platzierungen stammen von Arena (arena.ai, ehemals LMArena), Datensatz <a href="'+DATASET+'" rel="noopener" target="_blank">lmarena-ai/leaderboard-dataset</a>, Lizenz <a href="'+LIZENZ+'" rel="noopener" target="_blank">CC BY 4.0</a>. Sie beruhen auf Abstimmungen von Nutzern, die Antworten zweier Modelle vergleichen – ein guter Anhaltspunkt, aber keine Messung für deinen konkreten Einsatz. Die Zuordnung zu den Modellen in unserem Preisvergleich erfolgt automatisch über die Modellnamen; Fehler sind möglich.</p>'+
+  '<h2>Unabhängigkeit</h2>'+
+  '<p>Die Reihenfolge richtet sich nur nach dem gewählten Kriterium (z. B. Preis) bzw. nach der Platzierung. Es gibt keine bezahlten Platzierungen. Falls wir Partnerlinks nutzen, sind sie mit „Anzeige“ gekennzeichnet und beeinflussen weder Reihenfolge noch Kennzeichnung.</p>'+
+  '<h2>Fehler gefunden?</h2>'+
+  '<p>Schreib uns an '+MAIL+' – am besten mit Link zum Modell und zur Preisseite des Anbieters. Alle Angaben ohne Gewähr.</p>'; }},
+en:{h1:"How we compare", lead:"Where our prices come from, how we compare them and why some offers are flagged.",
+  nav_vergleich:"Price comparison", nav_kosten:"Cost calculator", nav_finder:"Model finder", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
+  inhalt:function(x){ return ''+
+  '<h2>Where the prices come from</h2>'+
+  '<p>Every night an automated program fetches the prices directly from the providers – from their public model lists and APIs. Currently: '+esc(x.anbieter)+'. Last update: '+esc(x.stand)+'.</p>'+
+  '<p>We show list prices in US dollars excluding taxes. Not included are discounts (e.g. for prompt caching or volume), minimum top-ups, top-up fees and exchange rates. The price on the provider’s website always prevails.</p>'+
+  '<h2>Units</h2><ul>'+
+  '<li><b>Text:</b> price per 1M tokens, separately for input (what you send) and output (what the model answers).</li>'+
+  '<li><b>Flat price:</b> one price for input and output.</li>'+
+  '<li><b>Images:</b> per image. <b>Videos:</b> per second – prices per video are converted to seconds using the video length.</li>'+
+  '<li><b>Free:</b> offers without a token price, usually with usage limits.</li>'+
+  '<li>'+tag("batch","Batch")+' variants where requests are collected and processed with a delay – usually cheaper, but not for chat or real-time use.</li></ul>'+
+  '<h2>Reference price and '+tag("warn","⚠ … below reference")+'</h2>'+
+  '<p>For every text model we determine a reference price. We compare a blended price of 3 parts input and 1 part output; a flat price counts for both.</p><ul>'+
+  '<li><b>Closed models</b> (weights not public, e.g. GPT, Claude, Gemini, Grok): the vendor sets the price. The reference is the OpenRouter price, which for these models usually equals the vendor’s list price. We flag offers <b>more than 50%</b> below it. Variants such as “… Uncensored” or “… Thinking” without their own reference price are compared with the base model.</li>'+
+  '<li><b>Open models</b> (e.g. DeepSeek, Qwen, Llama, GLM): any provider can run them, so price differences are normal. The reference is the median of all providers (with at least three offers, otherwise OpenRouter). We flag offers <b>more than 80%</b> below it – only if the reference is at least $0.20 per 1M tokens.</li></ul>'+
+  '<p>The flag is <b>not a rating of the provider</b> and not an accusation. It means: we cannot tell how such a low price is possible, and we cannot verify which model is actually served. Before using it, check terms, privacy and reliability and start with a small balance.</p>'+
+  '<p>In the price comparison these offers stay visible and flagged; “★ cheapest” ignores them. In the model finder, the leaderboard, the cost calculator, the A vs B comparisons and the widget they are not considered by default.</p>'+
+  (x.stats ? '<div class="live">Currently: <b>'+x.stats.auffaellig+'</b> of '+x.stats.geprueft+' checked text offers are flagged.</div>' : '')+
+  '<h2>Outdated data '+tag("alt","⏱ as of …")+'</h2>'+
+  '<p>If fetching from a provider fails, we show the last known prices with their date. If they are older than three days, we no longer use them for recommendations.</p>'+
+  '<div class="live">'+(x.alt.length ? 'Currently affected: '+esc(x.alt.join(", ")) : 'Currently the data of all providers is up to date.')+'</div>'+
+  '<h2>Ranks (leaderboard)</h2>'+
+  '<p>The ranks come from Arena (arena.ai, formerly LMArena), dataset <a href="'+DATASET+'" rel="noopener" target="_blank">lmarena-ai/leaderboard-dataset</a>, license <a href="'+LIZENZ+'" rel="noopener" target="_blank">CC BY 4.0</a>. They are based on votes by users comparing the answers of two models – a good indication, but not a measurement for your specific use. They are matched to the models in our price comparison automatically by model name; errors are possible.</p>'+
+  '<h2>Independence</h2>'+
+  '<p>The order depends only on the chosen criterion (e.g. price) or the rank. There are no paid placements. If we use affiliate links, they are labelled as advertising and influence neither the order nor the flags.</p>'+
+  '<h2>Found an error?</h2>'+
+  '<p>Write to '+MAIL+' – ideally with a link to the model and to the provider’s pricing page. All information without guarantee.</p>'; }},
+zh:{h1:"我们的比较方法", lead:"我们的价格从何而来、如何比较，以及为什么部分报价会被标注。",
+  nav_vergleich:"价格对比", nav_kosten:"成本计算器", nav_finder:"模型推荐", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
+  inhalt:function(x){ return ''+
+  '<h2>价格来源</h2>'+
+  '<p>每天夜间，一个自动程序直接从各提供商公开的模型列表和接口获取价格。目前包括：'+esc(x.anbieter)+'。最近更新：'+esc(x.stand)+'。</p>'+
+  '<p>显示的是不含税的美元标价。未包含折扣（如提示缓存或批量折扣）、最低充值、充值手续费和汇率。一切以提供商网站上的价格为准。</p>'+
+  '<h2>计价单位</h2><ul>'+
+  '<li><b>文本：</b>每百万 Token 的价格，分别列出输入（你发送的内容）和输出（模型的回答）。</li>'+
+  '<li><b>统一价：</b>输入和输出同一个价格。</li>'+
+  '<li><b>图像：</b>按张计价。<b>视频：</b>按秒计价——按条计价的视频会根据时长换算为每秒价格。</li>'+
+  '<li><b>免费：</b>没有 Token 价格的报价，通常有使用限制。</li>'+
+  '<li>'+tag("batch","Batch")+' 批处理版本：请求会被汇总并延迟处理——通常更便宜，但不适合聊天或实时场景。</li></ul>'+
+  '<h2>参考价与 '+tag("warn","⚠ 低于参考价 …")+'</h2>'+
+  '<p>我们为每个文本模型确定一个参考价。比较时使用混合价格：3 份输入加 1 份输出；统一价同时适用于两者。</p><ul>'+
+  '<li><b>闭源模型</b>（权重未公开，如 GPT、Claude、Gemini、Grok）：价格由厂商决定。参考价为 OpenRouter 的价格，对这些模型通常等于厂商官方价格。比其低 <b>50% 以上</b>的报价会被标注。没有自身参考价的变体（如“… Uncensored”或“… Thinking”）会与基础模型比较。</li>'+
+  '<li><b>开源模型</b>（如 DeepSeek、Qwen、Llama、GLM）：任何提供商都可以自行运行，价格差异属于正常。参考价为所有提供商的中位数（至少三个报价，否则使用 OpenRouter）。比其低 <b>80% 以上</b>的报价会被标注——前提是参考价至少为每百万 Token $0.20。</li></ul>'+
+  '<p>该标注<b>不是对提供商的评价</b>，也不是指控。它表示：我们无法确认如此低的价格如何实现，也无法核实实际提供的是哪个模型。使用前请查看条款、隐私政策和可靠性，并先用少量余额测试。</p>'+
+  '<p>在价格对比中，此类报价仍会显示并带有标注；“★ 最便宜”不计入它们。在模型推荐、排行榜、成本计算器、A 对比 B 页面和小组件中，默认不考虑此类报价。</p>'+
+  (x.stats ? '<div class="live">当前：在 '+x.stats.geprueft+' 个已检查的文本报价中，有 <b>'+x.stats.auffaellig+'</b> 个被标注。</div>' : '')+
+  '<h2>过时数据 '+tag("alt","⏱ 数据日期 …")+'</h2>'+
+  '<p>如果从某个提供商获取数据失败，我们会显示最近一次获取的价格及其日期。超过三天的数据不再用于推荐。</p>'+
+  '<div class="live">'+(x.alt.length ? '当前受影响：'+esc(x.alt.join("、")) : '目前所有提供商的数据均为最新。')+'</div>'+
+  '<h2>名次（排行榜）</h2>'+
+  '<p>名次来自 Arena（arena.ai，原 LMArena），数据集 <a href="'+DATASET+'" rel="noopener" target="_blank">lmarena-ai/leaderboard-dataset</a>，许可证 <a href="'+LIZENZ+'" rel="noopener" target="_blank">CC BY 4.0</a>。名次基于用户对两个模型回答的比较投票——可作为参考，但并非针对你具体用途的测量。与我们价格对比中模型的对应关系按模型名称自动匹配，可能存在错误。</p>'+
+  '<h2>独立性</h2>'+
+  '<p>排序仅取决于所选条件（如价格）或名次。不存在付费排名。如我们使用推广链接，会标注为广告，且不影响排序和标注。</p>'+
+  '<h2>发现错误？</h2>'+
+  '<p>请写信至 '+MAIL+'——最好附上模型链接和提供商的价格页面。所有信息不作保证。</p>'; }},
+ru:{h1:"Как мы сравниваем", lead:"Откуда наши цены, как мы их сравниваем и почему некоторые предложения помечены.",
+  nav_vergleich:"Сравнение цен", nav_kosten:"Калькулятор", nav_finder:"Подбор модели", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
+  inhalt:function(x){ return ''+
+  '<h2>Откуда цены</h2>'+
+  '<p>Каждую ночь программа автоматически получает цены напрямую у поставщиков – из их публичных списков моделей и API. Сейчас: '+esc(x.anbieter)+'. Последнее обновление: '+esc(x.stand)+'.</p>'+
+  '<p>Показываются прайсовые цены в долларах США без налогов. Не учитываются скидки (например, за кеширование промптов или объём), минимальные пополнения, комиссии за пополнение и курсы валют. Действует всегда цена на сайте поставщика.</p>'+
+  '<h2>Единицы</h2><ul>'+
+  '<li><b>Текст:</b> цена за 1 млн токенов, отдельно для входа (что вы отправляете) и выхода (что отвечает модель).</li>'+
+  '<li><b>Единая цена:</b> одна цена для входа и выхода.</li>'+
+  '<li><b>Изображения:</b> за изображение. <b>Видео:</b> за секунду – цены за видео пересчитываются по длительности.</li>'+
+  '<li><b>Бесплатно:</b> предложения без цены за токены, обычно с лимитами.</li>'+
+  '<li>'+tag("batch","Batch")+' пакетные варианты: запросы собираются и обрабатываются с задержкой – обычно дешевле, но не для чата и работы в реальном времени.</li></ul>'+
+  '<h2>Эталонная цена и '+tag("warn","⚠ … ниже эталона")+'</h2>'+
+  '<p>Для каждой текстовой модели мы определяем эталонную цену. Сравнивается смешанная цена: 3 части входа и 1 часть выхода; единая цена считается для обоих.</p><ul>'+
+  '<li><b>Закрытые модели</b> (веса не опубликованы, например GPT, Claude, Gemini, Grok): цену устанавливает производитель. Эталон – цена на OpenRouter, которая для этих моделей обычно совпадает с прайсом производителя. Мы помечаем предложения, которые <b>более чем на 50 %</b> ниже. Варианты вроде «… Uncensored» или «… Thinking» без собственной эталонной цены сравниваются с базовой моделью.</li>'+
+  '<li><b>Открытые модели</b> (например DeepSeek, Qwen, Llama, GLM): любой поставщик может запускать их сам, поэтому разница в ценах нормальна. Эталон – медиана всех поставщиков (минимум три предложения, иначе OpenRouter). Мы помечаем предложения, которые <b>более чем на 80 %</b> ниже – только если эталон не меньше $0.20 за 1 млн токенов.</li></ul>'+
+  '<p>Пометка – <b>не оценка поставщика</b> и не обвинение. Она означает: мы не можем объяснить, как возможна такая низкая цена, и проверить, какая модель реально используется. Перед использованием проверьте условия, конфиденциальность и надёжность и начните с небольшого баланса.</p>'+
+  '<p>В сравнении цен такие предложения остаются видимыми и помеченными; «★ дешевле всех» их не учитывает. В подборе модели, рейтинге, калькуляторе, сравнениях A vs B и виджете они по умолчанию не учитываются.</p>'+
+  (x.stats ? '<div class="live">Сейчас помечено <b>'+x.stats.auffaellig+'</b> из '+x.stats.geprueft+' проверенных текстовых предложений.</div>' : '')+
+  '<h2>Устаревшие данные '+tag("alt","⏱ на …")+'</h2>'+
+  '<p>Если получить данные у поставщика не удалось, мы показываем последние известные цены с датой. Данные старше трёх дней больше не используются для рекомендаций.</p>'+
+  '<div class="live">'+(x.alt.length ? 'Сейчас затронуты: '+esc(x.alt.join(", ")) : 'Сейчас данные всех поставщиков актуальны.')+'</div>'+
+  '<h2>Места (рейтинг)</h2>'+
+  '<p>Места взяты из Arena (arena.ai, ранее LMArena), набор данных <a href="'+DATASET+'" rel="noopener" target="_blank">lmarena-ai/leaderboard-dataset</a>, лицензия <a href="'+LIZENZ+'" rel="noopener" target="_blank">CC BY 4.0</a>. Они основаны на голосах пользователей, сравнивающих ответы двух моделей, – хороший ориентир, но не измерение для вашей конкретной задачи. Сопоставление с моделями в нашем сравнении цен выполняется автоматически по названиям; возможны ошибки.</p>'+
+  '<h2>Независимость</h2>'+
+  '<p>Порядок зависит только от выбранного критерия (например, цены) или места в рейтинге. Платных размещений нет. Если мы используем партнёрские ссылки, они помечены как реклама и не влияют ни на порядок, ни на пометки.</p>'+
+  '<h2>Нашли ошибку?</h2>'+
+  '<p>Напишите на '+MAIL+' – лучше со ссылкой на модель и страницу цен поставщика. Вся информация без гарантии.</p>'; }}
+};
+
+function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+let lang = lsGet("lang") || (navigator.language || "").slice(0,2);
+if (!L10N[lang]) lang = "en";
+
+function render(){
+  const T = L10N[lang];
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+  document.title = T.h1 + " – aiapicompare";
+  document.querySelectorAll("[data-t]").forEach(function(el){ el.textContent = T[el.dataset.t]; });
+  document.querySelectorAll(".langbtns button").forEach(function(b){ b.classList.toggle("active", b.dataset.lang === lang); });
+  const alt = Object.keys(META.veraltet || {}).map(function(q){
+    const name = Object.keys(META.quellen || {}).filter(function(n){ return n.toLowerCase().replace(/[^a-z]/g, "") === q.replace(/[^a-z]/g, ""); })[0] || q;
+    return name + " (" + (RF ? RF.datum(String(META.veraltet[q]).slice(0, 10), lang) : META.veraltet[q]) + ")";
+  });
+  document.getElementById("inhalt").innerHTML = T.inhalt({anbieter: anbieterListe(), stand: META.erstellt || "—", stats: RF ? RF.stats() : null, alt: alt});
+}
+document.addEventListener("click", function(e){
+  const l = e.target.closest("button[data-lang]");
+  if (l){ lang = l.dataset.lang; lsSet("lang", lang); render(); }
+});
+render();
+</script>
+</body>
+</html>

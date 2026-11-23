@@ -13,6 +13,8 @@
 | `llms.txt` (erzeugt) | Kurzbeschreibung der Website für KI-Assistenten |
 | `indexnow.py` + `<Schlüssel>.txt` | meldet neue/geänderte Seiten nachts an Bing & Co. (IndexNow), sobald die Domain live ist |
 | `bereiche.js` | Namen der Anwendungsbereiche in 4 Sprachen |
+| `methodik.html` | „So vergleichen wir“: Datenquellen, Einheiten, Referenzpreis und Kennzeichnung, veraltete Daten, Unabhängigkeit |
+| `referenz.js` | Referenzpreis je Modell und Kennzeichnung „⚠ weit unter Referenzpreis“ / „⏱ Stand …“ / „Batch“ – dieselben Regeln stehen in `build_pages.py` |
 | `finder.html` | Modell-Finder: 3 Fragen (Zweck, Budget, Qualität vs. Preis) → passende Modelle aus Arena-Platzierung + Preis |
 | `preisindex.html` | KI-Preisindex: Entwicklung der API-Preise seit dem Starttag (Daten: `out/preisindex.js`, erzeugt von `build_news.py`) |
 | `einbetten.html` | Preis-Widget für fremde Websites (Code zum Kopieren); die Widgets selbst liegen unter `widget/<modell>.html` (erzeugt) |
@@ -88,3 +90,13 @@ Lokal: `python pruefen.py vorschau`.
 ## Preisindex
 Startet automatisch mit dem ersten Tag, an dem `out/verlauf.json` Daten hat. Aussagekräftig wird er nach einigen Wochen;
 bis mindestens zwei Messpunkte vorliegen, zeigt die Seite einen Hinweis statt des Diagramms.
+
+## Kennzeichnung „⚠ weit unter Referenzpreis“
+Damit man dem „günstigsten Preis“ trauen kann, bekommt jedes Textmodell einen Referenzpreis (gemischt 3 Teile Input : 1 Teil Output):
+- **Geschlossene Modelle** (GPT, Claude, Gemini, Grok …): Referenz = OpenRouter (in der Regel der Listenpreis des Herstellers).
+  Gekennzeichnet wird, was mehr als 50 % darunter liegt. Varianten wie „…-uncensored“ / „…-thinking“ ohne eigene Referenz → Grundmodell.
+- **Offene Modelle**: Referenz = Median aller Anbieter (ab 3 Angeboten). Gekennzeichnet: mehr als 80 % darunter, nur wenn die Referenz ≥ $0.20 ist.
+- Preisvergleich: gekennzeichnete Angebote bleiben sichtbar, „★ günstigster“ und „+X %“ ignorieren sie; Filter „Angebote weit unter Referenzpreis ausblenden“.
+- Modell-Finder, Bestenliste, Kostenrechner, A-vs-B-Seiten, Widget, Modellseiten-Text: standardmäßig ohne solche Angebote (zuschaltbar).
+- Fehlgeschlagener Abruf: Preise mit „⏱ Stand …“; älter als 3 Tage → nicht mehr für Empfehlungen.
+Schwellen ändern: `referenz.js` **und** `build_pages.py` (Abschnitt „Referenzpreis“) gleich anpassen, Text auf `methodik.html` nachziehen.

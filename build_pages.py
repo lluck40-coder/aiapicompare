@@ -13,7 +13,8 @@ die statischen SEO-Seiten aus out/data.js:
 Aufruf:  python build_pages.py _site        (GitHub-Workflow)
          python build_pages.py vorschau     (lokale Vorschau, dann vorschau/index.html öffnen)
 """
-import json, re, sys, shutil, html, urllib.parse
+import json, re, sys, shutil, html, urllib.parse, math
+import datetime as dt
 from pathlib import Path
 from collections import Counter, defaultdict
 
@@ -23,7 +24,7 @@ DOMAIN = "https://aiapicompare.com/"
 SPRACHEN = ["en", "de", "zh", "ru"]          # en liegt im Stammverzeichnis
 
 STATISCH = ["index.html", "anbindung.html", "kosten.html","free.html", "bestenliste.html", "news.html", "bereiche.js",
-            "finder.html", "preisindex.html", "einbetten.html",
+            "finder.html", "preisindex.html", "einbetten.html", "methodik.html", "referenz.js",
             "impressum.html", "datenschutz.html",
             "style.css", "sprache.js", "theme.js", "config.js", "favicon.svg", "favicon-32.png",
             "apple-touch-icon.png", "og-image.png", "robots.txt", "CNAME"]
@@ -85,7 +86,7 @@ FAEH = {
 }
 
 T = {
-"en": dict(htmllang="en", nav_finder="Model finder", fuss_anb="Providers", fuss_index="AI price index", fuss_widget="Embed widget", nav_best="Leaderboard", nav_news="News", nav_vergleich="Price comparison", nav_kosten="Cost calculator", nav_gratis="Free models",
+"en": dict(htmllang="en", nav_finder="Model finder", fuss_anb="Providers", fuss_index="AI price index", fuss_widget="Embed widget", fuss_methodik="How we compare", nav_best="Leaderboard", nav_news="News", nav_vergleich="Price comparison", nav_kosten="Cost calculator", nav_gratis="Free models",
   nav_anbindung="Setup & integration", impressum="Imprint", datenschutz="Privacy", alle_modelle="All models", api="Data as JSON",
   titel1="{name} API pricing & capabilities | aiapicompare", lead_flat="{name} is available from {n} provider(s). Cheapest: <b>{prov}</b> at <b>{inp}</b> per 1M tokens (flat rate for input and output).",
   titel="{name} API pricing: {n} providers compared | aiapicompare",
@@ -113,7 +114,7 @@ T = {
   idx_lead="{n} models from {p} providers. Click a model for the full price comparison.",
   th_modell="Model", th_anz="Providers", th_ab="From", zurueck="← Back to the price comparison",
   disclosure="<b>Transparency:</b> Links marked “{k}” are affiliate links (advertising). If you buy credits through them, we receive a commission – the price stays the same for you."),
-"de": dict(htmllang="de", nav_finder="Modell-Finder", fuss_anb="Anbieter", fuss_index="KI-Preisindex", fuss_widget="Widget einbetten", nav_best="Bestenliste", nav_news="Neuigkeiten", nav_vergleich="Preisvergleich", nav_kosten="Kostenrechner", nav_gratis="Kostenlose Modelle",
+"de": dict(htmllang="de", nav_finder="Modell-Finder", fuss_anb="Anbieter", fuss_index="KI-Preisindex", fuss_widget="Widget einbetten", fuss_methodik="So vergleichen wir", nav_best="Bestenliste", nav_news="Neuigkeiten", nav_vergleich="Preisvergleich", nav_kosten="Kostenrechner", nav_gratis="Kostenlose Modelle",
   nav_anbindung="Anbindung & Einrichtung", impressum="Impressum", datenschutz="Datenschutz", alle_modelle="Alle Modelle", api="Daten als JSON",
   titel1="{name} API-Preis & Fähigkeiten | aiapicompare", lead_flat="{name} ist bei {n} Anbieter(n) verfügbar. Am günstigsten: <b>{prov}</b> mit <b>{inp}</b> pro 1 Mio. Token (Pauschalpreis für Input und Output).",
   titel="{name} API-Preise: {n} Anbieter im Vergleich | aiapicompare",
@@ -141,7 +142,7 @@ T = {
   idx_lead="{n} Modelle von {p} Anbietern. Ein Klick auf ein Modell zeigt den vollständigen Preisvergleich.",
   th_modell="Modell", th_anz="Anbieter", th_ab="Ab", zurueck="← Zurück zum Preisvergleich",
   disclosure="<b>Transparenz:</b> Links mit dem Hinweis „{k}“ sind Affiliate-Links (Werbung). Kaufst du darüber Guthaben, erhalten wir eine Provision – für dich ändert sich der Preis nicht."),
-"zh": dict(htmllang="zh-CN", nav_finder="模型推荐", fuss_anb="提供商", fuss_index="AI 价格指数", fuss_widget="嵌入小组件", nav_best="排行榜", nav_news="动态", nav_vergleich="价格对比", nav_kosten="成本计算器", nav_gratis="免费模型",
+"zh": dict(htmllang="zh-CN", nav_finder="模型推荐", fuss_anb="提供商", fuss_index="AI 价格指数", fuss_widget="嵌入小组件", fuss_methodik="比较方法", nav_best="排行榜", nav_news="动态", nav_vergleich="价格对比", nav_kosten="成本计算器", nav_gratis="免费模型",
   nav_anbindung="接入与配置", impressum="网站信息", datenschutz="隐私政策", alle_modelle="全部模型", api="JSON 数据",
   titel1="{name} API 价格与功能 | aiapicompare", lead_flat="{name} 共有 {n} 家提供商。最便宜：<b>{prov}</b>，每百万 Token <b>{inp}</b>（输入输出统一价格）。",
   titel="{name} API 价格：{n} 家提供商对比 | aiapicompare",
@@ -169,7 +170,7 @@ T = {
   idx_lead="来自 {p} 家提供商的 {n} 个模型。点击模型查看完整价格对比。",
   th_modell="模型", th_anz="提供商", th_ab="起价", zurueck="← 返回价格对比",
   disclosure="<b>透明声明：</b>标有“{k}”的链接为推广（联盟）链接，属于广告。若您通过这些链接充值，我们将获得佣金，您的价格不变。"),
-"ru": dict(htmllang="ru", nav_finder="Подбор модели", fuss_anb="Поставщики", fuss_index="Индекс цен AI", fuss_widget="Виджет для сайта", nav_best="Рейтинг", nav_news="Новости", nav_vergleich="Сравнение цен", nav_kosten="Калькулятор", nav_gratis="Бесплатные модели",
+"ru": dict(htmllang="ru", nav_finder="Подбор модели", fuss_anb="Поставщики", fuss_index="Индекс цен AI", fuss_widget="Виджет для сайта", fuss_methodik="Как мы сравниваем", nav_best="Рейтинг", nav_news="Новости", nav_vergleich="Сравнение цен", nav_kosten="Калькулятор", nav_gratis="Бесплатные модели",
   nav_anbindung="Подключение", impressum="Импрессум", datenschutz="Конфиденциальность", alle_modelle="Все модели", api="Данные в JSON",
   titel1="{name}: цена API и возможности | aiapicompare", lead_flat="{name} доступна у {n} поставщиков. Дешевле всего: <b>{prov}</b> — <b>{inp}</b> за 1 млн токенов (единая цена за вход и выход).",
   titel="{name}: цены API у {n} поставщиков | aiapicompare",
@@ -269,13 +270,179 @@ GRUPPEN = defaultdict(list)
 for z in ZEILEN:
     GRUPPEN[z["slug"]].append(z)
 
+# ------------------------------------------------------------------ Referenzpreis
+# Gleiche Regeln wie referenz.js (Browser) – Erklärung auf methodik.html.
+GESCHLOSSEN = re.compile(r"^(claude|gpt-(?!oss)|chatgpt|o[1-9](-|$)|gemini|grok|nova-|sonar)")
+GRENZE_GESCHLOSSEN, GRENZE_OFFEN, MIN_REF_OFFEN, ALT_TAGE = 0.5, 0.2, 0.2, 3
+VARIANTE = re.compile(r"-(uncensored|thinking|fast|highspeed|nitro)$")   # Varianten geschlossener Modelle → Grundmodell
+
+def _zahl(x):
+    return isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x)
+
+def _misch(v):
+    if _zahl(v.get("in")) and _zahl(v.get("out")):
+        return (3 * v["in"] + v["out"]) / 4
+    if _zahl(v.get("in")):
+        return v["in"]
+    if _zahl(v.get("price")):
+        return v["price"]
+    return None
+
+def _median(a):
+    a = sorted(a)
+    n, h = len(a), len(a) // 2
+    return a[h] if n % 2 else (a[h - 1] + a[h]) / 2
+
+REF, REF_ERG, _EIGEN = {}, {}, {}
+_pro_basis = defaultdict(list)
+for _q in sorted(k for k in D if k != "meta"):
+    for _k, _v in (D.get(_q) or {}).items():
+        if not isinstance(_v, dict) or _k.startswith("media-") or _v.get("gratis") or _v.get("media"):
+            continue
+        if not (_zahl(_v.get("in")) or _zahl(_v.get("price"))):
+            continue
+        _m = _misch(_v)
+        if _m is None or not _m > 0:
+            continue
+        _pro_basis[re.sub(r":free$", "", _k)].append(dict(q=_q, k=_k, v=_v, m=_m))
+for _b, _l in _pro_basis.items():
+    _zu = bool(GESCHLOSSEN.match(_b))
+    _or = None
+    for _x in _l:
+        if _x["q"] == "openrouter" and (_or is None or _x["m"] < _or["m"]):
+            _or = _x
+    _or_ref = (dict(inp=_or["v"]["in"] if _zahl(_or["v"].get("in")) else None,
+                    out=_or["v"]["out"] if _zahl(_or["v"].get("out")) else None, m=_or["m"], src="openrouter") if _or else None)
+    _med_ref = dict(inp=None, out=None, m=_median([x["m"] for x in _l]), src="median") if len(_l) >= 3 else None
+    _r = (_or_ref or _med_ref) if _zu else (_med_ref or _or_ref)
+    if not _r or not _r["m"] > 0:
+        continue
+    _r["geschlossen"] = _zu
+    _r["via"] = ""
+    _EIGEN[_b] = _r
+for _b in _pro_basis:
+    if _b in _EIGEN:
+        REF[_b] = _EIGEN[_b]
+        continue
+    _x = _b
+    while VARIANTE.search(_x):
+        _x = VARIANTE.sub("", _x)
+        _g = _EIGEN.get(_x)
+        if _g and _g["geschlossen"]:
+            REF[_b] = dict(inp=_g["inp"], out=_g["out"], m=_g["m"], src=_g["src"], geschlossen=True, via=_x)
+            break
+for _b, _l in _pro_basis.items():
+    _r = REF.get(_b)
+    if not _r:
+        continue
+    _zu = _r["geschlossen"]
+    _grenze = GRENZE_GESCHLOSSEN if _zu else (GRENZE_OFFEN if _r["m"] >= MIN_REF_OFFEN else 0)
+    for _x in _l:
+        _v = _x["v"]
+        if _r["src"] == "openrouter" and _zahl(_v.get("in")) and _zahl(_v.get("out")) and _r["inp"] is not None and _r["out"] is not None:
+            _ratio = _x["m"] / _r["m"]
+        elif _r["src"] == "openrouter" and _zahl(_v.get("in")) and not _zahl(_v.get("out")) and _r["inp"] is not None:
+            _ratio = _v["in"] / _r["inp"]
+        else:
+            _ratio = _x["m"] / _r["m"]
+        if not _ratio > 0 or not math.isfinite(_ratio):
+            continue
+        REF_ERG[(_x["q"], _x["k"])] = dict(ratio=_ratio, pct=math.floor((1 - _ratio) * 100 + 0.5), auff=_ratio < _grenze, src=_r["src"])
+
+ALT = {}
+_meta = D.get("meta") or {}
+try:
+    _stand = dt.date.fromisoformat(str(_meta.get("erstellt", ""))[:10])
+except ValueError:
+    _stand = None
+for _q, _seit in (_meta.get("veraltet") or {}).items():
+    _s = str(_seit or "")[:10]
+    try:
+        _tage = (_stand - dt.date.fromisoformat(_s)).days if _stand else 0
+    except ValueError:
+        _tage = 0
+    ALT[_q] = dict(seit=_s, tage=_tage, zu_alt=_tage > ALT_TAGE)
+
+for z in ZEILEN:
+    e = REF_ERG.get((z["q"], z["kanon"]))
+    z["ref"] = e
+    z["auff"] = bool(e and e["auff"])
+    z["alt"] = ALT.get(z["q"])
+    z["ok"] = not z["auff"] and not (z["alt"] and z["alt"]["zu_alt"])
+    z["batch"] = z["kanon"].endswith(":batch") or "(batch)" in (z["name"] or "").lower()
+
+def _fmt_ref(n):
+    return "$" + (f"{n:.0f}" if n >= 100 else f"{n:.2f}" if n >= 1 else f"{n:.3f}" if n >= 0.01 else f"{n:.4f}")
+
+REF_T = {
+    "de": dict(tag="⚠ {p} % unter Referenz",
+               titel="Dieser Preis liegt {p} % unter dem Referenzpreis ({ref}). Wir können nicht nachvollziehen, wie er zustande kommt, und nicht prüfen, welches Modell tatsächlich geliefert wird. Vorher Bedingungen, Datenschutz und Zuverlässigkeit prüfen und mit kleinem Guthaben testen.",
+               alt_tag="⏱ Stand {d}", alt_titel="Der letzte Abruf bei diesem Anbieter ist fehlgeschlagen – angezeigt werden die Preise vom {d}.",
+               batch_titel="Batch-Variante: in der Regel günstiger, Anfragen werden aber gesammelt und verzögert verarbeitet – meist nicht für Chat oder Echtzeit geeignet.",
+               ref="Referenzpreis", pro_io="pro 1 Mio. Token (Input / Output)", pro_misch="pro 1 Mio. Token (gemischt 3:1)",
+               src_or="OpenRouter", src_or_zu="OpenRouter – bei diesem Modell in der Regel der Listenpreis des Herstellers", src_med="Median aller Anbieter", via="Grundmodell",
+               trenner="Weit unter dem Referenzpreis – bitte vorher prüfen", mehr="So vergleichen wir →",
+               melden="Preis falsch? Melden", alt_anb="Der letzte Abruf bei {p} ist fehlgeschlagen – angezeigt werden die Preise vom {d}."),
+    "en": dict(tag="⚠ {p}% below reference",
+               titel="This price is {p}% below the reference price ({ref}). We cannot tell how it is possible or verify which model is actually served. Check terms, privacy and reliability first and test with a small balance.",
+               alt_tag="⏱ as of {d}", alt_titel="The last update from this provider failed – prices shown are from {d}.",
+               batch_titel="Batch variant: usually cheaper, but requests are collected and processed with a delay – usually not suitable for chat or real-time use.",
+               ref="Reference price", pro_io="per 1M tokens (input / output)", pro_misch="per 1M tokens (blended 3:1)",
+               src_or="OpenRouter", src_or_zu="OpenRouter – for this model usually the vendor's list price", src_med="median of all providers", via="base model",
+               trenner="Far below the reference price – please check first", mehr="How we compare →",
+               melden="Wrong price? Report it", alt_anb="The last update from {p} failed – prices shown are from {d}."),
+    "zh": dict(tag="⚠ 低于参考价 {p}%",
+               titel="此价格比参考价低 {p}%（{ref}）。我们无法确认该价格如何实现，也无法核实实际提供的是哪个模型。使用前请先查看条款、隐私政策和可靠性，并先用少量余额测试。",
+               alt_tag="⏱ 数据日期 {d}", alt_titel="该提供商最近一次更新失败——显示的是 {d} 的价格。",
+               batch_titel="批处理版本：通常更便宜，但请求会被汇总并延迟处理——一般不适合聊天或实时场景。",
+               ref="参考价", pro_io="每百万 Token（输入 / 输出）", pro_misch="每百万 Token（按 3:1 混合）",
+               src_or="OpenRouter", src_or_zu="OpenRouter——对该模型通常即厂商官方价格", src_med="所有提供商的中位数", via="基础模型",
+               trenner="远低于参考价——使用前请先核实", mehr="我们的比较方法 →",
+               melden="价格有误？告诉我们", alt_anb="{p} 最近一次更新失败——显示的是 {d} 的价格。"),
+    "ru": dict(tag="⚠ на {p} % ниже эталона",
+               titel="Эта цена на {p} % ниже эталонной ({ref}). Мы не можем объяснить, как она возможна, и проверить, какая модель реально используется. Перед использованием проверьте условия, конфиденциальность и надёжность и протестируйте с небольшим балансом.",
+               alt_tag="⏱ на {d}", alt_titel="Последнее обновление у этого поставщика не удалось – показаны цены на {d}.",
+               batch_titel="Пакетный вариант: обычно дешевле, но запросы собираются и обрабатываются с задержкой – как правило, не подходит для чата и работы в реальном времени.",
+               ref="Эталонная цена", pro_io="за 1 млн токенов (вход / выход)", pro_misch="за 1 млн токенов (смешанная 3:1)",
+               src_or="OpenRouter", src_or_zu="OpenRouter – для этой модели обычно прайс производителя", src_med="медиана всех поставщиков", via="базовая модель",
+               trenner="Намного ниже эталонной цены – проверьте заранее", mehr="Как мы сравниваем →",
+               melden="Цена неверна? Сообщите нам", alt_anb="Последнее обновление у {p} не удалось – показаны цены на {d}."),
+}
+
+def ref_datum(d, lang):
+    m = re.match(r"^(\d{4})-(\d\d)-(\d\d)", d or "")
+    if not m:
+        return d or ""
+    return f"{m[3]}.{m[2]}.{m[1]}" if lang in ("de", "ru") else f"{m[1]}-{m[2]}-{m[3]}"
+
+def ref_text(basis, lang):
+    r, t = REF.get(re.sub(r":free$", "", basis)), REF_T[lang]
+    if not r:
+        return ""
+    preis = (f'{_fmt_ref(r["inp"])} / {_fmt_ref(r["out"])} {t["pro_io"]}' if r["inp"] is not None and r["out"] is not None
+             else f'{_fmt_ref(r["m"])} {t["pro_misch"]}')
+    src = t["src_med"] if r["src"] == "median" else (t["src_or_zu"] if r["geschlossen"] else t["src_or"])
+    return f"{preis}, {src}" + (f' ({t["via"]}: {r["via"]})' if r["via"] else "")
+
+def ref_tags(z, lang):
+    t, h = REF_T[lang], ""
+    if z["auff"]:
+        h += (f'<span class="tag warn" title="{esc(t["titel"].format(p=z["ref"]["pct"], ref=ref_text(z["kanon"], lang)))}">'
+              f'{esc(t["tag"].format(p=z["ref"]["pct"]))}</span>')
+    if z["alt"]:
+        d = ref_datum(z["alt"]["seit"], lang)
+        h += f'<span class="tag alt" title="{esc(t["alt_titel"].format(d=d))}">{esc(t["alt_tag"].format(d=d))}</span>'
+    if z["batch"]:
+        h += f'<span class="tag batch" title="{esc(t["batch_titel"])}">Batch</span>'
+    return h
+
 def gruppen_info(slug_, liste):
     namen = Counter(name_sauber(z["name"]) for z in liste)
     name = sorted(namen.items(), key=lambda x: (-x[1], -(" " in x[0]), -sum(c.isupper() for c in x[0]), len(x[0])))[0][0]
     entw = Counter(z["entw"] for z in liste if z["entw"]).most_common(1)
     liste = sorted(liste, key=lambda z: (z["preis"], z["quelle"]))
     return dict(slug=slug_, name=name or slug_, entw=entw[0][0] if entw else "", zeilen=liste,
-                billig=liste[0], ctx=max((z["ctx"] for z in liste), default=0),
+                billig=liste[0], billig_ok=next((z for z in liste if z["ok"]), liste[0]), ctx=max((z["ctx"] for z in liste), default=0),
                 media=all(z["media"] for z in liste), anbieter=len({z["q"] for z in liste}),
                 gratis=[z for z in liste if z["gratis"]])
 
@@ -362,7 +529,7 @@ def kopf(lang, rel, titel, desc, rest, alternativen=True):
 def fuss(lang, rel):
     t = T[lang]
     return f'''
-<div class="legal"><a href="{rel}index.html">{t["nav_vergleich"]}</a><a href="{rel}{pfad(lang, "models/index.html")}">{t["alle_modelle"]}</a><a href="{rel}{pfad(lang, "providers/index.html")}">{t["fuss_anb"]}</a><a href="{rel}preisindex.html">{t["fuss_index"]}</a><a href="{rel}einbetten.html">{t["fuss_widget"]}</a><a href="{rel}api/prices.json">{t["api"]}</a><a href="{rel}impressum.html">{t["impressum"]}</a><a href="{rel}datenschutz.html">{t["datenschutz"]}</a></div>
+<div class="legal"><a href="{rel}index.html">{t["nav_vergleich"]}</a><a href="{rel}{pfad(lang, "models/index.html")}">{t["alle_modelle"]}</a><a href="{rel}{pfad(lang, "providers/index.html")}">{t["fuss_anb"]}</a><a href="{rel}preisindex.html">{t["fuss_index"]}</a><a href="{rel}einbetten.html">{t["fuss_widget"]}</a><a href="{rel}methodik.html">{t["fuss_methodik"]}</a><a href="{rel}api/prices.json">{t["api"]}</a><a href="{rel}impressum.html">{t["impressum"]}</a><a href="{rel}datenschutz.html">{t["datenschutz"]}</a></div>
 </div>
 <script src="{rel}config.js"></script>
 <script>
@@ -402,7 +569,8 @@ def caps_html(z, lang, mini=True):
 # ------------------------------------------------------------------ Preisverlauf-Diagramm
 def verlauf_svg(info):
     punkte = defaultdict(lambda: float("inf"))
-    serien = [VERLAUF.get(z["q"] + "|" + z["kanon"], {}).get("p") or [] for z in info["zeilen"]]
+    zeilen = [z for z in info["zeilen"] if not z["auff"]] or info["zeilen"]   # ohne Angebote weit unter Referenzpreis
+    serien = [VERLAUF.get(z["q"] + "|" + z["kanon"], {}).get("p") or [] for z in zeilen]
     tage = sorted({d for s in serien for d, _ in s})
     if len(tage) < 2:
         return None
@@ -435,7 +603,7 @@ def modellseite(info, lang):
     t = T[lang]
     rel = "../" if lang == "en" else "../../"
     rest = f'models/{info["slug"]}.html'
-    b = info["billig"]
+    b = info["billig_ok"]          # günstigstes Angebot ohne „weit unter Referenzpreis“ / veraltete Daten
     name, n = info["name"], info["anbieter"]
     if info["media"]:
         desc = t["desc_media"].format(name=name, preis=preis_text(b, t), prov=b["quelle"], n=n)
@@ -490,16 +658,25 @@ def modellseite(info, lang):
     else:
         h += f'<th>{t["th_anbieter"]}</th><th class="num">{t["th_in"]}</th><th class="num">{t["th_out"]}</th><th class="num">{t["th_ctx"]}</th><th></th>'
     h += "</tr></thead><tbody>"
-    bezahlt = [z["preis"] for z in info["zeilen"] if 0 < z["preis"] < float("inf")]
+    bezahlt = [z["preis"] for z in info["zeilen"] if 0 < z["preis"] < float("inf") and z["ok"]]
     min_bez = min(bezahlt) if bezahlt else None
     def aufschlag(z):
-        if min_bez and 0 < z["preis"] < float("inf") and z["preis"] > min_bez:
+        if min_bez and not z["auff"] and 0 < z["preis"] < float("inf") and z["preis"] > min_bez:
             return f' <span class="diff">+{round((z["preis"] / min_bez - 1) * 100)} %</span>'
         return ""
-    for i, z in enumerate(info["zeilen"]):
-        anb = f'<span class="dot" style="background:{z["farbe"]}"></span><a href="{rel}{pfad(lang, "providers/" + z["q"] + ".html")}">{esc(z["quelle"])}</a><br><small style="color:var(--dim);font-family:var(--mono)">{esc(z["roh"])}</small>'
+    # erst die regulären Angebote, darunter getrennt die Angebote weit unter dem Referenzpreis
+    reihe = [z for z in info["zeilen"] if not z["auff"]] + [z for z in info["zeilen"] if z["auff"]]
+    erster_ok = next((z for z in reihe if z["ok"]), None)
+    rt = REF_T[lang]
+    spalten = 4 if info["media"] else 5
+    trenner = False
+    for i, z in enumerate(reihe):
+        if z["auff"] and not trenner:
+            trenner = True
+            h += f'<tr class="trenner"><td colspan="{spalten}">⚠ {esc(rt["trenner"])}</td></tr>'
+        anb = f'<span class="dot" style="background:{z["farbe"]}"></span><a href="{rel}{pfad(lang, "providers/" + z["q"] + ".html")}">{esc(z["quelle"])}</a>{ref_tags(z, lang)}<br><small style="color:var(--dim);font-family:var(--mono)">{esc(z["roh"])}</small>'
         einr = f' <a class="btn" href="{rel}anbindung.html#anbieter={z["q"]}&amp;modell={esc(z["roh"])}">{t["einrichten"]}</a>' if not z["media"] else ""
-        cls = ' class="best"' if i == 0 and len(info["zeilen"]) > 1 else ""
+        cls = ' class="best"' if z is erster_ok and len(info["zeilen"]) > 1 else ""
         if info["media"]:
             h += f'<tr{cls}><td>{anb}</td><td class="num price">{esc(preis_text(z, t))}{aufschlag(z)}</td><td>{caps_html(z, lang)}</td><td class="num">{go_link(z, t)}</td></tr>'
         else:
@@ -507,6 +684,10 @@ def modellseite(info, lang):
             pout = t["gratis"] if z["gratis"] else fmt(z["out"])
             h += f'<tr{cls}><td>{anb}</td><td class="num price">{esc(pin)}{aufschlag(z)}</td><td class="num price">{esc(pout)}</td><td class="num">{fmt_ctx(z["ctx"])}</td><td class="num" style="white-space:nowrap">{go_link(z, t)}{einr}</td></tr>'
     h += f'</tbody></table></div>\n<p class="hint" style="font-size:.78rem;color:var(--dim)">{t["ranking"]} {t["stand"].format(d=esc(STAND))}</p>\n'
+    rtext = ref_text(info["zeilen"][0]["kanon"], lang) if not info["media"] else ""
+    betreff = urllib.parse.quote(f"Preis / price: {name}")
+    h += ('<p class="refzeile">' + (f'{esc(rt["ref"])}: {esc(rtext)} · ' if rtext else "")
+          + f'<a href="{rel}methodik.html">{esc(rt["mehr"])}</a> · <a href="mailto:kontakt@aiapicompare.com?subject={betreff}">{esc(rt["melden"])}</a></p>\n')
 
     # Preisverlauf
     svg = verlauf_svg(info)
@@ -514,7 +695,7 @@ def modellseite(info, lang):
 
     # Schnellstart (Text-Modelle)
     if not info["media"]:
-        g = next((z for z in info["zeilen"] if not z["media"]), None)
+        g = next((z for z in info["zeilen"] if not z["media"] and z["ok"]), None) or next((z for z in info["zeilen"] if not z["media"]), None)
         if g:
             _, _, base, env = ANBIETER[g["q"]]
             h += f'<h2>{esc(t["code_titel"].format(prov=g["quelle"]))}</h2><pre>' + esc(
@@ -639,8 +820,9 @@ def plaetze_von(info):
                 pl[bk] = p
     return pl
 
-def bezahlt_billig(info):
-    l = [z for z in info["zeilen"] if 0 < z["preis"] < float("inf")]
+def bezahlt_billig(info, alle=False):
+    """Günstigstes bezahltes Angebot – ohne Angebote weit unter Referenzpreis und ohne veraltete Daten (> 3 Tage)."""
+    l = [z for z in info["zeilen"] if 0 < z["preis"] < float("inf") and (alle or z["ok"])]
     return min(l, key=lambda z: (z["preis"], z["quelle"])) if l else None
 
 def top_slugs(bereiche, n, media):
@@ -885,6 +1067,7 @@ def llms_txt():
         f"- [News: new models and price changes]({DOMAIN}news.html)",
         f"- [Cost calculator]({DOMAIN}kosten.html): monthly cost for tokens, images or video seconds",
         f"- [Setup guides]({DOMAIN}anbindung.html): base URLs and configuration for VS Code, Cline, Cursor, Hermes and more",
+        f"- [How we compare]({DOMAIN}methodik.html): data sources, reference prices and why some offers are flagged as far below the reference price",
         "",
         "## Data",
         f"- [prices.json]({DOMAIN}api/prices.json): all current prices as JSON",
@@ -918,7 +1101,7 @@ PV = {
   idx_h1="AI API providers", idx_lead="All providers in our daily price check – with number of models, free models and the cheapest text model.",
   th_anb="Provider", th_anz="Models", th_frei="Free", th_ab="Cheapest text model",
   hinweis="Facts from our own daily price check. Prices without guarantee – the provider’s website is authoritative.",
-  w_ab="from", w_bei="at", w_anb="{n} providers", w_quelle="Prices: aiapicompare.com",
+  auff_anb="{n} offers from {p} are far below the reference price (e.g. far below the vendor's list price). We cannot verify which model is actually served – check terms and privacy first and test with a small balance.", w_warn="⚠ Far below reference price – check first", w_ab="from", w_bei="at", w_anb="{n} providers", w_quelle="Prices: aiapicompare.com",
   nf_titel="Page not found", nf_text="This page does not exist (anymore). Maybe one of these helps:", nf_suche="Search for a model …"),
 "de": dict(titel="{p} API-Preise: {n} KI-Modelle im Vergleich | aiapicompare", desc="{p}: Preise für {n} KI-Modelle per API, günstigste Modelle, kostenlose Modelle, Top-Modelle der Arena und Einrichtung (Base-URL). Täglich aktualisiert.",
   h1="{p}: API-Preise & Modelle", lead="{p} bietet in unserem täglichen Preisvergleich {n} Modelle{arten}. Unten: die günstigsten Modelle, die am besten bewerteten Modelle der Arena-Bestenliste und die Anbindung von {p}.",
@@ -932,7 +1115,7 @@ PV = {
   idx_h1="KI-API-Anbieter", idx_lead="Alle Anbieter in unserem täglichen Preisvergleich – mit Anzahl der Modelle, kostenlosen Modellen und dem günstigsten Textmodell.",
   th_anb="Anbieter", th_anz="Modelle", th_frei="Kostenlos", th_ab="Günstigstes Textmodell",
   hinweis="Fakten aus unserem eigenen täglichen Preisvergleich. Preise ohne Gewähr – maßgeblich ist die Seite des Anbieters.",
-  w_ab="ab", w_bei="bei", w_anb="{n} Anbieter", w_quelle="Preise: aiapicompare.com",
+  auff_anb="{n} Angebote von {p} liegen weit unter dem Referenzpreis (z. B. weit unter dem Listenpreis des Herstellers). Wir können nicht prüfen, welches Modell tatsächlich geliefert wird – vorher Bedingungen und Datenschutz prüfen und mit kleinem Guthaben testen.", w_warn="⚠ Weit unter Referenzpreis – vorher prüfen", w_ab="ab", w_bei="bei", w_anb="{n} Anbieter", w_quelle="Preise: aiapicompare.com",
   nf_titel="Seite nicht gefunden", nf_text="Diese Seite gibt es nicht (mehr). Vielleicht hilft eine dieser Seiten weiter:", nf_suche="Modell suchen …"),
 "zh": dict(titel="{p} API 价格：{n} 个 AI 模型对比 | aiapicompare", desc="{p}：{n} 个 AI 模型的 API 价格、最便宜的模型、免费模型、Arena 高分模型及接入方式（Base URL）。每日更新。",
   h1="{p}：API 价格与模型", lead="在我们的每日价格查询中，{p} 提供 {n} 个模型{arten}。下方列出最便宜的模型、Arena 排行榜评分最高的模型以及 {p} 的接入方式。",
@@ -946,7 +1129,7 @@ PV = {
   idx_h1="AI API 提供商", idx_lead="我们每日价格查询中的全部提供商——含模型数量、免费模型和最便宜的文本模型。",
   th_anb="提供商", th_anz="模型数", th_frei="免费", th_ab="最便宜的文本模型",
   hinweis="数据来自我们自己的每日价格查询。价格仅供参考，以提供商网站为准。",
-  w_ab="起", w_bei="于", w_anb="{n} 家提供商", w_quelle="价格：aiapicompare.com",
+  auff_anb="{p} 有 {n} 个报价远低于参考价（例如远低于厂商官方价格）。我们无法核实实际提供的是哪个模型——使用前请查看条款和隐私政策，并先用少量余额测试。", w_warn="⚠ 远低于参考价——请先核实", w_ab="起", w_bei="于", w_anb="{n} 家提供商", w_quelle="价格：aiapicompare.com",
   nf_titel="页面不存在", nf_text="此页面不存在（或已删除）。以下页面或许有帮助：", nf_suche="搜索模型 …"),
 "ru": dict(titel="{p}: цены API на {n} AI-моделей | aiapicompare", desc="{p}: цены на {n} AI-моделей через API, самые дешёвые и бесплатные модели, лучшие модели Arena и подключение (Base URL). Обновляется ежедневно.",
   h1="{p}: цены API и модели", lead="В нашей ежедневной проверке у {p} {n} моделей{arten}. Ниже: самые дешёвые модели, лучшие по рейтингу Arena и подключение {p}.",
@@ -960,7 +1143,7 @@ PV = {
   idx_h1="Поставщики AI API", idx_lead="Все поставщики в нашей ежедневной проверке цен – число моделей, бесплатные модели и самая дешёвая текстовая модель.",
   th_anb="Поставщик", th_anz="Моделей", th_frei="Бесплатно", th_ab="Самая дешёвая текстовая модель",
   hinweis="Факты из нашей собственной ежедневной проверки цен. Цены без гарантии – действует информация на сайте поставщика.",
-  w_ab="от", w_bei="у", w_anb="{n} поставщ.", w_quelle="Цены: aiapicompare.com",
+  auff_anb="{n} предложений {p} намного ниже эталонной цены (например, намного ниже прайса производителя). Мы не можем проверить, какая модель реально используется – заранее проверьте условия и конфиденциальность и протестируйте с небольшим балансом.", w_warn="⚠ Намного ниже эталонной цены – проверьте заранее", w_ab="от", w_bei="у", w_anb="{n} поставщ.", w_quelle="Цены: aiapicompare.com",
   nf_titel="Страница не найдена", nf_text="Такой страницы нет (больше нет). Возможно, поможет одна из этих:", nf_suche="Найти модель …"),
 }
 
@@ -990,6 +1173,12 @@ def anbieterseite(q, lang):
           f'<a href="{rel}{pfad(lang, "providers/index.html")}">{v["alle"]}</a> › {esc(name)}</div>\n')
     h += f'<h1><span class="dot" style="background:{farbe}"></span>{esc(v["h1"].format(p=name))}</h1>\n'
     h += f'<p class="lead">{esc(v["lead"].format(p=name, n=n, arten=v["arten"].format(t=arten) if arten else ""))}</p>\n'
+    if ALT.get(q):
+        h += f'<div class="hinweisbox">⏱ {esc(REF_T[lang]["alt_anb"].format(p=name, d=ref_datum(ALT[q]["seit"], lang)))}</div>\n'
+    n_auff = sum(1 for z in info["zeilen"] if z["auff"])
+    if n_auff:
+        h += (f'<div class="hinweisbox">⚠ {esc(PV[lang]["auff_anb"].format(n=n_auff, p=name))} '
+              f'<a href="{rel}methodik.html" style="color:inherit">{esc(REF_T[lang]["mehr"])}</a></div>\n')
     ab = info["billig"][0] if info["billig"] else None
     h += ('<div class="zahlen">'
           f'<div class="zahl"><span>{v["k_modelle"]}</span><b>{n}</b></div>'
@@ -1006,7 +1195,7 @@ def anbieterseite(q, lang):
         for z in liste:
             pin = t["gratis"] if z["gratis"] else fmt(z["inp"] if z["inp"] is not None else z["ab"])
             pout = t["gratis"] if z["gratis"] else fmt(z["out"]) if z["out"] is not None else "—"
-            x += (f'<tr><td><a href="{rel}{pfad(lang, "models/" + z["slug"] + ".html")}">{esc(name_sauber(z["name"]))}</a>'
+            x += (f'<tr><td><a href="{rel}{pfad(lang, "models/" + z["slug"] + ".html")}">{esc(name_sauber(z["name"]))}</a>{ref_tags(dict(z, alt=None), lang)}'
                   f'<br><small style="color:var(--dim);font-family:var(--mono)">{esc(z["roh"])}</small></td>'
                   f'<td class="num price">{esc(pin) if z["gratis"] else esc(pin) + " / " + esc(pout)}</td>'
                   + (f'<td class="num">#{allround_platz(z)}</td>' if mit_platz else "")
@@ -1048,24 +1237,30 @@ def anbieterindex(lang):
           f'<th class="num">{v["th_frei"]}</th><th>{v["th_ab"]}</th></tr></thead><tbody>')
     for q, info in sorted(ANBIETER_INFOS.items(), key=lambda x: -len(x[1]["slugs"])):
         ab = info["billig"][0] if info["billig"] else None
-        h += (f'<tr><td><a href="{q}.html"><span class="dot" style="background:{ANBIETER[q][1]}"></span>{esc(ANBIETER[q][0])}</a></td>'
+        alt_tag = ""
+        if ALT.get(q):
+            d = ref_datum(ALT[q]["seit"], lang)
+            alt_tag = f'<span class="tag alt" title="{esc(REF_T[lang]["alt_titel"].format(d=d))}">{esc(REF_T[lang]["alt_tag"].format(d=d))}</span>'
+        h += (f'<tr><td><a href="{q}.html"><span class="dot" style="background:{ANBIETER[q][1]}"></span>{esc(ANBIETER[q][0])}</a>{alt_tag}</td>'
               f'<td class="num">{len(info["slugs"])}</td><td class="num">{len(info["gratis"])}</td>'
-              f'<td>{(esc(name_sauber(ab["name"])) + " · <span class=price>" + esc(preis_text(ab, t)) + "</span>") if ab else "—"}</td></tr>')
+              f'<td>{(esc(name_sauber(ab["name"])) + " · <span class=price>" + esc(preis_text(ab, t)) + "</span>" + ref_tags(dict(ab, alt=None), lang)) if ab else "—"}</td></tr>')
     h += f'</tbody></table></div><p style="font-size:.78rem;color:var(--dim)">{v["hinweis"]} {t["stand"].format(d=esc(STAND))}</p>'
     h += fuss(lang, rel)
     return h
 
 def widgetseite(info):
     """Kleine, einbettbare Preisbox (iframe). Sprache über ?lang=de|en|zh|ru, Standard Englisch."""
-    b = bezahlt_billig(info) or info["billig"]
+    b = bezahlt_billig(info) or info["billig_ok"]
+    warn = bool(b["auff"])
     def vor(l):
         pt = preis_text(b, T[l])
         return "" if b["gratis"] or pt.startswith(T[l]["ab"] + " ") else PV[l]["w_ab"] + " "
     texte = {l: dict(ab=vor(l), bei=PV[l]["w_bei"], anb=PV[l]["w_anb"].format(n=info["anbieter"]), quelle=PV[l]["w_quelle"],
+                     warn=PV[l]["w_warn"] if warn else "",
                      preis=preis_text(b, T[l]), gratis=T[l]["gratis"]) for l in SPRACHEN}
     return f'''<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex"><title>{esc(info["name"])} – aiapicompare</title>
+<meta name="robots" content="noindex"><link rel="icon" href="data:,"><title>{esc(info["name"])} – aiapicompare</title>
 <style>
   html,body{{margin:0;background:transparent;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}}
   a.box{{display:block;box-sizing:border-box;max-width:340px;padding:12px 14px;border:1px solid #d8dde3;border-radius:10px;background:#fff;color:#0f172a;text-decoration:none}}
@@ -1085,7 +1280,7 @@ def widgetseite(info):
   var t = T[l]; document.documentElement.lang = l;
   document.getElementById("p").textContent = t.ab + t.preis;
   document.getElementById("m").textContent = t.bei + " {esc(b["quelle"])} · " + t.anb;
-  document.getElementById("q").textContent = t.quelle;
+  document.getElementById("q").textContent = t.warn ? t.warn + " · " + t.quelle : t.quelle;
   if (l !== "en") document.getElementById("box").href = "{DOMAIN}" + l + "/models/{info["slug"]}.html";
   if (s.get("theme") === "light") document.body.className = "hell"; else if (s.get("theme") === "dark") document.body.className = "dunkel";
 }})();
@@ -1188,7 +1383,7 @@ def main():
     x = ['<?xml version="1.0" encoding="UTF-8"?>',
          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
     for loc, prio in [("", "1.0"), ("kosten.html", "0.9"), ("finder.html", "0.9"), ("bestenliste.html", "0.9"), ("news.html", "0.8"),
-                      ("preisindex.html", "0.8"), ("einbetten.html", "0.5"), ("anbindung.html", "0.8")]:
+                      ("preisindex.html", "0.8"), ("einbetten.html", "0.5"), ("methodik.html", "0.6"), ("anbindung.html", "0.8")]:
         x.append(f"  <url><loc>{DOMAIN}{loc}</loc><changefreq>daily</changefreq><priority>{prio}</priority></url>")
     for rest, mehrsprachig, freq, prio in urls:
         alts = "".join(f'<xhtml:link rel="alternate" hreflang="{T[l]["htmllang"]}" href="{DOMAIN}{pfad(l, rest)}"/>' for l in SPRACHEN)

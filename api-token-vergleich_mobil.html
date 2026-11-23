@@ -175,6 +175,14 @@
   .tag.arena{background:rgba(245,158,11,.12);color:#f59e0b;border-color:rgba(245,158,11,.35);text-decoration:none}
   .tag.arena:hover{border-color:#f59e0b}
   .tag.best{background:var(--accent-bg);color:var(--accent);border-color:rgba(74,222,128,.35)}
+  .tag.warn{background:rgba(245,158,11,.12);color:#f59e0b;border-color:rgba(245,158,11,.45);cursor:help}
+  .tag.alt{cursor:help}
+  .tag.batch{background:rgba(96,165,250,.10);color:var(--blue);border-color:rgba(96,165,250,.35);cursor:help}
+  [data-theme="light"] .tag.warn{color:#b45309;background:#fef3c7;border-color:#f59e0b}
+  tr.trenner td{font-size:.72rem;font-weight:600;color:#f59e0b;padding:.5rem .4rem .25rem !important;background:transparent !important}
+  [data-theme="light"] tr.trenner td{color:#b45309}
+  .refzeile{font-size:.72rem;color:var(--muted);margin:.45rem 0 0}
+  .refzeile a{color:inherit}
   .prov{display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap}
   .prov small{color:var(--dim)}
   .price{font-family:var(--mono);white-space:nowrap}
@@ -295,7 +303,7 @@
     <div id="results"></div>
     <div class="infobox" id="infobox"></div>
     <footer id="footer"></footer>
-    <div class="legal"><a href="impressum.html" data-t="impressum"></a><a href="datenschutz.html" data-t="datenschutz"></a><a href="anbindung.html" data-t="nav_anbindung"></a><a href="api/prices.json" data-t="api"></a><a href="preisindex.html" data-t="fuss_index"></a><a href="einbetten.html" data-t="fuss_widget"></a></div>
+    <div class="legal"><a href="impressum.html" data-t="impressum"></a><a href="datenschutz.html" data-t="datenschutz"></a><a href="anbindung.html" data-t="nav_anbindung"></a><a href="api/prices.json" data-t="api"></a><a href="preisindex.html" data-t="fuss_index"></a><a href="einbetten.html" data-t="fuss_widget"></a><a href="methodik.html" data-t="fuss_methodik"></a></div>
   </main>
 </div>
 
@@ -26820,6 +26828,175 @@ window.API_DATEN = {
 
 </script>
 <script>
+/* Referenzpreis und Kennzeichnung „weit unter Referenzpreis“ – gemeinsam für alle Seiten.
+   Dieselben Regeln stehen in build_pages.py (Abschnitt „Referenzpreis“) und auf methodik.html.
+
+   - Nur Textangebote mit Preis (keine Bild/Video-Modelle, keine Gratis-Angebote).
+   - Verglichen wird ein gemischter Preis: 3 Teile Input + 1 Teil Output (Pauschalpreis = beides).
+   - Geschlossene Modelle (GPT, Claude, Gemini, Grok …): Referenz = OpenRouter
+     (entspricht bei diesen Modellen in der Regel dem Listenpreis des Herstellers),
+     sonst Median aller Anbieter (ab 3 Angeboten). Gekennzeichnet: mehr als 50 % darunter.
+   - Offene Modelle (DeepSeek, Qwen, Llama …): Referenz = Median aller Anbieter (ab 3 Angeboten),
+     sonst OpenRouter. Gekennzeichnet: mehr als 80 % darunter – nur wenn die Referenz mindestens
+     $0.20 pro 1 Mio. Token beträgt (bei sehr kleinen, billigen Modellen sind große Abstände normal).
+   - Varianten geschlossener Modelle ohne eigene Referenz (z. B. „…-uncensored“, „…-thinking“)
+     werden mit dem Referenzpreis des Grundmodells verglichen.
+   - Anbieter, deren letzter Abruf fehlgeschlagen ist (meta.veraltet), werden mit Datum gezeigt;
+     sind die Daten älter als 3 Tage, zählen sie nicht für Empfehlungen. */
+(function(){
+  "use strict";
+  var D = window.API_DATEN || {};
+  var GESCHLOSSEN = /^(claude|gpt-(?!oss)|chatgpt|o[1-9](-|$)|gemini|grok|nova-|sonar)/;
+  var GRENZE_GESCHLOSSEN = 0.5, GRENZE_OFFEN = 0.2, MIN_REF_OFFEN = 0.2, ALT_TAGE = 3;
+  var VARIANTE = /-(uncensored|thinking|fast|highspeed|nitro)$/;   // Varianten geschlossener Modelle → Grundmodell
+
+  function zahl(x){ return typeof x === "number" && isFinite(x); }
+  function misch(v){
+    if (zahl(v.in) && zahl(v.out)) return (3 * v.in + v.out) / 4;
+    if (zahl(v.in)) return v.in;
+    if (zahl(v.price)) return v.price;
+    return null;
+  }
+  function textAngebot(k, v){
+    return !/^media-/.test(k) && !v.gratis && !v.media && (zahl(v.in) || zahl(v.price)) && misch(v) > 0;
+  }
+  function median(a){
+    a = a.slice().sort(function(x, y){ return x - y; });
+    var n = a.length, h = Math.floor(n / 2);
+    return n % 2 ? a[h] : (a[h - 1] + a[h]) / 2;
+  }
+
+  var proBasis = {};
+  Object.keys(D).sort().forEach(function(q){
+    if (q === "meta" || !D[q] || typeof D[q] !== "object") return;
+    Object.keys(D[q]).forEach(function(k){
+      var v = D[q][k];
+      if (!v || !textAngebot(k, v)) return;
+      var b = k.replace(/:free$/, "");
+      (proBasis[b] = proBasis[b] || []).push({q:q, k:k, v:v, m:misch(v)});
+    });
+  });
+
+  var REF = {}, ERG = {}, EIGEN = {};
+  // 1. eigene Referenz je Modell
+  Object.keys(proBasis).forEach(function(b){
+    var l = proBasis[b], zu = GESCHLOSSEN.test(b), or = null;
+    l.forEach(function(x){ if (x.q === "openrouter" && (!or || x.m < or.m)) or = x; });
+    var orRef = or ? {inp: zahl(or.v.in) ? or.v.in : null, out: zahl(or.v.out) ? or.v.out : null, m: or.m, src: "openrouter"} : null;
+    var medRef = l.length >= 3 ? {inp: null, out: null, m: median(l.map(function(x){ return x.m; })), src: "median"} : null;
+    var r = zu ? (orRef || medRef) : (medRef || orRef);
+    if (!r || !(r.m > 0)) return;
+    r.geschlossen = zu; r.via = "";
+    EIGEN[b] = r;
+  });
+  // 2. Varianten geschlossener Modelle ohne eigene Referenz → Referenz des Grundmodells
+  Object.keys(proBasis).forEach(function(b){
+    if (EIGEN[b]) { REF[b] = EIGEN[b]; return; }
+    var x = b;
+    while (VARIANTE.test(x)) {
+      x = x.replace(VARIANTE, "");
+      var g = EIGEN[x];
+      if (g && g.geschlossen) { REF[b] = {inp: g.inp, out: g.out, m: g.m, src: g.src, geschlossen: true, via: x}; break; }
+    }
+  });
+  // 3. Abweichung je Angebot
+  Object.keys(proBasis).forEach(function(b){
+    var r = REF[b], l = proBasis[b];
+    if (!r) return;
+    var zu = r.geschlossen;
+    var grenze = zu ? GRENZE_GESCHLOSSEN : (r.m >= MIN_REF_OFFEN ? GRENZE_OFFEN : 0);
+    l.forEach(function(x){
+      var v = x.v, ratio;
+      if (r.src === "openrouter" && zahl(v.in) && zahl(v.out) && r.inp !== null && r.out !== null) ratio = x.m / r.m;
+      else if (r.src === "openrouter" && zahl(v.in) && !zahl(v.out) && r.inp !== null) ratio = v.in / r.inp;
+      else ratio = x.m / r.m;
+      if (!(ratio > 0) || !isFinite(ratio)) return;
+      ERG[x.q + "|" + x.k] = {ratio: ratio, pct: Math.round((1 - ratio) * 100), auff: ratio < grenze, src: r.src};
+    });
+  });
+
+  var meta = D.meta || {}, stand = Date.parse(String(meta.erstellt || "").slice(0, 10)), ALT = {};
+  Object.keys(meta.veraltet || {}).forEach(function(q){
+    var seit = String(meta.veraltet[q] || "").slice(0, 10), t = Date.parse(seit);
+    var tage = (isFinite(stand) && isFinite(t)) ? Math.round((stand - t) / 864e5) : 0;
+    ALT[q] = {seit: seit, tage: tage, zuAlt: tage > ALT_TAGE};
+  });
+
+  function fmt(n){ return "$" + (n >= 100 ? n.toFixed(0) : n >= 1 ? n.toFixed(2) : n >= 0.01 ? n.toFixed(3) : n.toFixed(4)); }
+  function datum(d, lang){
+    var m = /^(\d{4})-(\d\d)-(\d\d)/.exec(d || "");
+    if (!m) return d || "";
+    return (lang === "de" || lang === "ru") ? m[3] + "." + m[2] + "." + m[1] : m[1] + "-" + m[2] + "-" + m[3];
+  }
+  function refPreis(r, t){
+    return r.inp !== null && r.out !== null ? fmt(r.inp) + " / " + fmt(r.out) + " " + t.pro_io : fmt(r.m) + " " + t.pro_misch;
+  }
+
+  var TXT = {
+    de: {tag: function(p){ return "⚠ " + p + " % unter Referenz"; },
+      titel: function(p, ref){ return "Dieser Preis liegt " + p + " % unter dem Referenzpreis (" + ref + "). Wir können nicht nachvollziehen, wie er zustande kommt, und nicht prüfen, welches Modell tatsächlich geliefert wird. Vorher Bedingungen, Datenschutz und Zuverlässigkeit prüfen und mit kleinem Guthaben testen."; },
+      alt_tag: function(d){ return "⏱ Stand " + d; },
+      alt_titel: function(d){ return "Der letzte Abruf bei diesem Anbieter ist fehlgeschlagen – angezeigt werden die Preise vom " + d + "."; },
+      batch_titel: "Batch-Variante: in der Regel günstiger, Anfragen werden aber gesammelt und verzögert verarbeitet – meist nicht für Chat oder Echtzeit geeignet.",
+      ref: "Referenzpreis", pro_io: "pro 1 Mio. Token (Input / Output)", pro_misch: "pro 1 Mio. Token (gemischt 3:1)",
+      src: {openrouter: "OpenRouter", openrouter_zu: "OpenRouter – bei diesem Modell in der Regel der Listenpreis des Herstellers", median: "Median aller Anbieter"}, via: "Grundmodell",
+      trenner: "Weit unter dem Referenzpreis – bitte vorher prüfen", mehr: "So vergleichen wir →"},
+    en: {tag: function(p){ return "⚠ " + p + "% below reference"; },
+      titel: function(p, ref){ return "This price is " + p + "% below the reference price (" + ref + "). We cannot tell how it is possible or verify which model is actually served. Check terms, privacy and reliability first and test with a small balance."; },
+      alt_tag: function(d){ return "⏱ as of " + d; },
+      alt_titel: function(d){ return "The last update from this provider failed – prices shown are from " + d + "."; },
+      batch_titel: "Batch variant: usually cheaper, but requests are collected and processed with a delay – usually not suitable for chat or real-time use.",
+      ref: "Reference price", pro_io: "per 1M tokens (input / output)", pro_misch: "per 1M tokens (blended 3:1)",
+      src: {openrouter: "OpenRouter", openrouter_zu: "OpenRouter – for this model usually the vendor's list price", median: "median of all providers"}, via: "base model",
+      trenner: "Far below the reference price – please check first", mehr: "How we compare →"},
+    zh: {tag: function(p){ return "⚠ 低于参考价 " + p + "%"; },
+      titel: function(p, ref){ return "此价格比参考价低 " + p + "%（" + ref + "）。我们无法确认该价格如何实现，也无法核实实际提供的是哪个模型。使用前请先查看条款、隐私政策和可靠性，并先用少量余额测试。"; },
+      alt_tag: function(d){ return "⏱ 数据日期 " + d; },
+      alt_titel: function(d){ return "该提供商最近一次更新失败——显示的是 " + d + " 的价格。"; },
+      batch_titel: "批处理版本：通常更便宜，但请求会被汇总并延迟处理——一般不适合聊天或实时场景。",
+      ref: "参考价", pro_io: "每百万 Token（输入 / 输出）", pro_misch: "每百万 Token（按 3:1 混合）",
+      src: {openrouter: "OpenRouter", openrouter_zu: "OpenRouter——对该模型通常即厂商官方价格", median: "所有提供商的中位数"}, via: "基础模型",
+      trenner: "远低于参考价——使用前请先核实", mehr: "我们的比较方法 →"},
+    ru: {tag: function(p){ return "⚠ на " + p + " % ниже эталона"; },
+      titel: function(p, ref){ return "Эта цена на " + p + " % ниже эталонной (" + ref + "). Мы не можем объяснить, как она возможна, и проверить, какая модель реально используется. Перед использованием проверьте условия, конфиденциальность и надёжность и протестируйте с небольшим балансом."; },
+      alt_tag: function(d){ return "⏱ на " + d; },
+      alt_titel: function(d){ return "Последнее обновление у этого поставщика не удалось – показаны цены на " + d + "."; },
+      batch_titel: "Пакетный вариант: обычно дешевле, но запросы собираются и обрабатываются с задержкой – как правило, не подходит для чата и работы в реальном времени.",
+      ref: "Эталонная цена", pro_io: "за 1 млн токенов (вход / выход)", pro_misch: "за 1 млн токенов (смешанная 3:1)",
+      src: {openrouter: "OpenRouter", openrouter_zu: "OpenRouter – для этой модели обычно прайс производителя", median: "медиана всех поставщиков"}, via: "базовая модель",
+      trenner: "Намного ниже эталонной цены – проверьте заранее", mehr: "Как мы сравниваем →"}
+  };
+  function txt(lang){ return TXT[lang] || TXT.en; }
+  function refText(basis, lang){
+    var r = REF[String(basis).replace(/:free$/, "")], t = txt(lang);
+    if (!r) return "";
+    var src = r.src === "median" ? t.src.median : (r.geschlossen ? t.src.openrouter_zu : t.src.openrouter);
+    return refPreis(r, t) + ", " + src + (r.via ? " (" + t.via + ": " + r.via + ")" : "");
+  }
+
+  window.REFERENZ = {
+    ref: function(basis){ return REF[String(basis).replace(/:free$/, "")] || null; },
+    pruefe: function(q, k){ return ERG[q + "|" + k] || null; },
+    alt: function(q){ return ALT[q] || null; },
+    /* für Empfehlungen geeignet: nicht weit unter Referenz und Daten nicht älter als 3 Tage */
+    ok: function(q, k){ var e = ERG[q + "|" + k], a = ALT[q]; return !(e && e.auff) && !(a && a.zuAlt); },
+    batch: function(k, name){ return /:batch$/.test(k || "") || /\(batch\)/i.test(name || ""); },
+    txt: txt, datum: datum, refText: refText,
+    /* fertige Kennzeichen (HTML) für Tabellen */
+    tags: function(q, k, lang, name){
+      var t = txt(lang), h = "", e = ERG[q + "|" + k], a = ALT[q], b = String(k).replace(/:free$/, "");
+      if (e && e.auff) h += '<span class="tag warn" title="' + esc(t.titel(e.pct, refText(b, lang))) + '">' + esc(t.tag(e.pct)) + '</span>';
+      if (a) h += '<span class="tag alt" title="' + esc(t.alt_titel(datum(a.seit, lang))) + '">' + esc(t.alt_tag(datum(a.seit, lang))) + '</span>';
+      if (/:batch$/.test(k || "") || /\(batch\)/i.test(name || "")) h += '<span class="tag batch" title="' + esc(t.batch_titel) + '">Batch</span>';
+      return h;
+    },
+    stats: function(){ var n = 0, a = 0; Object.keys(ERG).forEach(function(k){ n++; if (ERG[k].auff) a++; }); return {geprueft: n, auffaellig: a}; }
+  };
+  function esc(s){ return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+})();
+
+</script>
+<script>
 /* Anwendungsbereiche der Bestenliste (Arena-Ranglisten) – Namen in 4 Sprachen.
    Wird von bestenliste.html und index.html genutzt. */
 window.BEREICHE = [
@@ -26915,18 +27092,18 @@ const BEKANNT = ["OpenAI","Anthropic","Google","DeepSeek","xAI","Meta","Qwen","M
 const I18N = {
   de:{
     seitentitel:"aiapicompare – KI-API-Preise vergleichen",
-    nav_kosten:"Kostenrechner", nav_finder:"Modell-Finder", fuss_index:"KI-Preisindex", fuss_widget:"Widget einbetten", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", arena_titel:function(p,b){ return "Platz "+p+" in der Arena-Bestenliste: "+b; }, arena_hinweis:"🏆 = Platz in der Arena-Bestenliste (arena.ai, CC BY 4.0)", gratis:"kostenlos", nur_gratis:"Nur kostenlose Modelle", neu:"NEU", vorher:function(p){ return "vorher "+p; }, theme:"Hell / Dunkel", api:"Daten als JSON", pro5s:"/ 5-s-Clip", gen:"pro Generierung",
+    nav_kosten:"Kostenrechner", nav_finder:"Modell-Finder", fuss_index:"KI-Preisindex", fuss_widget:"Widget einbetten", fuss_methodik:"So vergleichen wir", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", arena_titel:function(p,b){ return "Platz "+p+" in der Arena-Bestenliste: "+b; }, arena_hinweis:"🏆 = Platz in der Arena-Bestenliste (arena.ai, CC BY 4.0)", gratis:"kostenlos", nur_gratis:"Nur kostenlose Modelle", neu:"NEU", vorher:function(p){ return "vorher "+p; }, theme:"Hell / Dunkel", api:"Daten als JSON", pro5s:"/ 5-s-Clip", gen:"pro Generierung",
     filter:"Filter", suche:"Modell, Anbieter oder ID suchen …", sortieren:"Sortieren:",
     nav_vergleich:"Preisvergleich", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
     zum_anbieter:"Zum Anbieter", einrichten:function(n){ return "So bindest du "+n+" an (Hermes, VS Code …)"; },
     geschaetzt:"geschätzt – aus dem Abrechnungsfaktor des Anbieters abgeleitet, nicht direkt veröffentlicht",
     disclosure:function(k){ return "<b>Transparenz:</b> Links mit dem Hinweis „"+k+"“ sind Affiliate-Links (Werbung). Wenn du darüber bei einem Anbieter Guthaben kaufst, erhalten wir eine Provision – für dich ändert sich der Preis nicht. Die Reihenfolge der Ergebnisse wird dadurch nicht beeinflusst."; },
-    infobox:'<h4>Wie die Reihenfolge zustande kommt</h4><p>Die Ergebnisse werden ausschließlich nach dem von dir gewählten Kriterium sortiert (Input-Preis, Output-Preis, Kontextfenster, Anbieter oder Name). Bei Gleichstand stehen bekannte Modellentwickler vorn, danach alphabetisch. Es gibt keine bezahlten Platzierungen; Affiliate-Partnerschaften haben keinen Einfluss auf Reihenfolge oder Auswahl.</p><h4>Woher die Daten kommen</h4><p>Preise werden automatisch aus den öffentlichen Modell-Katalogen bzw. Preisseiten der Anbieter gelesen. Token-Preise in USD pro 1 Mio. Token; Bild-, Video- und 3D-Modelle pro Einheit (Bild, Sekunde, Generierung). Werte mit ≈ sind abgeleitet. Steuern, Mindestaufladungen und Wechselkurse sind nicht berücksichtigt. Maßgeblich ist immer der Preis auf der Seite des Anbieters.</p>',
+    infobox:'<h4>Wie die Reihenfolge zustande kommt</h4><p>Die Ergebnisse werden ausschließlich nach dem von dir gewählten Kriterium sortiert (Input-Preis, Output-Preis, Kontextfenster, Anbieter oder Name). Bei Gleichstand stehen bekannte Modellentwickler vorn, danach alphabetisch. Es gibt keine bezahlten Platzierungen; Affiliate-Partnerschaften haben keinen Einfluss auf Reihenfolge oder Auswahl.</p><h4>Woher die Daten kommen</h4><p>Preise werden automatisch aus den öffentlichen Modell-Katalogen bzw. Preisseiten der Anbieter gelesen. Token-Preise in USD pro 1 Mio. Token; Bild-, Video- und 3D-Modelle pro Einheit (Bild, Sekunde, Generierung). Werte mit ≈ sind abgeleitet. Steuern, Mindestaufladungen und Wechselkurse sind nicht berücksichtigt. Maßgeblich ist immer der Preis auf der Seite des Anbieters.</p><h4>⚠ Weit unter Referenzpreis</h4><p>Liegt ein Angebot weit unter dem üblichen Preis (geschlossene Modelle wie GPT, Claude, Gemini: mehr als 50 % unter dem Listenpreis; offene Modelle: mehr als 80 % unter dem Median aller Anbieter), kennzeichnen wir es. Das ist keine Bewertung des Anbieters – wir können aber nicht prüfen, welches Modell tatsächlich geliefert wird. „★ günstigster“ berücksichtigt solche Angebote nicht. <a href="methodik.html">So vergleichen wir →</a></p>',
     anbieter:"Anbieter", typ:"Ausgabe-Typ", typen:{text:"Text",bild:"Bild",video:"Video",audio:"Audio","3d":"3D"},
     kontext:"Min. Kontextfenster", preis:"Max. Input-Preis", familie:"Modellfamilie",
     alle:"alle", keine:"keine", egal:"beliebig", unbegrenzt:"beliebig",
     faeh_titel:"Fähigkeiten (Bild & Video)", faeh_hint:"Laut Katalog des jeweiligen Anbieters – dasselbe Modell kann je Anbieter unterschiedliche Optionen haben.", dauer_bis:"bis", spalte_faeh:"Fähigkeiten",
-    nur_guenstig:"Nur günstigster Anbieter je Modell", nur_mehrere:"Nur Modelle mit mehreren Anbietern",
+    nur_guenstig:"Nur günstigster Anbieter je Modell", nur_mehrere:"Nur Modelle mit mehreren Anbietern", ohne_auff:"Angebote weit unter Referenzpreis ausblenden",
     reset:"Alle Filter zurücksetzen",
     sorts:{"preis-asc":"Input-Preis: niedrig → hoch","preis-desc":"Input-Preis: hoch → niedrig",
            "output-asc":"Output-Preis: niedrig → hoch","output-desc":"Output-Preis: hoch → niedrig",
@@ -26948,18 +27125,18 @@ const I18N = {
   },
   en:{
     seitentitel:"aiapicompare – Compare AI API prices",
-    nav_kosten:"Cost calculator", nav_finder:"Model finder", fuss_index:"AI price index", fuss_widget:"Embed widget", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", arena_titel:function(p,b){ return "Rank "+p+" in the Arena leaderboard: "+b; }, arena_hinweis:"🏆 = rank in the Arena leaderboard (arena.ai, CC BY 4.0)", gratis:"free", nur_gratis:"Free models only", neu:"NEW", vorher:function(p){ return "previously "+p; }, theme:"Light / dark", api:"Data as JSON", pro5s:"/ 5 s clip", gen:"per generation",
+    nav_kosten:"Cost calculator", nav_finder:"Model finder", fuss_index:"AI price index", fuss_widget:"Embed widget", fuss_methodik:"How we compare", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", arena_titel:function(p,b){ return "Rank "+p+" in the Arena leaderboard: "+b; }, arena_hinweis:"🏆 = rank in the Arena leaderboard (arena.ai, CC BY 4.0)", gratis:"free", nur_gratis:"Free models only", neu:"NEW", vorher:function(p){ return "previously "+p; }, theme:"Light / dark", api:"Data as JSON", pro5s:"/ 5 s clip", gen:"per generation",
     filter:"Filters", suche:"Search model, provider or ID …", sortieren:"Sort:",
     nav_vergleich:"Price comparison", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
     zum_anbieter:"Go to provider", einrichten:function(n){ return "How to connect "+n+" (Hermes, VS Code …)"; },
     geschaetzt:"estimated – derived from the provider's billing factor, not published directly",
     disclosure:function(k){ return "<b>Transparency:</b> Links marked “"+k+"” are affiliate links (advertising). If you buy credits from a provider through them, we receive a commission – the price stays the same for you. The order of results is not affected."; },
-    infobox:'<h4>How results are ranked</h4><p>Results are sorted solely by the criterion you choose (input price, output price, context window, provider or name). Ties are broken by well-known model developers first, then alphabetically. There are no paid placements; affiliate partnerships have no influence on ranking or selection.</p><h4>Where the data comes from</h4><p>Prices are read automatically from the providers’ public model catalogues and pricing pages. Token prices in USD per 1M tokens; image, video and 3D models per unit (image, second, generation). Values marked ≈ are derived. Taxes, minimum top-ups and exchange rates are not included. The price on the provider’s website always prevails.</p>',
+    infobox:'<h4>How results are ranked</h4><p>Results are sorted solely by the criterion you choose (input price, output price, context window, provider or name). Ties are broken by well-known model developers first, then alphabetically. There are no paid placements; affiliate partnerships have no influence on ranking or selection.</p><h4>Where the data comes from</h4><p>Prices are read automatically from the providers’ public model catalogues and pricing pages. Token prices in USD per 1M tokens; image, video and 3D models per unit (image, second, generation). Values marked ≈ are derived. Taxes, minimum top-ups and exchange rates are not included. The price on the provider’s website always prevails.</p><h4>⚠ Far below reference price</h4><p>If an offer is far below the usual price (closed models such as GPT, Claude, Gemini: more than 50% below the list price; open models: more than 80% below the median of all providers), we mark it. This is not a rating of the provider – but we cannot verify which model is actually served. “★ cheapest” ignores such offers. <a href="methodik.html">How we compare →</a></p>',
     anbieter:"Providers", typ:"Output type", typen:{text:"Text",bild:"Image",video:"Video",audio:"Audio","3d":"3D"},
     kontext:"Min. context window", preis:"Max. input price", familie:"Model family",
     alle:"all", keine:"none", egal:"any", unbegrenzt:"any",
     faeh_titel:"Capabilities (image & video)", faeh_hint:"According to each provider’s catalogue – the same model may offer different options per provider.", dauer_bis:"up to", spalte_faeh:"Capabilities",
-    nur_guenstig:"Cheapest provider per model only", nur_mehrere:"Only models with several providers",
+    nur_guenstig:"Cheapest provider per model only", nur_mehrere:"Only models with several providers", ohne_auff:"Hide offers far below reference price",
     reset:"Reset all filters",
     sorts:{"preis-asc":"Input price: low → high","preis-desc":"Input price: high → low",
            "output-asc":"Output price: low → high","output-desc":"Output price: high → low",
@@ -26981,18 +27158,18 @@ const I18N = {
   },
   zh:{
     seitentitel:"aiapicompare – AI API 价格对比",
-    nav_kosten:"成本计算器", nav_finder:"模型推荐", fuss_index:"AI 价格指数", fuss_widget:"嵌入小组件", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", arena_titel:function(p,b){ return "Arena 排行榜第 "+p+" 名："+b; }, arena_hinweis:"🏆 = Arena 排行榜名次（arena.ai，CC BY 4.0）", gratis:"免费", nur_gratis:"仅显示免费模型", neu:"新", vorher:function(p){ return "之前 "+p; }, theme:"浅色 / 深色", api:"JSON 数据", pro5s:"/ 5 秒片段", gen:"每次生成",
+    nav_kosten:"成本计算器", nav_finder:"模型推荐", fuss_index:"AI 价格指数", fuss_widget:"嵌入小组件", fuss_methodik:"比较方法", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", arena_titel:function(p,b){ return "Arena 排行榜第 "+p+" 名："+b; }, arena_hinweis:"🏆 = Arena 排行榜名次（arena.ai，CC BY 4.0）", gratis:"免费", nur_gratis:"仅显示免费模型", neu:"新", vorher:function(p){ return "之前 "+p; }, theme:"浅色 / 深色", api:"JSON 数据", pro5s:"/ 5 秒片段", gen:"每次生成",
     filter:"筛选", suche:"搜索模型、提供商或 ID …", sortieren:"排序：",
     nav_vergleich:"价格对比", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
     zum_anbieter:"前往提供商", einrichten:function(n){ return "如何接入 "+n+"（Hermes、VS Code …）"; },
     geschaetzt:"估算值 – 根据提供商的计费系数推算，并非官方直接公布",
     disclosure:function(k){ return "<b>透明声明：</b>标有“"+k+"”的链接为推广（联盟）链接，属于广告。若您通过这些链接在提供商处充值，我们将获得佣金，您的价格不变。结果排序不受影响。"; },
-    infobox:'<h4>排序规则</h4><p>结果仅按您选择的条件排序（输入价格、输出价格、上下文窗口、提供商或名称）。条件相同时，知名模型开发商优先，其次按字母顺序。不存在付费排名；联盟合作不影响排序或展示内容。</p><h4>数据来源</h4><p>价格自动读取自各提供商公开的模型目录和价格页面。Token 价格单位为每百万 Token 美元；图像、视频和 3D 模型按单位计价（每张、每秒、每次生成）。带 ≈ 的数值为推算值。未包含税费、最低充值和汇率。一切以提供商网站上的价格为准。</p>',
+    infobox:'<h4>排序规则</h4><p>结果仅按您选择的条件排序（输入价格、输出价格、上下文窗口、提供商或名称）。条件相同时，知名模型开发商优先，其次按字母顺序。不存在付费排名；联盟合作不影响排序或展示内容。</p><h4>数据来源</h4><p>价格自动读取自各提供商公开的模型目录和价格页面。Token 价格单位为每百万 Token 美元；图像、视频和 3D 模型按单位计价（每张、每秒、每次生成）。带 ≈ 的数值为推算值。未包含税费、最低充值和汇率。一切以提供商网站上的价格为准。</p><h4>⚠ 远低于参考价</h4><p>如果某个报价远低于通常价格（GPT、Claude、Gemini 等闭源模型：比官方价格低 50% 以上；开源模型：比所有提供商的中位数低 80% 以上），我们会加以标注。这并非对提供商的评价，但我们无法核实实际提供的是哪个模型。“★ 最便宜”不计入此类报价。<a href="methodik.html">我们的比较方法 →</a></p>',
     anbieter:"提供商", typ:"输出类型", typen:{text:"文本",bild:"图像",video:"视频",audio:"音频","3d":"3D"},
     kontext:"最小上下文窗口", preis:"最高输入价格", familie:"模型系列",
     alle:"全部", keine:"无", egal:"不限", unbegrenzt:"不限",
     faeh_titel:"功能（图像与视频）", faeh_hint:"依据各提供商目录——同一模型在不同提供商处的选项可能不同。", dauer_bis:"最长", spalte_faeh:"功能",
-    nur_guenstig:"每个模型仅显示最便宜的提供商", nur_mehrere:"仅显示有多个提供商的模型",
+    nur_guenstig:"每个模型仅显示最便宜的提供商", nur_mehrere:"仅显示有多个提供商的模型", ohne_auff:"隐藏远低于参考价的报价",
     reset:"重置所有筛选",
     sorts:{"preis-asc":"输入价格：从低到高","preis-desc":"输入价格：从高到低",
            "output-asc":"输出价格：从低到高","output-desc":"输出价格：从高到低",
@@ -27014,18 +27191,18 @@ const I18N = {
   },
   ru:{
     seitentitel:"aiapicompare – сравнение цен AI API",
-    nav_kosten:"Калькулятор", nav_finder:"Подбор модели", fuss_index:"Индекс цен AI", fuss_widget:"Виджет для сайта", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", arena_titel:function(p,b){ return "Место "+p+" в рейтинге Arena: "+b; }, arena_hinweis:"🏆 = место в рейтинге Arena (arena.ai, CC BY 4.0)", gratis:"бесплатно", nur_gratis:"Только бесплатные модели", neu:"НОВОЕ", vorher:function(p){ return "раньше "+p; }, theme:"Светлая / тёмная", api:"Данные в JSON", pro5s:"/ клип 5 с", gen:"за генерацию",
+    nav_kosten:"Калькулятор", nav_finder:"Подбор модели", fuss_index:"Индекс цен AI", fuss_widget:"Виджет для сайта", fuss_methodik:"Как мы сравниваем", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", arena_titel:function(p,b){ return "Место "+p+" в рейтинге Arena: "+b; }, arena_hinweis:"🏆 = место в рейтинге Arena (arena.ai, CC BY 4.0)", gratis:"бесплатно", nur_gratis:"Только бесплатные модели", neu:"НОВОЕ", vorher:function(p){ return "раньше "+p; }, theme:"Светлая / тёмная", api:"Данные в JSON", pro5s:"/ клип 5 с", gen:"за генерацию",
     filter:"Фильтры", suche:"Поиск по модели, поставщику или ID …", sortieren:"Сортировка:",
     nav_vergleich:"Сравнение цен", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
     zum_anbieter:"К поставщику", einrichten:function(n){ return "Как подключить "+n+" (Hermes, VS Code …)"; },
     geschaetzt:"оценка – рассчитано по коэффициенту тарификации поставщика",
     disclosure:function(k){ return "<b>Прозрачность:</b> ссылки с пометкой «"+k+"» – партнёрские (реклама). При покупке через них мы получаем комиссию, цена для вас не меняется. На порядок результатов это не влияет."; },
-    infobox:'<h4>Как формируется порядок</h4><p>Результаты сортируются только по выбранному вами критерию (цена входа, цена выхода, контекст, поставщик или имя). При равенстве сначала известные разработчики, затем по алфавиту. Платных размещений нет; партнёрские программы не влияют на порядок или выбор.</p><h4>Источник данных</h4><p>Цены автоматически берутся из публичных каталогов и страниц цен поставщиков. Токены – USD за 1 млн; картинки, видео и 3D – за единицу. Значения с ≈ рассчитаны. Налоги и курсы валют не учтены. Действует цена на сайте поставщика.</p>',
+    infobox:'<h4>Как формируется порядок</h4><p>Результаты сортируются только по выбранному вами критерию (цена входа, цена выхода, контекст, поставщик или имя). При равенстве сначала известные разработчики, затем по алфавиту. Платных размещений нет; партнёрские программы не влияют на порядок или выбор.</p><h4>Источник данных</h4><p>Цены автоматически берутся из публичных каталогов и страниц цен поставщиков. Токены – USD за 1 млн; картинки, видео и 3D – за единицу. Значения с ≈ рассчитаны. Налоги и курсы валют не учтены. Действует цена на сайте поставщика.</p><h4>⚠ Намного ниже эталонной цены</h4><p>Если предложение намного ниже обычной цены (закрытые модели – GPT, Claude, Gemini: более чем на 50 % ниже прайса; открытые модели: более чем на 80 % ниже медианы всех поставщиков), мы его помечаем. Это не оценка поставщика, но мы не можем проверить, какая модель реально используется. «★ дешевле всех» такие предложения не учитывает. <a href="methodik.html">Как мы сравниваем →</a></p>',
     anbieter:"Поставщики", typ:"Тип вывода", typen:{text:"Текст",bild:"Картинка",video:"Видео",audio:"Аудио","3d":"3D"},
     kontext:"Мин. контекстное окно", preis:"Макс. цена входа", familie:"Семейство моделей",
     alle:"все", keine:"ничего", egal:"любой", unbegrenzt:"любая",
     faeh_titel:"Возможности (изображения и видео)", faeh_hint:"По каталогу поставщика – у одной модели опции могут отличаться в зависимости от поставщика.", dauer_bis:"до", spalte_faeh:"Возможности",
-    nur_guenstig:"Только самый дешёвый поставщик", nur_mehrere:"Только модели у нескольких поставщиков",
+    nur_guenstig:"Только самый дешёвый поставщик", nur_mehrere:"Только модели у нескольких поставщиков", ohne_auff:"Скрыть предложения намного ниже эталона",
     reset:"Сбросить все фильтры",
     sorts:{"preis-asc":"Цена входа: по возрастанию","preis-desc":"Цена входа: по убыванию",
            "output-asc":"Цена выхода: по возрастанию","output-desc":"Цена выхода: по убыванию",
@@ -27078,6 +27255,11 @@ QUELLEN.forEach(function(q){
     });
   });
 });
+// Referenzpreis: Angebote weit darunter und veraltete Daten (referenz.js)
+zeilen.forEach(function(z){
+  const RF = window.REFERENZ, e = RF ? RF.pruefe(z.qkey, z.kanon) : null, a = RF ? RF.alt(z.qkey) : null;
+  z.auff = !!(e && e.auff); z.zuAlt = !!(a && a.zuAlt); z.ok = !z.auff && !z.zuAlt;
+});
 // Videos: Preis auf "pro Sekunde" umrechnen, damit "pro Sekunde" und "pro Generierung" vergleichbar werden
 zeilen.forEach(function(z){
   z.ps = null;
@@ -27101,16 +27283,22 @@ zeilen.forEach(function(z){ z.basis = z.kanon.replace(/:free$/, ""); });
 zeilen.forEach(function(z){ z.gkey = z.basis + (z.inp === null && z.ab === null && z.mp !== null ? "|" + (z.ps !== null ? "second" : z.einheit) : ""); });
 zeilen.forEach(function(z){ (gruppen[z.gkey] = gruppen[z.gkey] || []).push(z); });
 Object.keys(gruppen).forEach(function(k){
-  const g = gruppen[k].filter(function(z){ return z.preis !== Infinity; });
+  const alle = gruppen[k].filter(function(z){ return z.preis !== Infinity; });
+  const g = alle.filter(function(z){ return z.ok; });   // ohne Angebote weit unter Referenzpreis / veraltete Daten
+  const minAlle = alle.length ? Math.min.apply(null, alle.map(function(z){ return z.preis; })) : Infinity;
   const min = g.length ? Math.min.apply(null, g.map(function(z){ return z.preis; })) : Infinity;
   const bez = g.filter(function(z){ return z.preis > 0; });
   const minBez = bez.length ? Math.min.apply(null, bez.map(function(z){ return z.preis; })) : Infinity;   // Bezug für "+x %" (ohne Gratis-Angebote)
-  gruppen[k].forEach(function(z){ z.anz = gruppen[k].length; z.minPreis = min; z.minBezahlt = minBez; z.best = z.preis !== Infinity && z.preis === min && g.length > 1; });
+  gruppen[k].forEach(function(z){
+    z.anz = gruppen[k].length; z.minPreis = min; z.minBezahlt = minBez;
+    z.best = z.ok && z.preis !== Infinity && z.preis === min && alle.length > 1;
+    z.istMin = g.length ? (z.ok && z.preis === min) : (z.preis !== Infinity && z.preis === minAlle);   // für "Nur günstigster Anbieter"
+  });
 });
 const MAXCTX = 2000000;
 
 /* =================== Zustand (in URL gespeichert) =================== */
-const DEFAULT = {q:"", anb:[], typ:[], fam:[], cap:[], ctx:0, pmax:PREIS_STEPS.length-1, sort:"preis", dir:"asc", best:false, multi:false, gratis:false, view:"table"};
+const DEFAULT = {q:"", anb:[], typ:[], fam:[], cap:[], ctx:0, pmax:PREIS_STEPS.length-1, sort:"preis", dir:"asc", best:false, multi:false, gratis:false, ohneAuff:false, view:"table"};
 let S = JSON.parse(JSON.stringify(DEFAULT));
 let lang = "de";
 let limit = 100;
@@ -27135,6 +27323,7 @@ function ladeZustand(){
   S.best  = p.get("best") === "1";
   S.multi = p.get("multi") === "1";
   S.gratis = p.get("gratis") === "1";
+  S.ohneAuff = p.get("ohneauff") === "1";
   if (p.has("view")) S.view = p.get("view");
 }
 function speichereZustand(){
@@ -27147,6 +27336,7 @@ function speichereZustand(){
   if (S.best) p.set("best","1");
   if (S.gratis) p.set("gratis","1");
   if (S.multi) p.set("multi","1");
+  if (S.ohneAuff) p.set("ohneauff","1");
   const s = p.toString();
   try { history.replaceState(null, "", s ? "#" + s : location.pathname + location.search); } catch(e){}
 }
@@ -27179,7 +27369,8 @@ function filtere(ohne){
     if (ohne !== "fam" && S.fam.length && !S.fam.some(function(f){ return famMatch(z, f); })) return false;
     if (minC && z.context < minC) return false;
     if (maxP !== Infinity && !(z.preis <= maxP)) return false;
-    if (S.best && !(z.preis !== Infinity && z.preis === z.minPreis)) return false;
+    if (S.best && !z.istMin) return false;
+    if (S.ohneAuff && z.auff) return false;
     if (S.multi && z.anz < 2) return false;
     if (S.gratis && !z.gratis) return false;
     if (q && z.such.indexOf(q) < 0 && z.such.replace(/[.\s_]+/g, "-").indexOf(qn) < 0) return false;
@@ -27237,7 +27428,9 @@ function renderSidebar(){
       '<div style="height:.6rem"></div>'+
       '<label class="toggle"><span>'+t.nur_mehrere+'</span><span class="switch"><input type="checkbox" id="multichk"'+(S.multi?" checked":"")+'><span></span></span></label>'+
       '<div style="height:.6rem"></div>'+
-      '<label class="toggle"><span>'+t.nur_gratis+'</span><span class="switch"><input type="checkbox" id="gratischk"'+(S.gratis?" checked":"")+'><span></span></span></label></div>'+
+      '<label class="toggle"><span>'+t.nur_gratis+'</span><span class="switch"><input type="checkbox" id="gratischk"'+(S.gratis?" checked":"")+'><span></span></span></label>'+
+      '<div style="height:.6rem"></div>'+
+      '<label class="toggle"><span>'+t.ohne_auff+'</span><span class="switch"><input type="checkbox" id="auffchk"'+(S.ohneAuff?" checked":"")+'><span></span></span></label></div>'+
     '<div class="fgroup">'+kopf(t.typ,"typ")+
       TYPEN.map(function(k){ return check("typ", k, t.typen[k], cT[k]); }).join("")+'</div>'+
     faehGruppe(t)+
@@ -27312,6 +27505,7 @@ function tagsHtml(z, t){
     if (pz !== 0) h += '<span class="tag '+(pz < 0 ? "down" : "up")+'" title="'+esc(t.vorher(fmtPreis(z.vorher)))+'">'+(pz < 0 ? "↓ " : "↑ +")+pz+' %</span>';
   }
   z.typ.filter(function(x){ return x !== "text"; }).forEach(function(x){ h += '<span class="tag">'+esc(t.typen[x] || x)+'</span>'; });
+  if (window.REFERENZ) h += window.REFERENZ.tags(z.qkey, z.kanon, lang, z.name);
   return h ? '<span class="tags">'+h+'</span>' : "";
 }
 function cmpBtn(z, t){
@@ -27319,19 +27513,26 @@ function cmpBtn(z, t){
   return '<button class="cmpbtn'+(offen[z.id]?" open":"")+'" data-cmp="'+esc(z.id)+'">'+t.anbieter_n(z.anz)+' '+(offen[z.id]?"▴":"▾")+'</button>';
 }
 function vergleichHtml(z, t){
-  const g = gruppen[z.gkey].slice().sort(function(a,b){ return (a.preis - b.preis) || a.quelle.localeCompare(b.quelle); });
+  // erst die regulären Angebote, darunter getrennt die Angebote weit unter dem Referenzpreis
+  const g = gruppen[z.gkey].slice().sort(function(a,b){ return (a.auff - b.auff) || (a.preis - b.preis) || a.quelle.localeCompare(b.quelle); });
   const medien = g.some(function(x){ return x.faeh.length || x.aufl || x.dauer; });
+  const RT = window.REFERENZ ? window.REFERENZ.txt(lang) : null;
+  const spalten = medien ? 4 : 5;
+  let trenner = false;
   return '<div style="font-size:.72rem;color:var(--muted);margin:.2rem 0 .3rem">'+t.cmp_titel+'</div>'+
     '<table class="cmptable"><thead><tr><th>'+t.cols.anbieter+'</th><th class="num">'+t.cols.preis+'</th>'+
       (medien ? '<th>'+t.spalte_faeh+'</th>' : '<th class="num">'+t.cols.output+'</th><th class="num">'+t.cols.kontext+'</th>')+'<th></th></tr></thead><tbody>'+
     g.map(function(x){
-      const diff = (x.preis !== Infinity && x.preis > 0 && x.minBezahlt > 0 && x.minBezahlt !== Infinity && x.preis > x.minBezahlt) ? '<span class="diff">'+t.teurer(Math.round((x.preis/x.minBezahlt - 1)*100))+'</span>' : "";
-      return '<tr class="'+(x.id===z.id?"self":"")+'"><td>'+provZelle(x)+' <small class="unit">'+esc(x.name)+'</small></td>'+
+      const diff = (!x.auff && x.preis !== Infinity && x.preis > 0 && x.minBezahlt > 0 && x.minBezahlt !== Infinity && x.preis > x.minBezahlt) ? '<span class="diff">'+t.teurer(Math.round((x.preis/x.minBezahlt - 1)*100))+'</span>' : "";
+      let vor = "";
+      if (x.auff && !trenner && RT){ trenner = true; vor = '<tr class="trenner"><td colspan="'+spalten+'">⚠ '+esc(RT.trenner)+'</td></tr>'; }
+      return vor + '<tr class="'+(x.id===z.id?"self":"")+'"><td>'+provZelle(x)+' <small class="unit">'+esc(x.name)+'</small>'+(window.REFERENZ ? window.REFERENZ.tags(x.qkey, x.kanon, lang, x.name) : '')+'</td>'+
         '<td class="num">'+preisZelle(x,t)+diff+'</td>'+
         (medien ? '<td>'+(capsHtml(x,t) || '<span class="unit">—</span>')+'</td>' :
           '<td class="num price">'+fmtPreis(x.outp)+'</td><td class="num ctx">'+fmtCtx(x.context)+'</td>')+
         '<td class="num">'+goLink(x,false)+'</td></tr>';
-    }).join("")+'</tbody></table>';
+    }).join("")+'</tbody></table>'+
+    (RT && !medien && window.REFERENZ.ref(z.basis) ? '<p class="refzeile">'+esc(RT.ref)+': '+esc(window.REFERENZ.refText(z.basis, lang))+' · <a href="methodik.html">'+esc(RT.mehr)+'</a></p>' : '');
 }
 
 function renderResults(){
@@ -27397,6 +27598,7 @@ function renderChips(){
   if (S.best) c.push(['best','',"★ "+t.guenstigster]);
   if (S.multi) c.push(['multi','',t.nur_mehrere]);
   if (S.gratis) c.push(['gratis','',t.nur_gratis]);
+  if (S.ohneAuff) c.push(['ohneAuff','',t.ohne_auff]);
   document.getElementById("chips").innerHTML = c.map(function(x){
     return '<span class="chip" data-chip="'+x[0]+'" data-v="'+esc(x[1])+'">'+esc(x[2])+' <i>✕</i></span>';
   }).join("");
@@ -27466,6 +27668,7 @@ sb.addEventListener("change", function(e){
   } else if (el.id === "bestchk") S.best = el.checked;
   else if (el.id === "multichk") S.multi = el.checked;
   else if (el.id === "gratischk") S.gratis = el.checked;
+  else if (el.id === "auffchk") S.ohneAuff = el.checked;
   else if (el.id === "ctxrange") S.ctx = +el.value;
   else if (el.id === "prange") S.pmax = +el.value;
   else return;
