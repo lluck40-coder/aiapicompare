@@ -109,13 +109,15 @@ def zuordnung(daten):
     return nach_norm
 
 
-def finde(n, nach_norm):
+def finde(n, nach_norm, art):
     treffer = set(nach_norm.get(n, set()))
     for m, schluessel in nach_norm.items():
         if m != n and ((m.startswith(n + "-") and ZUSATZ.match(m[len(n):])) or
                        (n.startswith(m + "-") and ZUSATZ.match(n[len(m):]))):
             treffer |= schluessel
-    return sorted(treffer)
+    # Bild-/Video-Platzierungen nur echten Bild-/Video-Angeboten zuordnen, Text-Platzierungen nur Text-Angeboten
+    medien = art in ("bild", "video")
+    return sorted(k for k in treffer if k.startswith("media-") == medien)
 
 
 def baue_staerken(daten):
@@ -138,7 +140,7 @@ def baue_staerken(daten):
             liste.append({"p": len(liste) + 1, "n": z.get("model_name"), "o": z.get("organization") or "",
                           "r": round(float(wert)) if wert is not None else None,
                           "v": int(z.get("vote_count") or z.get("observation_count") or 0),
-                          "k": finde(n, nach_norm)})
+                          "k": finde(n, nach_norm, art)})
             if len(liste) >= ANZAHL:
                 break
         if liste:
