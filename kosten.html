@@ -45,6 +45,8 @@
     <a href="index.html" data-t="nav_vergleich"></a>
     <a href="kosten.html" class="active" data-t="nav_kosten"></a>
     <a href="free.html" data-t="nav_gratis" id="gratislink"></a>
+    <a href="bestenliste.html" data-t="nav_best"></a>
+    <a href="news.html" data-t="nav_news"></a>
     <a href="anbindung.html" data-t="nav_anbindung"></a>
   </nav>
   <button class="themebtn" title="Light / dark"><span class="ti-l">☀</span><span class="ti-d">☾</span></button>
@@ -94,7 +96,7 @@ const FARBE = {openrouter:"#a78bfa", uplinkswitch:"#f472b6", anymodel:"#fbbf24",
 
 const L10N = {
 de:{titel:"Kostenrechner: Was kostet mein KI-Projekt?", lead:"Gib ein, wie viel du pro Monat brauchst – der Rechner zeigt die günstigsten Anbieter und Modelle mit Monats- und Jahreskosten.",
-  nav_vergleich:"Preisvergleich", nav_kosten:"Kostenrechner", nav_gratis:"Kostenlose Modelle", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
+  nav_vergleich:"Preisvergleich", nav_kosten:"Kostenrechner", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
   m_text:"📝 Text (Token)", m_bild:"🖼️ Bilder", m_video:"🎬 Video",
   in_m:"Input-Token pro Monat (Mio.)", out_m:"Output-Token pro Monat (Mio.)", modell:"Modell (optional)", modell_ph:"z. B. deepseek, claude, glm …", minctx:"Min. Kontextfenster", egal:"beliebig",
   bilder:"Bilder pro Monat", clips:"Videos pro Monat", sek:"Sekunden pro Video", gratis_mit:"Kostenlose Modelle einbeziehen",
@@ -109,7 +111,7 @@ de:{titel:"Kostenrechner: Was kostet mein KI-Projekt?", lead:"Gib ein, wie viel 
   caps:{t2v:"📝 Text→Video",start:"⏮️ Startbild",ende:"⏭️ Endbild",ref:"🧩 Referenzen",ton:"🔊 Ton",edit:"✏️ Bearbeiten","4k":"4K",transparent:"🔳 Transparent",multiref:"🗂️ Mehrere Bilder"},
   einheit:{image:"/Bild",second:"/s"}, ab:"ab", gratis:"kostenlos"},
 en:{titel:"Cost calculator: what does my AI project cost?", lead:"Enter how much you need per month – the calculator shows the cheapest providers and models with monthly and yearly cost.",
-  nav_vergleich:"Price comparison", nav_kosten:"Cost calculator", nav_gratis:"Free models", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
+  nav_vergleich:"Price comparison", nav_kosten:"Cost calculator", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
   m_text:"📝 Text (tokens)", m_bild:"🖼️ Images", m_video:"🎬 Video",
   in_m:"Input tokens per month (M)", out_m:"Output tokens per month (M)", modell:"Model (optional)", modell_ph:"e.g. deepseek, claude, glm …", minctx:"Min. context window", egal:"any",
   bilder:"Images per month", clips:"Videos per month", sek:"Seconds per video", gratis_mit:"Include free models",
@@ -124,7 +126,7 @@ en:{titel:"Cost calculator: what does my AI project cost?", lead:"Enter how much
   caps:{t2v:"📝 Text→video",start:"⏮️ First frame",ende:"⏭️ Last frame",ref:"🧩 References",ton:"🔊 Audio",edit:"✏️ Editing","4k":"4K",transparent:"🔳 Transparent",multiref:"🗂️ Multiple images"},
   einheit:{image:"/image",second:"/s"}, ab:"from", gratis:"free"},
 zh:{titel:"成本计算器：我的 AI 项目要花多少钱？", lead:"输入每月用量——计算器会列出最便宜的提供商和模型，以及月度和年度费用。",
-  nav_vergleich:"价格对比", nav_kosten:"成本计算器", nav_gratis:"免费模型", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
+  nav_vergleich:"价格对比", nav_kosten:"成本计算器", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
   m_text:"📝 文本（Token）", m_bild:"🖼️ 图像", m_video:"🎬 视频",
   in_m:"每月输入 Token（百万）", out_m:"每月输出 Token（百万）", modell:"模型（可选）", modell_ph:"如 deepseek、claude、glm …", minctx:"最小上下文窗口", egal:"不限",
   bilder:"每月图像数", clips:"每月视频数", sek:"每个视频秒数", gratis_mit:"包含免费模型",
@@ -139,7 +141,7 @@ zh:{titel:"成本计算器：我的 AI 项目要花多少钱？", lead:"输入�
   caps:{t2v:"📝 文生视频",start:"⏮️ 首帧",ende:"⏭️ 尾帧",ref:"🧩 参考图",ton:"🔊 音频",edit:"✏️ 编辑","4k":"4K",transparent:"🔳 透明",multiref:"🗂️ 多图"},
   einheit:{image:"/张",second:"/秒"}, ab:"起", gratis:"免费"},
 ru:{titel:"Калькулятор: сколько стоит мой AI-проект?", lead:"Укажите месячный объём – калькулятор покажет самых дешёвых поставщиков и модели с ценой за месяц и год.",
-  nav_vergleich:"Сравнение цен", nav_kosten:"Калькулятор", nav_gratis:"Бесплатные модели", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
+  nav_vergleich:"Сравнение цен", nav_kosten:"Калькулятор", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
   m_text:"📝 Текст (токены)", m_bild:"🖼️ Изображения", m_video:"🎬 Видео",
   in_m:"Входные токены в месяц (млн)", out_m:"Выходные токены в месяц (млн)", modell:"Модель (необязательно)", modell_ph:"напр. deepseek, claude, glm …", minctx:"Мин. контекст", egal:"любой",
   bilder:"Изображений в месяц", clips:"Видео в месяц", sek:"Секунд на видео", gratis_mit:"Учитывать бесплатные модели",

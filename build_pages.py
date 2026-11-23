@@ -22,7 +22,8 @@ ZIEL = Path(sys.argv[1] if len(sys.argv) > 1 else "vorschau").resolve()
 DOMAIN = "https://aiapicompare.com/"
 SPRACHEN = ["en", "de", "zh", "ru"]          # en liegt im Stammverzeichnis
 
-STATISCH = ["index.html", "anbindung.html", "kosten.html","free.html", "impressum.html", "datenschutz.html",
+STATISCH = ["index.html", "anbindung.html", "kosten.html","free.html", "bestenliste.html", "news.html", "bereiche.js",
+            "impressum.html", "datenschutz.html",
             "style.css", "sprache.js", "theme.js", "config.js", "favicon.svg", "favicon-32.png",
             "apple-touch-icon.png", "og-image.png", "robots.txt", "CNAME"]
 
@@ -36,6 +37,18 @@ VERLAUF = {}
 if (BASIS / "out" / "verlauf.json").exists():
     VERLAUF = json.loads((BASIS / "out" / "verlauf.json").read_text(encoding="utf-8"))
 STAND = (D.get("meta") or {}).get("erstellt", "")
+STAERKEN = {}
+if (BASIS / "out" / "staerken.js").exists():
+    try:
+        STAERKEN = lade_js(BASIS / "out" / "staerken.js")
+    except Exception:
+        STAERKEN = {}
+BEREICH_NAMEN = {}
+if (BASIS / "bereiche.js").exists():
+    for zeile in (BASIS / "bereiche.js").read_text(encoding="utf-8").splitlines():
+        felder = dict(re.findall(r'(\w+):"([^"]*)"', zeile))
+        if "k" in felder:
+            BEREICH_NAMEN[felder["k"]] = felder
 
 ANBIETER = {   # Name, Farbe, OpenAI-kompatible Base-URL, Umgebungsvariable
     "openrouter":   ("OpenRouter",   "#a78bfa", "https://openrouter.ai/api/v1", "OPENROUTER_API_KEY"),
@@ -71,7 +84,7 @@ FAEH = {
 }
 
 T = {
-"en": dict(htmllang="en", nav_vergleich="Price comparison", nav_kosten="Cost calculator", nav_gratis="Free models",
+"en": dict(htmllang="en", nav_best="Leaderboard", nav_news="News", nav_vergleich="Price comparison", nav_kosten="Cost calculator", nav_gratis="Free models",
   nav_anbindung="Setup & integration", impressum="Imprint", datenschutz="Privacy", alle_modelle="All models", api="Data as JSON",
   titel1="{name} API pricing & capabilities | aiapicompare", lead_flat="{name} is available from {n} provider(s). Cheapest: <b>{prov}</b> at <b>{inp}</b> per 1M tokens (flat rate for input and output).",
   titel="{name} API pricing: {n} providers compared | aiapicompare",
@@ -82,7 +95,7 @@ T = {
   lead_media="{name} is available from {n} provider(s). Cheapest: <b>{prov}</b> from <b>{preis}</b>.",
   ctx="Context window: up to {ctx} tokens.", gratis_bei="Free to use at {prov}.", entw="Developer: {e}.",
   th_anbieter="Provider", th_in="Input $/1M", th_out="Output $/1M", th_ctx="Context", th_preis="Price", th_faeh="Capabilities",
-  zum="Go to provider ↗", einrichten="Set up", faeh_titel="Capabilities", verlauf_titel="Price history (cheapest provider)",
+  zum="Go to provider ↗", einrichten="Set up", faeh_titel="Capabilities", arena_titel="Strengths in the Arena leaderboard", platz="Rank {p}", arena_quelle='Rankings: Arena (arena.ai, formerly LMArena), dataset <a href="{ds}" target="_blank" rel="noopener">lmarena-ai/leaderboard-dataset</a>, licensed under <a href="{lz}" target="_blank" rel="noopener">CC BY 4.0</a>, as of {stand}. Excerpt; variants with different reasoning effort merged and matched to our prices by aiapicompare. Not affiliated with Arena and not a recommendation.', verlauf_titel="Price history (cheapest provider)",
   verlauf_start="Price history is recorded daily – the chart appears after the first price change.", code_titel="Quick start with {prov}",
   verwandt="More models from {e}", faq_titel="FAQ",
   q1="Where is {name} cheapest?", a1="Currently at {prov} ({preis}). Prices are updated daily; the provider’s website is authoritative.",
@@ -99,7 +112,7 @@ T = {
   idx_lead="{n} models from {p} providers. Click a model for the full price comparison.",
   th_modell="Model", th_anz="Providers", th_ab="From", zurueck="← Back to the price comparison",
   disclosure="<b>Transparency:</b> Links marked “{k}” are affiliate links (advertising). If you buy credits through them, we receive a commission – the price stays the same for you."),
-"de": dict(htmllang="de", nav_vergleich="Preisvergleich", nav_kosten="Kostenrechner", nav_gratis="Kostenlose Modelle",
+"de": dict(htmllang="de", nav_best="Bestenliste", nav_news="Neuigkeiten", nav_vergleich="Preisvergleich", nav_kosten="Kostenrechner", nav_gratis="Kostenlose Modelle",
   nav_anbindung="Anbindung & Einrichtung", impressum="Impressum", datenschutz="Datenschutz", alle_modelle="Alle Modelle", api="Daten als JSON",
   titel1="{name} API-Preis & Fähigkeiten | aiapicompare", lead_flat="{name} ist bei {n} Anbieter(n) verfügbar. Am günstigsten: <b>{prov}</b> mit <b>{inp}</b> pro 1 Mio. Token (Pauschalpreis für Input und Output).",
   titel="{name} API-Preise: {n} Anbieter im Vergleich | aiapicompare",
@@ -110,7 +123,7 @@ T = {
   lead_media="{name} ist bei {n} Anbieter(n) verfügbar. Am günstigsten: <b>{prov}</b> ab <b>{preis}</b>.",
   ctx="Kontextfenster: bis {ctx} Token.", gratis_bei="Kostenlos nutzbar bei {prov}.", entw="Entwickler: {e}.",
   th_anbieter="Anbieter", th_in="Input $/1M", th_out="Output $/1M", th_ctx="Kontext", th_preis="Preis", th_faeh="Fähigkeiten",
-  zum="Zum Anbieter ↗", einrichten="Einrichten", faeh_titel="Fähigkeiten", verlauf_titel="Preisverlauf (günstigster Anbieter)",
+  zum="Zum Anbieter ↗", einrichten="Einrichten", faeh_titel="Fähigkeiten", arena_titel="Stärken laut Arena-Bestenliste", platz="Platz {p}", arena_quelle='Platzierungen: Arena (arena.ai, ehemals LMArena), Datensatz <a href="{ds}" target="_blank" rel="noopener">lmarena-ai/leaderboard-dataset</a>, lizenziert unter <a href="{lz}" target="_blank" rel="noopener">CC BY 4.0</a>, Stand {stand}. Auszug; Varianten mit unterschiedlichem Denkaufwand zusammengefasst und unseren Preisen zugeordnet durch aiapicompare. Keine Verbindung zu Arena und keine Empfehlung.', verlauf_titel="Preisverlauf (günstigster Anbieter)",
   verlauf_start="Der Preisverlauf wird täglich aufgezeichnet – das Diagramm erscheint nach der ersten Preisänderung.", code_titel="Schnellstart mit {prov}",
   verwandt="Weitere Modelle von {e}", faq_titel="Häufige Fragen",
   q1="Wo ist {name} am günstigsten?", a1="Derzeit bei {prov} ({preis}). Die Preise werden täglich aktualisiert; maßgeblich ist die Seite des Anbieters.",
@@ -127,7 +140,7 @@ T = {
   idx_lead="{n} Modelle von {p} Anbietern. Ein Klick auf ein Modell zeigt den vollständigen Preisvergleich.",
   th_modell="Modell", th_anz="Anbieter", th_ab="Ab", zurueck="← Zurück zum Preisvergleich",
   disclosure="<b>Transparenz:</b> Links mit dem Hinweis „{k}“ sind Affiliate-Links (Werbung). Kaufst du darüber Guthaben, erhalten wir eine Provision – für dich ändert sich der Preis nicht."),
-"zh": dict(htmllang="zh-CN", nav_vergleich="价格对比", nav_kosten="成本计算器", nav_gratis="免费模型",
+"zh": dict(htmllang="zh-CN", nav_best="排行榜", nav_news="动态", nav_vergleich="价格对比", nav_kosten="成本计算器", nav_gratis="免费模型",
   nav_anbindung="接入与配置", impressum="网站信息", datenschutz="隐私政策", alle_modelle="全部模型", api="JSON 数据",
   titel1="{name} API 价格与功能 | aiapicompare", lead_flat="{name} 共有 {n} 家提供商。最便宜：<b>{prov}</b>，每百万 Token <b>{inp}</b>（输入输出统一价格）。",
   titel="{name} API 价格：{n} 家提供商对比 | aiapicompare",
@@ -138,7 +151,7 @@ T = {
   lead_media="{name} 共有 {n} 家提供商。最便宜：<b>{prov}</b>，<b>{preis}</b> 起。",
   ctx="上下文窗口：最高 {ctx} Token。", gratis_bei="可在 {prov} 免费使用。", entw="开发商：{e}。",
   th_anbieter="提供商", th_in="输入 $/1M", th_out="输出 $/1M", th_ctx="上下文", th_preis="价格", th_faeh="功能",
-  zum="前往提供商 ↗", einrichten="配置", faeh_titel="功能", verlauf_titel="价格走势（最便宜的提供商）",
+  zum="前往提供商 ↗", einrichten="配置", faeh_titel="功能", arena_titel="Arena 排行榜中的优势", platz="第 {p} 名", arena_quelle='排名来源：Arena（arena.ai，原 LMArena），数据集 <a href="{ds}" target="_blank" rel="noopener">lmarena-ai/leaderboard-dataset</a>，采用 <a href="{lz}" target="_blank" rel="noopener">CC BY 4.0</a> 许可，数据日期 {stand}。摘录；不同推理强度的版本已由 aiapicompare 合并并与我们的价格对应。与 Arena 无关联，亦非推荐。', verlauf_titel="价格走势（最便宜的提供商）",
   verlauf_start="价格走势每日记录——首次价格变动后显示图表。", code_titel="使用 {prov} 快速开始",
   verwandt="{e} 的更多模型", faq_titel="常见问题",
   q1="{name} 在哪里最便宜？", a1="目前是 {prov}（{preis}）。价格每日更新，以提供商网站为准。",
@@ -155,7 +168,7 @@ T = {
   idx_lead="来自 {p} 家提供商的 {n} 个模型。点击模型查看完整价格对比。",
   th_modell="模型", th_anz="提供商", th_ab="起价", zurueck="← 返回价格对比",
   disclosure="<b>透明声明：</b>标有“{k}”的链接为推广（联盟）链接，属于广告。若您通过这些链接充值，我们将获得佣金，您的价格不变。"),
-"ru": dict(htmllang="ru", nav_vergleich="Сравнение цен", nav_kosten="Калькулятор", nav_gratis="Бесплатные модели",
+"ru": dict(htmllang="ru", nav_best="Рейтинг", nav_news="Новости", nav_vergleich="Сравнение цен", nav_kosten="Калькулятор", nav_gratis="Бесплатные модели",
   nav_anbindung="Подключение", impressum="Импрессум", datenschutz="Конфиденциальность", alle_modelle="Все модели", api="Данные в JSON",
   titel1="{name}: цена API и возможности | aiapicompare", lead_flat="{name} доступна у {n} поставщиков. Дешевле всего: <b>{prov}</b> — <b>{inp}</b> за 1 млн токенов (единая цена за вход и выход).",
   titel="{name}: цены API у {n} поставщиков | aiapicompare",
@@ -166,7 +179,7 @@ T = {
   lead_media="{name} доступна у {n} поставщиков. Дешевле всего: <b>{prov}</b> от <b>{preis}</b>.",
   ctx="Контекстное окно: до {ctx} токенов.", gratis_bei="Бесплатно у {prov}.", entw="Разработчик: {e}.",
   th_anbieter="Поставщик", th_in="Вход $/1M", th_out="Выход $/1M", th_ctx="Контекст", th_preis="Цена", th_faeh="Возможности",
-  zum="К поставщику ↗", einrichten="Настроить", faeh_titel="Возможности", verlauf_titel="История цен (самый дешёвый поставщик)",
+  zum="К поставщику ↗", einrichten="Настроить", faeh_titel="Возможности", arena_titel="Сильные стороны в рейтинге Arena", platz="Место {p}", arena_quelle='Места: Arena (arena.ai, ранее LMArena), набор данных <a href="{ds}" target="_blank" rel="noopener">lmarena-ai/leaderboard-dataset</a>, лицензия <a href="{lz}" target="_blank" rel="noopener">CC BY 4.0</a>, данные на {stand}. Выборка; варианты с разным уровнем рассуждения объединены и сопоставлены с нашими ценами aiapicompare. Не связано с Arena и не является рекомендацией.', verlauf_titel="История цен (самый дешёвый поставщик)",
   verlauf_start="История цен записывается ежедневно – график появится после первого изменения цены.", code_titel="Быстрый старт с {prov}",
   verwandt="Другие модели {e}", faq_titel="Вопросы и ответы",
   q1="Где {name} дешевле всего?", a1="Сейчас у {prov} ({preis}). Цены обновляются ежедневно; действует цена на сайте поставщика.",
@@ -332,6 +345,8 @@ def kopf(lang, rel, titel, desc, rest, alternativen=True):
     <a href="{rel}index.html">{t["nav_vergleich"]}</a>
     <a href="{rel}kosten.html">{t["nav_kosten"]}</a>
     <a href="{rel}{pfad(lang, "free.html")}">{t["nav_gratis"]}</a>
+    <a href="{rel}bestenliste.html">{t["nav_best"]}</a>
+    <a href="{rel}news.html">{t["nav_news"]}</a>
     <a href="{rel}anbindung.html">{t["nav_anbindung"]}</a>
   </nav>
   <button class="themebtn" title="Light / dark"><span class="ti-l">☀</span><span class="ti-d">☾</span></button>
@@ -449,6 +464,22 @@ def modellseite(info, lang):
         h += f'<h2>{t["faeh_titel"]}</h2><div class="caps">' + "".join(
             f'<span class="cap">{FAEH[c][0]} {esc(FAEH[c][1][lang])}</span>' for c in alle_faeh if c in FAEH) + "</div>\n"
 
+    # Platzierungen in der Arena-Bestenliste (CC BY 4.0, mit Quellenangabe)
+    plaetze = {}
+    for z in info["zeilen"]:
+        for bk, pl in ((STAERKEN.get("modelle") or {}).get(re.sub(r":free$", "", z["kanon"])) or {}).items():
+            if bk not in plaetze or pl < plaetze[bk]:
+                plaetze[bk] = pl
+    if plaetze:
+        meta = STAERKEN.get("meta") or {}
+        chips = "".join(
+            f'<a class="cap" style="text-decoration:none" href="{rel}bestenliste.html#{bk}">🏆 {t["platz"].format(p=pl)} · '
+            f'{esc((BEREICH_NAMEN.get(bk) or {}).get(lang) or (BEREICH_NAMEN.get(bk) or {}).get("en") or bk)}</a>'
+            for bk, pl in sorted(plaetze.items(), key=lambda x: x[1]))
+        h += f'<h2>{t["arena_titel"]}</h2><div class="caps">{chips}</div>\n'
+        h += (f'<p class="hint" style="font-size:.75rem;color:var(--dim)">'
+              f'{t["arena_quelle"].format(stand=esc(meta.get("stand", "")), ds=meta.get("datensatz", ""), lz=meta.get("lizenz_url", ""))}</p>\n')
+
     # Tabelle
     h += '<div class="tablewrap" style="margin-top:1rem"><table><thead><tr>'
     if info["media"]:
@@ -558,6 +589,9 @@ def main():
     shutil.copy2(BASIS / "out" / "data.js", ZIEL / "out" / "data.js")
     with open(ZIEL / "out" / "data.js", "a", encoding="utf-8") as f:   # Kennzeichen: Modellseiten existieren
         f.write("window.MODELLSEITEN = true;\n")
+    for f in ("staerken.js", "news.js"):
+        if (BASIS / "out" / f).exists():
+            shutil.copy2(BASIS / "out" / f, ZIEL / "out" / f)
     (ZIEL / "api").mkdir(exist_ok=True)
     if (BASIS / "out" / "prices.json").exists():
         shutil.copy2(BASIS / "out" / "prices.json", ZIEL / "api" / "prices.json")
@@ -576,7 +610,7 @@ def main():
     # Sitemap mit Sprachvarianten
     x = ['<?xml version="1.0" encoding="UTF-8"?>',
          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
-    for loc, prio in [("", "1.0"), ("kosten.html", "0.9"), ("anbindung.html", "0.8")]:
+    for loc, prio in [("", "1.0"), ("kosten.html", "0.9"), ("bestenliste.html", "0.9"), ("news.html", "0.8"), ("anbindung.html", "0.8")]:
         x.append(f"  <url><loc>{DOMAIN}{loc}</loc><changefreq>daily</changefreq><priority>{prio}</priority></url>")
     for rest, mehrsprachig, freq, prio in urls:
         alts = "".join(f'<xhtml:link rel="alternate" hreflang="{T[l]["htmllang"]}" href="{DOMAIN}{pfad(l, rest)}"/>' for l in SPRACHEN)

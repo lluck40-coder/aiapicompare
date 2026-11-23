@@ -85,7 +85,7 @@
 
   /* ---------- Layout ---------- */
   .layout{display:grid;grid-template-columns:270px 1fr;gap:0;min-height:calc(100vh - 57px)}
-  aside{border-right:1px solid var(--border);padding:1rem 1rem 2rem;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto}
+  aside{border-right:1px solid var(--border);padding:1rem 1rem 2rem;position:sticky;top:var(--tbh,57px);height:calc(100vh - var(--tbh,57px));overflow-y:auto}
   main{padding:1rem 1.25rem 3rem;min-width:0}
 
   /* ---------- Seitenleiste ---------- */
@@ -133,7 +133,7 @@
   thead th:first-child{border-top-left-radius:.6rem}
   thead th:last-child{border-top-right-radius:.6rem}
   table{width:100%;border-collapse:collapse}
-  thead th{position:sticky;top:57px;z-index:5;background:var(--panel2);padding:.6rem .8rem;font-size:.72rem;font-weight:600;color:var(--muted);text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;user-select:none}
+  thead th{position:sticky;top:var(--tbh,57px);z-index:5;background:var(--panel2);padding:.6rem .8rem;font-size:.72rem;font-weight:600;color:var(--muted);text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;user-select:none}
   th.sortable{cursor:pointer}
   th.sortable:hover{color:var(--fg)}
   th.active{color:var(--accent)}
@@ -153,6 +153,8 @@
   .mid{display:block;font-family:var(--mono);font-size:.72rem;color:var(--dim);margin-top:.1rem;word-break:break-all}
   .tags{display:inline-flex;gap:.25rem;margin-left:.35rem;vertical-align:middle}
   .tag{font-size:.62rem;padding:.05rem .35rem;border-radius:.3rem;background:var(--panel2);color:var(--muted);border:1px solid var(--border2)}
+  .tag.arena{background:rgba(245,158,11,.12);color:#f59e0b;border-color:rgba(245,158,11,.35);text-decoration:none}
+  .tag.arena:hover{border-color:#f59e0b}
   .tag.best{background:var(--accent-bg);color:var(--accent);border-color:rgba(74,222,128,.35)}
   .prov{display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap}
   .prov small{color:var(--dim)}
@@ -195,6 +197,11 @@
 
   footer{margin-top:1.5rem;font-size:.74rem;color:var(--dim);line-height:1.6}
 
+  /* Mittlere Breiten: Menü in eine zweite Zeile, damit das Suchfeld Platz behält */
+  @media (min-width:901px) and (max-width:1599px){
+    .topbar{flex-wrap:wrap;row-gap:.35rem}
+    .nav{order:6;flex-basis:100%;overflow-x:auto}
+  }
   /* ---------- Mobil ---------- */
   .backdrop{display:none}
   @media (max-width:900px){
@@ -233,6 +240,8 @@
     <a href="index.html" class="active" data-t="nav_vergleich"></a>
     <a href="kosten.html" data-t="nav_kosten"></a>
     <a href="free.html" data-t="nav_gratis" id="gratislink"></a>
+    <a href="bestenliste.html" data-t="nav_best"></a>
+    <a href="news.html" data-t="nav_news"></a>
     <a href="anbindung.html" data-t="nav_anbindung"></a>
   </nav>
   <button class="themebtn"><span class="ti-l">☀</span><span class="ti-d">☾</span></button>
@@ -272,6 +281,8 @@
 
 <script src="config.js"></script>
 <script src="out/data.js"></script>
+<script src="bereiche.js"></script>
+<script src="out/staerken.js"></script>
 <script>
 "use strict";
 const D = window.API_DATEN || {};
@@ -344,7 +355,7 @@ const BEKANNT = ["OpenAI","Anthropic","Google","DeepSeek","xAI","Meta","Qwen","M
 const I18N = {
   de:{
     seitentitel:"aiapicompare – KI-API-Preise vergleichen",
-    nav_kosten:"Kostenrechner", nav_gratis:"Kostenlose Modelle", gratis:"kostenlos", nur_gratis:"Nur kostenlose Modelle", neu:"NEU", vorher:function(p){ return "vorher "+p; }, theme:"Hell / Dunkel", api:"Daten als JSON", pro5s:"/ 5-s-Clip", gen:"pro Generierung",
+    nav_kosten:"Kostenrechner", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", arena_titel:function(p,b){ return "Platz "+p+" in der Arena-Bestenliste: "+b; }, arena_hinweis:"🏆 = Platz in der Arena-Bestenliste (arena.ai, CC BY 4.0)", gratis:"kostenlos", nur_gratis:"Nur kostenlose Modelle", neu:"NEU", vorher:function(p){ return "vorher "+p; }, theme:"Hell / Dunkel", api:"Daten als JSON", pro5s:"/ 5-s-Clip", gen:"pro Generierung",
     filter:"Filter", suche:"Modell, Anbieter oder ID suchen …", sortieren:"Sortieren:",
     nav_vergleich:"Preisvergleich", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
     zum_anbieter:"Zum Anbieter", einrichten:function(n){ return "So bindest du "+n+" an (Hermes, VS Code …)"; },
@@ -377,7 +388,7 @@ const I18N = {
   },
   en:{
     seitentitel:"aiapicompare – Compare AI API prices",
-    nav_kosten:"Cost calculator", nav_gratis:"Free models", gratis:"free", nur_gratis:"Free models only", neu:"NEW", vorher:function(p){ return "previously "+p; }, theme:"Light / dark", api:"Data as JSON", pro5s:"/ 5 s clip", gen:"per generation",
+    nav_kosten:"Cost calculator", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", arena_titel:function(p,b){ return "Rank "+p+" in the Arena leaderboard: "+b; }, arena_hinweis:"🏆 = rank in the Arena leaderboard (arena.ai, CC BY 4.0)", gratis:"free", nur_gratis:"Free models only", neu:"NEW", vorher:function(p){ return "previously "+p; }, theme:"Light / dark", api:"Data as JSON", pro5s:"/ 5 s clip", gen:"per generation",
     filter:"Filters", suche:"Search model, provider or ID …", sortieren:"Sort:",
     nav_vergleich:"Price comparison", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
     zum_anbieter:"Go to provider", einrichten:function(n){ return "How to connect "+n+" (Hermes, VS Code …)"; },
@@ -410,7 +421,7 @@ const I18N = {
   },
   zh:{
     seitentitel:"aiapicompare – AI API 价格对比",
-    nav_kosten:"成本计算器", nav_gratis:"免费模型", gratis:"免费", nur_gratis:"仅显示免费模型", neu:"新", vorher:function(p){ return "之前 "+p; }, theme:"浅色 / 深色", api:"JSON 数据", pro5s:"/ 5 秒片段", gen:"每次生成",
+    nav_kosten:"成本计算器", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", arena_titel:function(p,b){ return "Arena 排行榜第 "+p+" 名："+b; }, arena_hinweis:"🏆 = Arena 排行榜名次（arena.ai，CC BY 4.0）", gratis:"免费", nur_gratis:"仅显示免费模型", neu:"新", vorher:function(p){ return "之前 "+p; }, theme:"浅色 / 深色", api:"JSON 数据", pro5s:"/ 5 秒片段", gen:"每次生成",
     filter:"筛选", suche:"搜索模型、提供商或 ID …", sortieren:"排序：",
     nav_vergleich:"价格对比", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
     zum_anbieter:"前往提供商", einrichten:function(n){ return "如何接入 "+n+"（Hermes、VS Code …）"; },
@@ -443,7 +454,7 @@ const I18N = {
   },
   ru:{
     seitentitel:"aiapicompare – сравнение цен AI API",
-    nav_kosten:"Калькулятор", nav_gratis:"Бесплатные модели", gratis:"бесплатно", nur_gratis:"Только бесплатные модели", neu:"НОВОЕ", vorher:function(p){ return "раньше "+p; }, theme:"Светлая / тёмная", api:"Данные в JSON", pro5s:"/ клип 5 с", gen:"за генерацию",
+    nav_kosten:"Калькулятор", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", arena_titel:function(p,b){ return "Место "+p+" в рейтинге Arena: "+b; }, arena_hinweis:"🏆 = место в рейтинге Arena (arena.ai, CC BY 4.0)", gratis:"бесплатно", nur_gratis:"Только бесплатные модели", neu:"НОВОЕ", vorher:function(p){ return "раньше "+p; }, theme:"Светлая / тёмная", api:"Данные в JSON", pro5s:"/ клип 5 с", gen:"за генерацию",
     filter:"Фильтры", suche:"Поиск по модели, поставщику или ID …", sortieren:"Сортировка:",
     nav_vergleich:"Сравнение цен", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
     zum_anbieter:"К поставщику", einrichten:function(n){ return "Как подключить "+n+" (Hermes, VS Code …)"; },
@@ -518,6 +529,8 @@ zeilen.forEach(function(z){
   z.haupt = z.inp !== null ? z.inp : (z.ab !== null ? z.ab : z.mp);
 });
 const STAND = ((D.meta && D.meta.erstellt) || "").slice(0, 10);
+const BEREICH_BY_KEY = {};
+(window.BEREICHE || []).forEach(function(b){ BEREICH_BY_KEY[b.k] = b; });
 function istNeu(z){ return z.seit && STAND && (Date.parse(STAND) - Date.parse(z.seit)) <= 7 * 864e5; }
 function modellSlug(k){ return String(k).replace(/^media-/, "").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, ""); }
 function sprachPfad(){ return lang === "en" ? "" : lang + "/"; }
@@ -727,6 +740,13 @@ function tagsHtml(z, t){
   let h = "";
   if (z.best) h += '<span class="tag best">★ '+t.guenstigster+'</span>';
   if (istNeu(z)) h += '<span class="tag neu">'+t.neu+'</span>';
+  // Platzierungen in der Arena-Bestenliste (beste 2 Bereiche unter den ersten 10)
+  const sk = window.STAERKEN && window.STAERKEN.modelle ? window.STAERKEN.modelle[z.basis] : null;
+  if (sk) Object.keys(sk).filter(function(k){ return sk[k] <= 10 && BEREICH_BY_KEY[k]; })
+    .sort(function(a,b){ return sk[a] - sk[b]; }).slice(0, 2).forEach(function(k){
+      const b = BEREICH_BY_KEY[k];
+      h += '<a class="tag arena" href="bestenliste.html#'+k+'" title="'+esc(t.arena_titel(sk[k], b[lang] || b.en))+'">🏆 #'+sk[k]+' '+esc(b[lang] || b.en)+'</a>';
+    });
   if (z.vorher !== null && z.haupt !== null && z.vorher > 0 && z.haupt !== z.vorher) {
     const pz = Math.round((z.haupt / z.vorher - 1) * 100);
     if (pz !== 0) h += '<span class="tag '+(pz < 0 ? "down" : "up")+'" title="'+esc(t.vorher(fmtPreis(z.vorher)))+'">'+(pz < 0 ? "↓ " : "↑ +")+pz+' %</span>';
@@ -838,7 +858,8 @@ function renderStatic(){
   }).join("");
   document.querySelectorAll("#viewtog button").forEach(function(b){ b.classList.toggle("active", b.dataset.view === S.view); });
   const alt = Object.keys((D.meta && D.meta.veraltet) || {}).map(function(k){ return Q_BY_KEY[k] ? Q_BY_KEY[k].name : k; });
-  document.getElementById("meta").textContent = t.meta((D.meta && D.meta.erstellt) || "?") + (alt.length ? " · ⚠ " + t.veraltet(alt.join(", ")) : "");
+  document.getElementById("meta").innerHTML = esc(t.meta((D.meta && D.meta.erstellt) || "?") + (alt.length ? " · ⚠ " + t.veraltet(alt.join(", ")) : "")) +
+    (window.STAERKEN ? ' · <a href="bestenliste.html" style="color:inherit">' + esc(t.arena_hinweis) + '</a>' : "");
   document.getElementById("footer").textContent = t.footer;
   document.getElementById("infobox").innerHTML = t.infobox;
   const dis = document.getElementById("disclosure");
@@ -930,9 +951,14 @@ $("results").addEventListener("keydown", function(e){
   if (cb && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); offen[cb.dataset.cmp] = !offen[cb.dataset.cmp]; renderResults(); }
 });
 
+// Höhe der (ggf. zweizeiligen) Kopfleiste für klebende Tabellenköpfe
+function kopfHoehe(){ const tb = document.querySelector(".topbar"); if (tb) document.documentElement.style.setProperty("--tbh", tb.offsetHeight + "px"); }
+window.addEventListener("resize", kopfHoehe);
+
 ladeZustand();
 $("search").value = S.q;
 render(true);
+kopfHoehe();
 </script>
 </body>
 </html>

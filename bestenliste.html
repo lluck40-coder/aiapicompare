@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which AI model is best for what? Leaderboard with prices – aiapicompare</title>
+<meta name="description" content="Which AI model is best for coding, math, writing, German, images or video? Arena leaderboard rankings combined with the cheapest API price per model.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:image" content="https://aiapicompare.com/og-image.png">
+<link rel="stylesheet" href="style.css">
+<script src="theme.js"></script>
+<style>
+  .tabs{display:flex;flex-wrap:wrap;gap:.35rem;margin:1.1rem 0 .4rem}
+  .tabs button{padding:.4rem .75rem;border:1px solid var(--border2);border-radius:2rem;background:var(--input);cursor:pointer;font-size:.84rem;color:var(--muted)}
+  .tabs button:hover{border-color:var(--accent);color:var(--fg)}
+  .tabs button.active{border-color:var(--accent);color:var(--accent);background:var(--accent-bg);font-weight:600}
+  .gruppe{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);margin:.8rem 0 0}
+  .opt{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;margin:.8rem 0 1rem;font-size:.86rem}
+  .opt label{display:flex;gap:.4rem;align-items:center;cursor:pointer}
+  td.num,th.num{text-align:right}
+  .platz{font-weight:700;color:var(--dim);width:2.4rem}
+  tr.top3 .platz{color:var(--accent)}
+  .org{font-size:.75rem;color:var(--dim)}
+  .bar{display:inline-block;height:.35rem;border-radius:.2rem;background:var(--accent);opacity:.55;vertical-align:middle;margin-left:.4rem}
+  .price{font-family:var(--mono);white-space:nowrap}
+  .tag{display:inline-block;margin-left:.35rem;padding:.05rem .4rem;border-radius:.3rem;font-size:.68rem;font-weight:700;vertical-align:middle}
+  .tag.tipp{background:rgba(245,158,11,.15);color:#f59e0b}
+  .tag.frei{background:var(--accent-bg);color:var(--accent)}
+  .keinpreis{color:var(--dim);font-size:.8rem}
+  a.cmp{white-space:nowrap;font-size:.82rem}
+  .quelle{margin-top:1.2rem;font-size:.78rem;color:var(--dim);line-height:1.6}
+  .leer{padding:2rem;text-align:center;color:var(--muted)}
+  .erkl{font-size:.82rem;color:var(--muted);margin:.2rem 0 0}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="index.html" aria-label="aiapicompare"><img class="logo-d" src="logo/logo.svg" alt="aiapicompare" width="166" height="30"><img class="logo-l" src="logo/logo-hell.svg" alt="aiapicompare" width="166" height="30"></a>
+  <nav class="nav">
+    <a href="index.html" data-t="nav_vergleich"></a>
+    <a href="kosten.html" data-t="nav_kosten"></a>
+    <a href="free.html" data-t="nav_gratis"></a>
+    <a href="bestenliste.html" class="active" data-t="nav_best"></a>
+    <a href="news.html" data-t="nav_news"></a>
+    <a href="anbindung.html" data-t="nav_anbindung"></a>
+  </nav>
+  <button class="themebtn" title="Light / dark"><span class="ti-l">☀</span><span class="ti-d">☾</span></button>
+  <div class="langbtns">
+    <button data-lang="de">DE</button><button data-lang="en">EN</button><button data-lang="zh">中文</button><button data-lang="ru">RU</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="disclosure" id="disclosure" hidden></div>
+  <h1 data-t="h1"></h1>
+  <p class="lead" data-t="lead"></p>
+
+  <div id="tabs"></div>
+  <p class="erkl" id="erkl"></p>
+  <div class="opt">
+    <label><input type="checkbox" id="nurpreis"> <span data-t="nur_preis"></span></label>
+  </div>
+
+  <div class="tablewrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+
+  <p class="quelle" id="quelle"></p>
+
+  <div class="legal">
+    <a href="index.html" data-t="nav_vergleich"></a><a href="impressum.html" data-t="impressum"></a><a href="datenschutz.html" data-t="datenschutz"></a>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="out/data.js"></script>
+<script src="out/staerken.js"></script>
+<script src="bereiche.js"></script>
+<script>
+"use strict";
+const D = window.API_DATEN || {};
+const ST = window.STAERKEN || null;
+const C = window.SITE_CONFIG || {kennzeichnung:"Anzeige", hatAffiliate:function(){return false;},
+  linkHtml:function(k,u,t,c){ return u ? '<a class="'+(c||"")+'" href="'+u+'" target="_blank" rel="noopener">'+t+'</a>' : ""; }};
+const QUELLEN = {openrouter:"OpenRouter", uplinkswitch:"UplinkSwitch", anymodel:"AnyModel", nanogpt:"NanoGPT", chutes:"Chutes",
+  deepinfra:"DeepInfra", novita:"Novita AI", cometapi:"CometAPI", kyma:"Kyma API"};
+const FARBE = {openrouter:"#a78bfa", uplinkswitch:"#f472b6", anymodel:"#fbbf24", nanogpt:"#34d399", chutes:"#f87171",
+  deepinfra:"#60a5fa", novita:"#2dd4bf", cometapi:"#fb923c", kyma:"#c084fc"};
+
+const L10N = {
+de:{h1:"Welches KI-Modell ist wofür am besten?",
+  lead:"Platzierungen je Anwendungsbereich aus der Arena-Bestenliste – dort vergleichen Nutzer weltweit die Antworten zweier anonymer Modelle und stimmen für die bessere. Dazu zeigen wir den günstigsten API-Preis aus unserem Preisvergleich.",
+  nav_vergleich:"Preisvergleich", nav_kosten:"Kostenrechner", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
+  text:"Text & Code", media:"Bilder & Video", nur_preis:"Nur Modelle mit API-Preis in unserem Vergleich",
+  th:["Platz","Modell","Arena-Punkte","Stimmen","Günstigster API-Preis",""], vergleichen:"Preise vergleichen →",
+  keinpreis:"bei unseren Anbietern nicht gelistet", tipp:"Preis-Tipp", tipp_t:"Günstigstes Modell unter den ersten 10 mit Preis", frei:"auch kostenlos",
+  pro:{text:" / 1 Mio. Input-Token", bild:" pro Bild", video:" pro Sekunde"}, ab:"ab", gratis:"kostenlos",
+  erkl:"Höhere Punktzahl = wurde in direkten Vergleichen häufiger bevorzugt. Kleine Punktunterschiede (unter ca. 10) sind statistisch oft nicht eindeutig.",
+  leer:"Die Bestenliste wird beim nächsten täglichen Datenabruf erstellt.",
+  quelle:function(m){ return "Quelle der Platzierungen: "+m.quelle+", Datensatz <a href=\""+m.datensatz+"\" target=\"_blank\" rel=\"noopener\">lmarena-ai/leaderboard-dataset</a>, lizenziert unter <a href=\""+m.lizenz_url+"\" target=\"_blank\" rel=\"noopener\">CC BY 4.0</a>, Stand "+m.stand+". Änderungen durch aiapicompare: Auszug der ersten 50 Plätze je Bereich; Varianten eines Modells mit unterschiedlichem Denkaufwand sind zusammengefasst (die beste zählt), daher kann die Platznummer von der Arena abweichen; Zuordnung zu unseren Preisdaten. Keine Verbindung zu Arena; die Platzierungen geben die Bewertungen der Arena-Nutzer wieder und sind keine Empfehlung von aiapicompare. Die Reihenfolge wird nicht durch Partnerprogramme beeinflusst."; },
+  disclosure:function(k){ return "<b>Transparenz:</b> Links mit dem Hinweis „"+k+"“ sind Affiliate-Links (Werbung). Wir erhalten ggf. eine Provision – für dich ändert sich der Preis nicht. Die Reihenfolge wird dadurch nicht beeinflusst."; }},
+en:{h1:"Which AI model is best for what?",
+  lead:"Rankings per use case from the Arena leaderboard – users worldwide compare the answers of two anonymous models and vote for the better one. Next to it we show the cheapest API price from our price comparison.",
+  nav_vergleich:"Price comparison", nav_kosten:"Cost calculator", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
+  text:"Text & code", media:"Images & video", nur_preis:"Only models with an API price in our comparison",
+  th:["Rank","Model","Arena score","Votes","Cheapest API price",""], vergleichen:"Compare prices →",
+  keinpreis:"not listed at our providers", tipp:"Price tip", tipp_t:"Cheapest model among the top 10 with a price", frei:"also free",
+  pro:{text:" / 1M input tokens", bild:" per image", video:" per second"}, ab:"from", gratis:"free",
+  erkl:"Higher score = preferred more often in head-to-head comparisons. Small differences (below about 10 points) are often not statistically clear.",
+  leer:"The leaderboard will be created with the next daily data update.",
+  quelle:function(m){ return "Source of the rankings: "+m.quelle+", dataset <a href=\""+m.datensatz+"\" target=\"_blank\" rel=\"noopener\">lmarena-ai/leaderboard-dataset</a>, licensed under <a href=\""+m.lizenz_url+"\" target=\"_blank\" rel=\"noopener\">CC BY 4.0</a>, as of "+m.stand+". Changes by aiapicompare: excerpt of the top 50 per category; variants of a model with different reasoning effort are merged (the best counts), so the rank number may differ from the Arena; matched to our price data. Not affiliated with Arena; the rankings reflect the votes of Arena users and are not a recommendation by aiapicompare. The order is not influenced by affiliate programs."; },
+  disclosure:function(k){ return "<b>Transparency:</b> Links marked “"+k+"” are affiliate links (advertising). We may receive a commission – the price stays the same for you. Ranking is not affected."; }},
+zh:{h1:"哪个 AI 模型最适合做什么？",
+  lead:"各应用领域的排名来自 Arena 排行榜——全球用户比较两个匿名模型的回答，并投票选出更好的一个。旁边显示我们价格对比中最便宜的 API 价格。",
+  nav_vergleich:"价格对比", nav_kosten:"成本计算器", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
+  text:"文本与代码", media:"图像与视频", nur_preis:"仅显示在我们对比中有 API 价格的模型",
+  th:["名次","模型","Arena 分数","投票数","最低 API 价格",""], vergleichen:"比较价格 →",
+  keinpreis:"我们的提供商未收录", tipp:"性价比之选", tipp_t:"前 10 名中有价格的最便宜模型", frei:"也有免费版",
+  pro:{text:" / 百万输入 Token", bild:" / 张", video:" / 秒"}, ab:"起", gratis:"免费",
+  erkl:"分数越高 = 在两两比较中越常被选中。较小的分差（约 10 分以内）在统计上往往并不明确。",
+  leer:"排行榜将在下一次每日数据更新时生成。",
+  quelle:function(m){ return "排名来源："+m.quelle+"，数据集 <a href=\""+m.datensatz+"\" target=\"_blank\" rel=\"noopener\">lmarena-ai/leaderboard-dataset</a>，采用 <a href=\""+m.lizenz_url+"\" target=\"_blank\" rel=\"noopener\">CC BY 4.0</a> 许可，数据日期 "+m.stand+"。aiapicompare 所做修改：每个领域仅摘取前 50 名；同一模型不同推理强度的版本已合并（取最佳），因此名次可能与 Arena 不同；并与我们的价格数据对应。与 Arena 无关联；排名反映 Arena 用户的投票，并非 aiapicompare 的推荐。排序不受推广计划影响。"; },
+  disclosure:function(k){ return "<b>透明声明：</b>标有“"+k+"”的链接为推广（联盟）链接，属于广告。我们可能获得佣金，您的价格不变，排序不受影响。"; }},
+ru:{h1:"Какая AI-модель для чего лучше?",
+  lead:"Места по областям применения из рейтинга Arena – пользователи со всего мира сравнивают ответы двух анонимных моделей и голосуют за лучший. Рядом – самая низкая цена API из нашего сравнения.",
+  nav_vergleich:"Сравнение цен", nav_kosten:"Калькулятор", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
+  text:"Текст и код", media:"Изображения и видео", nur_preis:"Только модели с ценой API в нашем сравнении",
+  th:["Место","Модель","Баллы Arena","Голоса","Самая низкая цена API",""], vergleichen:"Сравнить цены →",
+  keinpreis:"нет у наших поставщиков", tipp:"Выгодно", tipp_t:"Самая дешёвая модель среди первых 10 с ценой", frei:"есть бесплатно",
+  pro:{text:" / 1 млн входных токенов", bild:" за изображение", video:" за секунду"}, ab:"от", gratis:"бесплатно",
+  erkl:"Больше баллов = чаще выбиралась в парных сравнениях. Небольшая разница (меньше ~10 баллов) статистически часто неоднозначна.",
+  leer:"Рейтинг будет создан при следующем ежедневном обновлении данных.",
+  quelle:function(m){ return "Источник мест: "+m.quelle+", набор данных <a href=\""+m.datensatz+"\" target=\"_blank\" rel=\"noopener\">lmarena-ai/leaderboard-dataset</a>, лицензия <a href=\""+m.lizenz_url+"\" target=\"_blank\" rel=\"noopener\">CC BY 4.0</a>, данные на "+m.stand+". Изменения aiapicompare: выборка первых 50 мест по каждой области; варианты модели с разным уровнем рассуждения объединены (учитывается лучший), поэтому номер места может отличаться от Arena; сопоставление с нашими ценами. Не связано с Arena; места отражают голоса пользователей Arena и не являются рекомендацией aiapicompare. Партнёрские программы не влияют на порядок."; },
+  disclosure:function(k){ return "<b>Прозрачность:</b> ссылки с пометкой «"+k+"» – партнёрские (реклама). Мы можем получить комиссию, цена для вас не меняется."; }}
+};
+
+/* ---------- Angebote aus den Preisdaten ---------- */
+const ANGEBOTE = {};   // Modell-Schlüssel -> Liste von Angeboten
+Object.keys(QUELLEN).forEach(function(q){
+  const src = D[q] || {};
+  Object.keys(src).forEach(function(k){
+    const v = src[k], basis = k.replace(/:free$/, "");
+    const a = {q:q, roh:v.roh_id || k, url:v.url || (q === "openrouter" ? "https://openrouter.ai/" + (v.roh_id || k) : ""),
+      inp: typeof v.in === "number" ? v.in : null, ab: (typeof v.in !== "number" && typeof v.price === "number") ? v.price : null,
+      mp: typeof v.media_preis === "number" ? v.media_preis : null, e: v.einheit || "", g: !!v.gratis, df: v.dauer_fix || 0};
+    a.ps = a.mp !== null ? (a.e === "second" ? a.mp : (a.e === "generation" && a.df ? a.mp / a.df : null)) : null;
+    (ANGEBOTE[basis] = ANGEBOTE[basis] || []).push(a);
+  });
+});
+function preisVon(a, art){
+  if (art === "text") return a.g ? 0 : (a.inp !== null ? a.inp : a.ab);
+  if (art === "bild") return a.e === "image" ? a.mp : null;
+  return a.ps;
+}
+function bestesAngebot(keys, art){
+  let best = null, frei = false;
+  (keys || []).forEach(function(k){
+    (ANGEBOTE[k] || []).forEach(function(a){
+      if (art !== "text" && !/^media-/.test(k)) return;
+      const p = preisVon(a, art);
+      if (p === null || p === undefined) return;
+      if (p === 0) { frei = true; return; }
+      if (!best || p < best.p) best = {a:a, p:p};
+    });
+  });
+  return {best:best, frei:frei};
+}
+
+/* ---------- Zustand ---------- */
+function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+let lang = lsGet("lang") || (navigator.language || "").slice(0,2);
+if (!L10N[lang]) lang = "en";
+const VORHANDEN = ST ? (window.BEREICHE || []).filter(function(b){ return ST.bereiche[b.k]; }) : [];
+let bereich = location.hash.replace(/^#/, "");
+if (!VORHANDEN.some(function(b){ return b.k === bereich; })) bereich = VORHANDEN.length ? VORHANDEN[0].k : "";
+let nurPreis = false;
+
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function fmtP(n){ return "$" + (n >= 100 ? n.toFixed(0) : n >= 1 ? n.toFixed(2) : n >= 0.01 ? n.toFixed(3) : n.toFixed(4)); }
+function suchName(n){ return String(n).replace(/\([^)]*\)/g, "").trim(); }
+
+function render(){
+  const T = L10N[lang];
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+  document.title = T.h1 + " – aiapicompare";
+  document.querySelectorAll("[data-t]").forEach(function(el){ el.textContent = T[el.dataset.t]; });
+  document.querySelectorAll(".langbtns button").forEach(function(b){ b.classList.toggle("active", b.dataset.lang === lang); });
+  const dis = document.getElementById("disclosure");
+  dis.hidden = !C.hatAffiliate();
+  if (C.hatAffiliate()) dis.innerHTML = '<span class="adlabel">'+esc(C.kennzeichnung)+'</span><span>'+T.disclosure(C.kennzeichnung)+'</span>';
+  if (!ST || !VORHANDEN.length){
+    document.getElementById("tabs").innerHTML = "";
+    document.getElementById("thead").innerHTML = "";
+    document.getElementById("tbody").innerHTML = '<tr><td class="leer">'+T.leer+'</td></tr>';
+    return;
+  }
+  // Reiter
+  let h = "";
+  ["text","media"].forEach(function(g){
+    const bs = VORHANDEN.filter(function(b){ return b.g === g; });
+    if (!bs.length) return;
+    h += '<div class="gruppe">'+T[g]+'</div><div class="tabs">'+bs.map(function(b){
+      return '<button data-b="'+b.k+'" class="'+(b.k === bereich ? "active" : "")+'">'+b.ico+' '+esc(b[lang] || b.en)+'</button>'; }).join("")+'</div>';
+  });
+  document.getElementById("tabs").innerHTML = h;
+  document.getElementById("erkl").textContent = T.erkl;
+  document.getElementById("quelle").innerHTML = T.quelle(ST.meta);
+
+  const B = ST.bereiche[bereich], art = B.art;
+  document.getElementById("thead").innerHTML = '<tr>'+T.th.map(function(x,i){ return '<th'+(i===2||i===3||i===4?' class="num"':'')+'>'+x+'</th>'; }).join("")+'</tr>';
+  const zeilen = B.liste.map(function(x){ const o = bestesAngebot(x.k, art); return {x:x, best:o.best, frei:o.frei}; });
+  // Preis-Tipp: günstigstes bezahltes Angebot unter den ersten 10 Plätzen mit Preis
+  let tipp = null;
+  zeilen.filter(function(z){ return z.best; }).slice(0, 10).forEach(function(z){ if (!tipp || z.best.p < tipp.best.p) tipp = z; });
+  const max = Math.max.apply(null, B.liste.map(function(x){ return x.r || 0; }));
+  const min = Math.min.apply(null, B.liste.map(function(x){ return x.r || max; }));
+  const sicht = zeilen.filter(function(z){ return !nurPreis || z.best || z.frei; });
+  document.getElementById("tbody").innerHTML = sicht.map(function(z){
+    const x = z.x;
+    const breite = max > min ? Math.round(8 + (x.r - min) / (max - min) * 52) : 30;
+    let preis = '<span class="keinpreis">'+T.keinpreis+'</span>';
+    if (z.best) preis = '<span class="price">'+T.ab+' '+fmtP(z.best.p)+'</span><span class="org">'+T.pro[art]+'</span><br><small class="org"><span class="dot" style="background:'+FARBE[z.best.a.q]+'"></span>'+esc(QUELLEN[z.best.a.q])+'</small>';
+    else if (z.frei) preis = '<span class="price">'+T.gratis+'</span>';
+    const tags = (tipp === z ? '<span class="tag tipp" title="'+esc(T.tipp_t)+'">💰 '+T.tipp+'</span>' : '') + (z.frei && z.best ? '<span class="tag frei">'+T.frei+'</span>' : '');
+    const link = (z.best || z.frei) ? '<a class="cmp" href="index.html#q='+encodeURIComponent(suchName(x.n))+'">'+T.vergleichen+'</a>' : '';
+    return '<tr class="'+(x.p <= 3 ? "top3" : "")+'"><td class="platz">'+x.p+'</td>'+
+      '<td><b>'+esc(x.n)+'</b>'+tags+'<br><span class="org">'+esc(x.o)+'</span></td>'+
+      '<td class="num"><span class="price">'+(x.r === null ? "—" : x.r)+'</span><span class="bar" style="width:'+breite+'px"></span></td>'+
+      '<td class="num org">'+(x.v ? x.v.toLocaleString("de-DE") : "—")+'</td>'+
+      '<td class="num">'+preis+'</td><td class="num">'+link+'</td></tr>';
+  }).join("");
+  try { history.replaceState(null, "", "#" + bereich); } catch(e){}
+}
+
+document.addEventListener("click", function(e){
+  const l = e.target.closest("button[data-lang]");
+  if (l){ lang = l.dataset.lang; lsSet("lang", lang); render(); return; }
+  const b = e.target.closest("button[data-b]");
+  if (b){ bereich = b.dataset.b; render(); }
+});
+document.getElementById("nurpreis").addEventListener("change", function(e){ nurPreis = e.target.checked; render(); });
+window.addEventListener("hashchange", function(){
+  const h = location.hash.replace(/^#/, "");
+  if (VORHANDEN.some(function(b){ return b.k === h; }) && h !== bereich){ bereich = h; render(); }
+});
+render();
+</script>
+</body>
+</html>

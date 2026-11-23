@@ -5,6 +5,10 @@
 |---|---|
 | `index.html` | Preisvergleich (Hauptseite) |
 | `kosten.html` | Kostenrechner (Text, Bilder, Video) |
+| `bestenliste.html` | „Welches Modell wofür?“ – Platzierungen aus der Arena-Bestenliste (CC BY 4.0) mit günstigstem Preis |
+| `news.html` | Neuigkeiten: neue Modelle und Preisänderungen aus den eigenen Preisdaten (keine fremden Texte) |
+| `build_news.py` | erzeugt `out/staerken.js` (Arena-Ranglisten) und `out/news.js` (Neuigkeiten); läuft nachts nach `build_data.py` |
+| `bereiche.js` | Namen der Anwendungsbereiche in 4 Sprachen |
 | `free.html` | Kostenlose Modelle (funktioniert auch lokal; online ersetzt durch die Sprachfassungen aus `build_pages.py`) |
 | `build_pages.py` | erzeugt Modellseiten (4 Sprachen), Seite „Kostenlose Modelle“, A–Z-Verzeichnis, Sitemap und `/api/prices.json` |
 | `theme.js` | heller/dunkler Modus |
@@ -51,3 +55,10 @@ Danach `vorschau/index.html` öffnen. Dort funktionieren auch die Modellseiten u
 `build_data.py` schreibt `out/verlauf.json`. Preisänderungen erscheinen im Vergleich als ↓/↑ in Prozent,
 neue Modelle der letzten 7 Tage als „NEU“, auf den Modellseiten als Diagramm.
 Beim allerersten Lauf wird nur der Ausgangsstand gespeichert (nichts wird als neu markiert).
+
+## Bestenliste & Neuigkeiten – rechtliche Hinweise
+- Die Platzierungen stammen aus dem Datensatz „lmarena-ai/leaderboard-dataset“ (Arena, ehemals LMArena),
+  Lizenz CC BY 4.0. Die Quellenangabe mit Lizenz-Link und Hinweis auf Änderungen steht auf der
+  Bestenliste, auf jeder Modellseite und (per Link) im Preisvergleich – bitte nicht entfernen.
+- Die Neuigkeiten entstehen nur aus den eigenen Preisdaten. Fremde Schlagzeilen oder Artikeltexte werden
+  bewusst nicht übernommen; zu den Anbietern gibt es nur einfache Links.
