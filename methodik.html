@@ -83,6 +83,8 @@ de:{h1:"So vergleichen wir", lead:"Woher unsere Preise kommen, wie wir sie vergl
   '<h2>Veraltete Daten '+tag("alt","⏱ Stand …")+'</h2>'+
   '<p>Schlägt der Abruf bei einem Anbieter fehl, zeigen wir die zuletzt abgerufenen Preise mit Datum an. Sind sie älter als drei Tage, verwenden wir sie nicht mehr für Empfehlungen.</p>'+
   '<div class="live">'+(x.alt.length ? 'Aktuell betroffen: '+esc(x.alt.join(", ")) : 'Aktuell sind die Daten aller Anbieter auf dem neuesten Stand.')+'</div>'+
+  '<h2>Angaben zu den Anbietern</h2>'+
+  '<p>Firmensitz, Zahlungsarten, Mindestaufladung, Gebühren und Datenschutz auf den <a href="de/providers/index.html">Anbieter-Seiten</a> tragen wir von Hand aus den eigenen Seiten der Anbieter zusammen (Nutzungsbedingungen, Datenschutzerklärung, Preisseite) und verlinken jeweils die Quellen. Das Prüfdatum steht unter den Angaben. Finden wir etwas nicht, steht dort „Keine Angabe“ – wir raten nicht.</p>'+
   '<h2>Platzierungen (Bestenliste)</h2>'+
   '<p>Die Platzierungen stammen von Arena (arena.ai, ehemals LMArena), Datensatz <a href="'+DATASET+'" rel="noopener" target="_blank">lmarena-ai/leaderboard-dataset</a>, Lizenz <a href="'+LIZENZ+'" rel="noopener" target="_blank">CC BY 4.0</a>. Sie beruhen auf Abstimmungen von Nutzern, die Antworten zweier Modelle vergleichen – ein guter Anhaltspunkt, aber keine Messung für deinen konkreten Einsatz. Die Zuordnung zu den Modellen in unserem Preisvergleich erfolgt automatisch über die Modellnamen; Fehler sind möglich.</p>'+
   '<h2>Unabhängigkeit</h2>'+
@@ -111,6 +113,8 @@ en:{h1:"How we compare", lead:"Where our prices come from, how we compare them a
   '<h2>Outdated data '+tag("alt","⏱ as of …")+'</h2>'+
   '<p>If fetching from a provider fails, we show the last known prices with their date. If they are older than three days, we no longer use them for recommendations.</p>'+
   '<div class="live">'+(x.alt.length ? 'Currently affected: '+esc(x.alt.join(", ")) : 'Currently the data of all providers is up to date.')+'</div>'+
+  '<h2>Provider details</h2>'+
+  '<p>Company location, payment methods, minimum top-up, fees and data handling on the <a href="providers/index.html">provider pages</a> are collected by hand from the providers’ own pages (terms, privacy policy, pricing page), with links to the sources. The date of the check is shown below the details. If we cannot find something, it says “Not stated” – we do not guess.</p>'+
   '<h2>Ranks (leaderboard)</h2>'+
   '<p>The ranks come from Arena (arena.ai, formerly LMArena), dataset <a href="'+DATASET+'" rel="noopener" target="_blank">lmarena-ai/leaderboard-dataset</a>, license <a href="'+LIZENZ+'" rel="noopener" target="_blank">CC BY 4.0</a>. They are based on votes by users comparing the answers of two models – a good indication, but not a measurement for your specific use. They are matched to the models in our price comparison automatically by model name; errors are possible.</p>'+
   '<h2>Independence</h2>'+
@@ -139,6 +143,8 @@ zh:{h1:"我们的比较方法", lead:"我们的价格从何而来、如何比较
   '<h2>过时数据 '+tag("alt","⏱ 数据日期 …")+'</h2>'+
   '<p>如果从某个提供商获取数据失败，我们会显示最近一次获取的价格及其日期。超过三天的数据不再用于推荐。</p>'+
   '<div class="live">'+(x.alt.length ? '当前受影响：'+esc(x.alt.join("、")) : '目前所有提供商的数据均为最新。')+'</div>'+
+  '<h2>提供商信息</h2>'+
+  '<p><a href="zh/providers/index.html">提供商页面</a>上的公司所在地、支付方式、最低充值、手续费和数据处理信息，由我们从提供商自己的页面（服务条款、隐私政策、价格页面）手动整理，并附上来源链接。核查日期显示在信息下方。找不到的信息会标注“未说明”——我们不做猜测。</p>'+
   '<h2>名次（排行榜）</h2>'+
   '<p>名次来自 Arena（arena.ai，原 LMArena），数据集 <a href="'+DATASET+'" rel="noopener" target="_blank">lmarena-ai/leaderboard-dataset</a>，许可证 <a href="'+LIZENZ+'" rel="noopener" target="_blank">CC BY 4.0</a>。名次基于用户对两个模型回答的比较投票——可作为参考，但并非针对你具体用途的测量。与我们价格对比中模型的对应关系按模型名称自动匹配，可能存在错误。</p>'+
   '<h2>独立性</h2>'+
@@ -167,6 +173,8 @@ ru:{h1:"Как мы сравниваем", lead:"Откуда наши цены,
   '<h2>Устаревшие данные '+tag("alt","⏱ на …")+'</h2>'+
   '<p>Если получить данные у поставщика не удалось, мы показываем последние известные цены с датой. Данные старше трёх дней больше не используются для рекомендаций.</p>'+
   '<div class="live">'+(x.alt.length ? 'Сейчас затронуты: '+esc(x.alt.join(", ")) : 'Сейчас данные всех поставщиков актуальны.')+'</div>'+
+  '<h2>Сведения о поставщиках</h2>'+
+  '<p>Местонахождение компании, способы оплаты, минимальное пополнение, комиссии и обработку данных на <a href="ru/providers/index.html">страницах поставщиков</a> мы собираем вручную с собственных страниц поставщиков (условия, политика конфиденциальности, страница цен) и даём ссылки на источники. Дата проверки указана под сведениями. Если что-то не найдено, там написано «Не указано» – мы не гадаем.</p>'+
   '<h2>Места (рейтинг)</h2>'+
   '<p>Места взяты из Arena (arena.ai, ранее LMArena), набор данных <a href="'+DATASET+'" rel="noopener" target="_blank">lmarena-ai/leaderboard-dataset</a>, лицензия <a href="'+LIZENZ+'" rel="noopener" target="_blank">CC BY 4.0</a>. Они основаны на голосах пользователей, сравнивающих ответы двух моделей, – хороший ориентир, но не измерение для вашей конкретной задачи. Сопоставление с моделями в нашем сравнении цен выполняется автоматически по названиям; возможны ошибки.</p>'+
   '<h2>Независимость</h2>'+

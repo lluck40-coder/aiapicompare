@@ -1,0 +1,370 @@
+{
+ "_hinweis": "Von Hand gepflegt. Nur Angaben mit Quelle eintragen; Unbekanntes als „Keine Angabe“. Nach Änderungen 'stand' aktualisieren. pruefen.py meldet, wenn 'stand' älter als 120 Tage ist.",
+ "stand": "2026-11-23",
+ "anbieter": {
+  "openrouter": {
+   "firma": "OpenRouter, Inc.",
+   "sitz": {
+    "de": "New York, USA",
+    "en": "New York, USA",
+    "zh": "美国纽约",
+    "ru": "Нью-Йорк, США"
+   },
+   "zahlung": [
+    "karte",
+    "alipay",
+    "krypto"
+   ],
+   "minimum": {
+    "de": "$5 pro Kauf",
+    "en": "$5 per purchase",
+    "zh": "每次购买 $5",
+    "ru": "$5 за покупку"
+   },
+   "gebuehr": {
+    "de": "5,5 % pro Aufladung (mind. $0.80), Krypto (USDC) 5 %",
+    "en": "5.5% per top-up (min. $0.80), crypto (USDC) 5%",
+    "zh": "每次充值 5.5%（最低 $0.80），加密货币（USDC）5%",
+    "ru": "5,5 % за пополнение (мин. $0.80), криптовалюта (USDC) 5 %"
+   },
+   "speichert": "optin",
+   "training": "nein_ausnahmen",
+   "daten": {
+    "de": "Speichert Prompts nur, wenn du die Protokollierung einschaltest. Die Modell-Anbieter dahinter haben eigene Regeln; mit der ZDR-Einstellung wird nur an Anbieter ohne Datenspeicherung weitergeleitet.",
+    "en": "Stores prompts only if you enable logging. The model providers behind it have their own policies; the ZDR setting routes only to providers without data retention.",
+    "zh": "仅在你开启日志时保存提示词。其背后的模型提供商有各自的政策；开启 ZDR 设置后只会路由到不保存数据的提供商。",
+    "ru": "Сохраняет промпты только при включённом логировании. У поставщиков моделей за ним свои правила; настройка ZDR направляет запросы только к поставщикам без хранения данных."
+   },
+   "quellen": [
+    "https://openrouter.ai/terms",
+    "https://openrouter.ai/contact",
+    "https://openrouter.ai/blog/announcements/simplifying-our-platform-fee/",
+    "https://openrouter.ai/docs/guides/privacy"
+   ]
+  },
+  "uplinkswitch": {
+   "firma": "Uplink Switch LLC",
+   "sitz": {
+    "de": "Wyoming, USA",
+    "en": "Wyoming, USA",
+    "zh": "美国怀俄明州",
+    "ru": "Вайоминг, США"
+   },
+   "zahlung": [
+    "karte",
+    "krypto"
+   ],
+   "minimum": {
+    "de": "$10 (Vorauszahlung)",
+    "en": "$10 (prepaid)",
+    "zh": "$10（预付）",
+    "ru": "$10 (предоплата)"
+   },
+   "gebuehr": {
+    "de": "Keine Angabe; Bonus-Guthaben ab $50",
+    "en": "Not stated; bonus credit from $50",
+    "zh": "未说明；充值 $50 起赠送额度",
+    "ru": "Не указано; бонус от $50"
+   },
+   "speichert": "nein",
+   "training": "unklar",
+   "daten": {
+    "de": "Speichert Prompts und Antworten laut Anbieter nicht (Ausnahme: Funktion „Replay“, 7 Tage). Neue Nachrichten werden zur Sicherheitsprüfung an die Moderations-API von OpenAI geschickt; die Modell-Hoster erhalten die Inhalte.",
+    "en": "According to the provider, prompts and responses are not stored (exception: “Replay” feature, 7 days). New messages are sent to OpenAI’s moderation API for safety checks; model hosts receive the content.",
+    "zh": "据提供商称，不保存提示词和回答（例外：“Replay”功能，保留 7 天）。新消息会发送到 OpenAI 的审核 API 进行安全检查；模型托管方会收到内容。",
+    "ru": "По данным поставщика, промпты и ответы не сохраняются (исключение: функция «Replay», 7 дней). Новые сообщения отправляются в модерационный API OpenAI; хостинги моделей получают содержимое."
+   },
+   "quellen": [
+    "https://uplinkswitch.ai/",
+    "https://uplinkswitch.ai/privacy"
+   ]
+  },
+  "anymodel": {
+   "firma": "OOO «BUZTON»",
+   "sitz": {
+    "de": "Taschkent, Usbekistan",
+    "en": "Tashkent, Uzbekistan",
+    "zh": "乌兹别克斯坦塔什干",
+    "ru": "Ташкент, Узбекистан"
+   },
+   "zahlung": [
+    "karte",
+    "sbp",
+    "krypto"
+   ],
+   "minimum": {
+    "de": "Keine Angabe (beliebiger Betrag laut Website)",
+    "en": "Not stated (any amount, per website)",
+    "zh": "未说明（网站称可充值任意金额）",
+    "ru": "Не указано (любая сумма, по данным сайта)"
+   },
+   "gebuehr": {
+    "de": "Keine Gebühren laut Website",
+    "en": "No fees, per website",
+    "zh": "网站称无手续费",
+    "ru": "Без комиссий, по данным сайта"
+   },
+   "speichert": "nein",
+   "training": "unklar",
+   "daten": {
+    "de": "Kein Archiv der Anfragen; kurze Ausschnitte werden einige Minuten zur Fehlersuche gehalten, Bildaufträge 24 Stunden. Der Verlauf im Web-Chat wird gespeichert (Backblaze, USA). Optional „Ghost Mode“.",
+    "en": "No archive of requests; short excerpts are kept for a few minutes for diagnostics, image jobs for 24 hours. Web chat history is stored (Backblaze, USA). Optional “Ghost Mode”.",
+    "zh": "不保存请求存档；简短片段会保留几分钟用于诊断，图像任务保留 24 小时。网页聊天记录会被保存（Backblaze，美国）。可选“Ghost Mode”。",
+    "ru": "Архив запросов не ведётся; короткие фрагменты хранятся несколько минут для диагностики, задания на изображения — 24 часа. История веб-чата сохраняется (Backblaze, США). Опционально «Ghost Mode»."
+   },
+   "quellen": [
+    "https://anymodel.org/legal/terms",
+    "https://anymodel.org/legal/privacy",
+    "https://anymodel.org/"
+   ]
+  },
+  "nanogpt": {
+   "firma": "NanoGPT LLC",
+   "sitz": {
+    "de": "USA",
+    "en": "USA",
+    "zh": "美国",
+    "ru": "США"
+   },
+   "zahlung": [
+    "karte",
+    "krypto"
+   ],
+   "minimum": {
+    "de": "$1 per Karte, $0.10 in Krypto (erste Einzahlung)",
+    "en": "$1 by card, $0.10 in crypto (first deposit)",
+    "zh": "银行卡 $1，加密货币 $0.10（首次充值）",
+    "ru": "$1 картой, $0.10 криптовалютой (первое пополнение)"
+   },
+   "gebuehr": {
+    "de": "Keine prozentualen Einzahlungsgebühren",
+    "en": "No percentage deposit fees",
+    "zh": "无按比例收取的充值手续费",
+    "ru": "Без процентной комиссии за пополнение"
+   },
+   "speichert": "unklar",
+   "training": "nein",
+   "daten": {
+    "de": "Kein Training mit deinen Eingaben und Ausgaben. Der Chat-Verlauf der Web-App liegt standardmäßig lokal auf deinem Gerät. Anfragen gehen an Drittanbieter mit eigenen Bedingungen; zur Speicherung von API-Anfragen keine klare Angabe.",
+    "en": "No training on your inputs and outputs. Web-app chat history is stored locally on your device by default. Requests go to third-party providers with their own terms; no clear statement on storage of API requests.",
+    "zh": "不使用你的输入和输出进行训练。网页应用的聊天记录默认保存在你的设备本地。请求会发给有各自条款的第三方提供商；关于 API 请求的存储没有明确说明。",
+    "ru": "Не обучает модели на ваших вводах и выводах. История чата веб-приложения по умолчанию хранится локально на вашем устройстве. Запросы передаются сторонним поставщикам с их условиями; о хранении API-запросов чёткой информации нет."
+   },
+   "quellen": [
+    "https://nano-gpt.com/terms",
+    "https://nano-gpt.com/get-started"
+   ]
+  },
+  "chutes": {
+   "firma": "Chutes Global Corp.",
+   "sitz": {
+    "de": "Delaware, USA",
+    "en": "Delaware, USA",
+    "zh": "美国特拉华州",
+    "ru": "Делавэр, США"
+   },
+   "zahlung": [
+    "karte",
+    "bank",
+    "krypto",
+    "tao"
+   ],
+   "minimum": {
+    "de": "Keine Angabe",
+    "en": "Not stated",
+    "zh": "未说明",
+    "ru": "Не указано"
+   },
+   "gebuehr": {
+    "de": "Keine Angabe",
+    "en": "Not stated",
+    "zh": "未说明",
+    "ru": "Не указано"
+   },
+   "speichert": "nein",
+   "training": "nein",
+   "daten": {
+    "de": "Speichert API-Inhalte laut Anbieter nicht (kurzzeitige Puffer bis 24 Stunden). Bei Standard-Modellen können externe Modell-Anbieter Inhalte bis zu 30 Tage aufbewahren; „TEE“-Modelle laufen in abgeschirmter Hardware.",
+    "en": "According to the provider, API content is not stored (transient buffers up to 24 hours). For standard models, external model providers may keep content for up to 30 days; “TEE” models run in isolated hardware.",
+    "zh": "据提供商称，不保存 API 内容（临时缓冲最长 24 小时）。对于标准模型，外部模型提供商可能保存内容最长 30 天；“TEE”模型在隔离的硬件中运行。",
+    "ru": "По данным поставщика, содержимое API не сохраняется (временные буферы до 24 часов). Для стандартных моделей внешние поставщики могут хранить данные до 30 дней; модели «TEE» работают в изолированном оборудовании."
+   },
+   "quellen": [
+    "https://chutes.ai/terms",
+    "https://chutes.ai/privacy",
+    "https://chutes.ai/pricing"
+   ]
+  },
+  "deepinfra": {
+   "firma": "Deep Infra Inc.",
+   "sitz": {
+    "de": "Palo Alto (Kalifornien), USA",
+    "en": "Palo Alto (California), USA",
+    "zh": "美国加利福尼亚州帕洛阿尔托",
+    "ru": "Пало-Альто (Калифорния), США"
+   },
+   "zahlung": [
+    "karte",
+    "rechnung"
+   ],
+   "zahlung_hinweis": {
+    "de": "Karte oder Vorauszahlung; Rechnung",
+    "en": "Card or prepayment; invoice",
+    "zh": "银行卡或预付；发票结算",
+    "ru": "Карта или предоплата; счёт"
+   },
+   "minimum": {
+    "de": "Keine Angabe",
+    "en": "Not stated",
+    "zh": "未说明",
+    "ru": "Не указано"
+   },
+   "gebuehr": {
+    "de": "Keine Angabe",
+    "en": "Not stated",
+    "zh": "未说明",
+    "ru": "Не указано"
+   },
+   "speichert": "nein",
+   "training": "nein_ausnahmen",
+   "daten": {
+    "de": "Speichert Anfragen laut Anbieter nicht (nur Metadaten wie Kosten); Ausnahmen: Bild-Ausgaben kurzzeitig, Batch-Aufträge. Kein Training – außer bei Google- und Anthropic-Modellen, dort gelten deren Regeln.",
+    "en": "According to the provider, requests are not stored (only metadata such as cost); exceptions: image outputs briefly, batch jobs. No training – except for Google and Anthropic models, where their policies apply.",
+    "zh": "据提供商称，不保存请求（仅保存费用等元数据）；例外：图像输出短暂保存、批处理任务。不用于训练——Google 和 Anthropic 模型除外，适用其各自政策。",
+    "ru": "По данным поставщика, запросы не сохраняются (только метаданные, например стоимость); исключения: изображения недолго, пакетные задания. Без обучения – кроме моделей Google и Anthropic, для них действуют их правила."
+   },
+   "quellen": [
+    "https://deepinfra.com/terms",
+    "https://deepinfra.com/pricing",
+    "https://docs.deepinfra.com/account/data-privacy"
+   ]
+  },
+  "novita": {
+   "firma": null,
+   "sitz": {
+    "de": "Keine Angabe gefunden",
+    "en": "Not found",
+    "zh": "未找到",
+    "ru": "Не найдено"
+   },
+   "zahlung": [
+    "karte"
+   ],
+   "zahlung_hinweis": {
+    "de": "Karte über Stripe; kein Krypto",
+    "en": "Card via Stripe; no crypto",
+    "zh": "通过 Stripe 用银行卡；不支持加密货币",
+    "ru": "Карта через Stripe; без криптовалюты"
+   },
+   "minimum": {
+    "de": "Mehr als $10 pro manueller Aufladung",
+    "en": "More than $10 per manual top-up",
+    "zh": "每次手动充值需超过 $10",
+    "ru": "Более $10 за ручное пополнение"
+   },
+   "gebuehr": {
+    "de": "Keine Angabe",
+    "en": "Not stated",
+    "zh": "未说明",
+    "ru": "Не указано"
+   },
+   "speichert": "unklar",
+   "training": "unklar",
+   "daten": {
+    "de": "Die Datenschutzerklärung äußert sich nicht zu Prompts; personenbezogene Daten werden laut Anbieter nicht zum Training genutzt.",
+    "en": "The privacy policy says nothing about prompts; according to the provider, personal information is not used for training.",
+    "zh": "隐私政策未提及提示词；据提供商称，个人信息不会用于训练。",
+    "ru": "В политике конфиденциальности ничего не сказано о промптах; по данным поставщика, персональные данные не используются для обучения."
+   },
+   "quellen": [
+    "https://novita.ai/docs/guides/payment-methods",
+    "https://docs.novita.ai/guides/faq",
+    "https://novita.ai/legal/privacy-policy"
+   ]
+  },
+  "cometapi": {
+   "firma": null,
+   "sitz": {
+    "de": "Keine Angabe (Vertragsrecht: Hongkong)",
+    "en": "Not stated (governing law: Hong Kong)",
+    "zh": "未说明（适用法律：香港）",
+    "ru": "Не указано (применимое право: Гонконг)"
+   },
+   "zahlung": [
+    "karte"
+   ],
+   "zahlung_hinweis": {
+    "de": "U. a. Karte über Stripe; weitere Methoden nicht aufgeführt",
+    "en": "Card via Stripe among others; other methods not listed",
+    "zh": "包括通过 Stripe 用银行卡；其他方式未列出",
+    "ru": "В т. ч. карта через Stripe; другие способы не указаны"
+   },
+   "minimum": {
+    "de": "Keine Angabe (kein Mindestumsatz)",
+    "en": "Not stated (no minimum spend)",
+    "zh": "未说明（无最低消费）",
+    "ru": "Не указано (без минимальных трат)"
+   },
+   "gebuehr": {
+    "de": "Keine Angabe",
+    "en": "Not stated",
+    "zh": "未说明",
+    "ru": "Не указано"
+   },
+   "speichert": "nein",
+   "training": "unklar",
+   "daten": {
+    "de": "Speichert laut Anbieter keine Prompts und Ausgaben, nur technische Protokolle (z. B. IP-Adresse, Zeitpunkt).",
+    "en": "According to the provider, no prompts or outputs are stored, only technical logs (e.g. IP address, time).",
+    "zh": "据提供商称，不保存提示词和输出，仅保存技术日志（如 IP 地址、时间）。",
+    "ru": "По данным поставщика, промпты и ответы не сохраняются, только технические логи (например, IP-адрес, время)."
+   },
+   "quellen": [
+    "https://www.cometapi.com/terms",
+    "https://apidoc.cometapi.com/privacy",
+    "https://www.cometapi.com/pricing/"
+   ]
+  },
+  "kyma": {
+   "firma": "Affitor LLC (Kyma API)",
+   "sitz": {
+    "de": "Wyoming, USA (Postanschrift: San Francisco)",
+    "en": "Wyoming, USA (mailing address: San Francisco)",
+    "zh": "美国怀俄明州（邮寄地址：旧金山）",
+    "ru": "Вайоминг, США (почтовый адрес: Сан-Франциско)"
+   },
+   "zahlung": [],
+   "zahlung_hinweis": {
+    "de": "Über Stripe (Methoden nicht aufgeführt)",
+    "en": "Via Stripe (methods not listed)",
+    "zh": "通过 Stripe（未列出具体方式）",
+    "ru": "Через Stripe (способы не указаны)"
+   },
+   "minimum": {
+    "de": "Keine Angabe; $0.50 Startguthaben ohne Karte",
+    "en": "Not stated; $0.50 signup credit without card",
+    "zh": "未说明；注册赠送 $0.50，无需银行卡",
+    "ru": "Не указано; $0.50 при регистрации без карты"
+   },
+   "gebuehr": {
+    "de": "Keine Angabe",
+    "en": "Not stated",
+    "zh": "未说明",
+    "ru": "Не указано"
+   },
+   "speichert": "ja",
+   "training": "nein",
+   "daten": {
+    "de": "Speichert Prompts und Antworten, automatische Löschung nach 90 Tagen; erzeugte Medien 24 Stunden. Kein Training laut Anbieter. Anfragen an „DeepSeek Direct“ werden in China verarbeitet.",
+    "en": "Stores prompts and responses, automatically deleted after 90 days; generated media 24 hours. No training, per provider. Requests to “DeepSeek Direct” are processed in China.",
+    "zh": "保存提示词和回答，90 天后自动删除；生成的媒体文件保存 24 小时。据提供商称不用于训练。发往“DeepSeek Direct”的请求在中国处理。",
+    "ru": "Сохраняет промпты и ответы, удаление через 90 дней; сгенерированные медиафайлы — 24 часа. По данным поставщика, без обучения. Запросы к «DeepSeek Direct» обрабатываются в Китае."
+   },
+   "quellen": [
+    "https://kymaapi.com/terms",
+    "https://kymaapi.com/privacy",
+    "https://kymaapi.com/pricing"
+   ]
+  }
+ }
+}

@@ -81,6 +81,17 @@ for datei, name, feld in [("staerken.js", "Bestenliste (Arena)", ("meta", "abger
     except Exception as e:  # noqa: BLE001
         probleme.append(("Daten", f"{name}: out/{datei} ist beschädigt ({e})."))
 
+# ---------- 2b. Von Hand gepflegte Anbieter-Angaben ----------
+try:
+    _fakten = json.loads(pathlib.Path("anbieter_info.json").read_text(encoding="utf-8"))
+    a = alter_tage(_fakten.get("stand", ""))
+    if a is not None and a > 120:
+        probleme.append(("Anbieter", f"Die Anbieter-Angaben (anbieter_info.json, Stand {_fakten.get('stand')}) sind {a} Tage alt – bitte Zahlungsarten, Mindestaufladung und Datenschutz bei den Anbietern nachprüfen."))
+except FileNotFoundError:
+    pass
+except Exception as e:  # noqa: BLE001
+    probleme.append(("Anbieter", f"anbieter_info.json ist beschädigt ({e})."))
+
 # ---------- 3. Tote interne Links ----------
 class Links(html.parser.HTMLParser):
     def __init__(self):

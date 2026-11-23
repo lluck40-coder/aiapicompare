@@ -14,6 +14,7 @@
 | `indexnow.py` + `<Schlüssel>.txt` | meldet neue/geänderte Seiten nachts an Bing & Co. (IndexNow), sobald die Domain live ist |
 | `bereiche.js` | Namen der Anwendungsbereiche in 4 Sprachen |
 | `methodik.html` | „So vergleichen wir“: Datenquellen, Einheiten, Referenzpreis und Kennzeichnung, veraltete Daten, Unabhängigkeit |
+| `anbieter_info.json` | **von Hand gepflegt:** Firmensitz, Zahlungsarten, Mindestaufladung, Gebühren, Datenschutz je Anbieter (mit Quellen) → Kasten „Auf einen Blick“ auf den Anbieter-Seiten und Tabelle „Bedingungen im Vergleich“. Nach dem Prüfen `stand` anpassen; die Kontrolle erinnert nach 120 Tagen |
 | `referenz.js` | Referenzpreis je Modell und Kennzeichnung „⚠ weit unter Referenzpreis“ / „⏱ Stand …“ / „Batch“ – dieselben Regeln stehen in `build_pages.py` |
 | `finder.html` | Modell-Finder: 3 Fragen (Zweck, Budget, Qualität vs. Preis) → passende Modelle aus Arena-Platzierung + Preis |
 | `preisindex.html` | KI-Preisindex: Entwicklung der API-Preise seit dem Starttag (Daten: `out/preisindex.js`, erzeugt von `build_news.py`) |

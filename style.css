@@ -88,3 +88,7 @@ tr.trenner td{font-size:.75rem;font-weight:600;color:#f59e0b;padding:.6rem .8rem
 .refzeile a{color:inherit}
 .hinweisbox{border:1px solid rgba(245,158,11,.45);background:rgba(245,158,11,.08);border-radius:.5rem;padding:.6rem .8rem;font-size:.85rem;margin:.8rem 0}
 [data-theme=light] .hinweisbox{background:#fffbeb;border-color:#fcd34d;color:#78350f}
+/* Anbieter-Fakten („Auf einen Blick“) */
+table.fakten th{width:13rem;text-align:left;font-weight:600;color:var(--muted);vertical-align:top;white-space:normal}
+table.fakten td{white-space:normal;line-height:1.55}
+@media (max-width:600px){ table.fakten th{width:auto;display:block;padding-bottom:0} table.fakten td{display:block;padding-top:.15rem} }

@@ -1188,6 +1188,7 @@ def anbieterseite(q, lang):
     h += (f'<div class="rel"><a class="btn" data-anb="{q}" data-start="1" href="{STARTSEITE.get(q, "#")}" target="_blank" rel="noopener">'
           f'{esc(v["zum_anb"].format(p=name))}</a><a class="btn" href="{rel}anbindung.html#anbieter={q}">{v["anleitung"]}</a>'
           f'<a class="btn" href="{rel}index.html#anb={q}">{t["nav_vergleich"]}</a></div>\n')
+    h += fakten_box(q, lang, rel)
 
     def tabelle(liste, mit_platz=False):
         x = (f'<div class="tablewrap" style="margin-top:.6rem"><table><thead><tr><th>{v["th_modell"]}</th><th class="num">{v["th_preis"]}</th>'
@@ -1228,6 +1229,91 @@ def anbieterseite(q, lang):
     h += fuss(lang, rel)
     return h
 
+# ------------------------------------------------------------------ Anbieter-Fakten (von Hand gepflegt: anbieter_info.json)
+try:
+    ANB_FAKTEN = json.loads((BASIS / "anbieter_info.json").read_text(encoding="utf-8"))
+except (OSError, ValueError):
+    ANB_FAKTEN = {}
+
+FAKT_T = {
+    "de": dict(h="Auf einen Blick", firma="Unternehmen und Sitz", zahlung="Zahlungsarten", minimum="Mindestaufladung", gebuehr="Gebühren",
+               speichert="Speichert Prompts", training="Training mit deinen Daten", daten="Datenschutz", quellen="Quellen",
+               hinweis="Laut Angaben des Anbieters, geprüft am {d} – ohne Gewähr. Bedingungen können sich ändern; maßgeblich sind die Seiten des Anbieters.",
+               h_vergl="Bedingungen im Vergleich", sitz="Sitz", melden="Fehler melden",
+               z=dict(karte="Karte", alipay="Alipay", krypto="Krypto", sbp="SBP (Russland)", bank="Überweisung", tao="TAO (Bittensor)", rechnung="Rechnung"),
+               s=dict(nein="Nein (laut Anbieter)", optin="Nur wenn eingeschaltet", ja="Ja", unklar="Keine klare Angabe"),
+               tr=dict(nein="Nein (laut Anbieter)", nein_ausnahmen="Nein (mit Ausnahmen)", unklar="Keine Angabe")),
+    "en": dict(h="At a glance", firma="Company and location", zahlung="Payment methods", minimum="Minimum top-up", gebuehr="Fees",
+               speichert="Stores prompts", training="Training on your data", daten="Data handling", quellen="Sources",
+               hinweis="Based on the provider’s own information, checked on {d} – without guarantee. Terms may change; the provider’s pages prevail.",
+               h_vergl="Terms compared", sitz="Location", melden="Report an error",
+               z=dict(karte="Card", alipay="Alipay", krypto="Crypto", sbp="SBP (Russia)", bank="Bank transfer", tao="TAO (Bittensor)", rechnung="Invoice"),
+               s=dict(nein="No (per provider)", optin="Only if you opt in", ja="Yes", unklar="Not clearly stated"),
+               tr=dict(nein="No (per provider)", nein_ausnahmen="No (with exceptions)", unklar="Not stated")),
+    "zh": dict(h="概览", firma="公司与所在地", zahlung="支付方式", minimum="最低充值", gebuehr="手续费",
+               speichert="是否保存提示词", training="用你的数据训练", daten="数据处理", quellen="来源",
+               hinweis="依据提供商自身信息，核查日期 {d}——不作保证。条款可能变化，以提供商页面为准。",
+               h_vergl="条款对比", sitz="所在地", melden="报告错误",
+               z=dict(karte="银行卡", alipay="支付宝", krypto="加密货币", sbp="SBP（俄罗斯）", bank="银行转账", tao="TAO（Bittensor）", rechnung="发票结算"),
+               s=dict(nein="否（据提供商）", optin="仅在你开启时", ja="是", unklar="未明确说明"),
+               tr=dict(nein="否（据提供商）", nein_ausnahmen="否（有例外）", unklar="未说明")),
+    "ru": dict(h="Коротко", firma="Компания и местонахождение", zahlung="Способы оплаты", minimum="Минимальное пополнение", gebuehr="Комиссии",
+               speichert="Хранит промпты", training="Обучение на ваших данных", daten="Обработка данных", quellen="Источники",
+               hinweis="По данным поставщика, проверено {d} – без гарантии. Условия могут меняться; действуют страницы поставщика.",
+               h_vergl="Сравнение условий", sitz="Местонахождение", melden="Сообщить об ошибке",
+               z=dict(karte="Карта", alipay="Alipay", krypto="Криптовалюта", sbp="СБП", bank="Банковский перевод", tao="TAO (Bittensor)", rechnung="Счёт"),
+               s=dict(nein="Нет (по данным поставщика)", optin="Только при включении", ja="Да", unklar="Нет чёткой информации"),
+               tr=dict(nein="Нет (по данным поставщика)", nein_ausnahmen="Нет (с исключениями)", unklar="Не указано")),
+}
+
+def _fakt(q):
+    return (ANB_FAKTEN.get("anbieter") or {}).get(q)
+
+def _zahlung_text(f, lang):
+    ft = FAKT_T[lang]
+    teile = [ft["z"].get(z, z) for z in f.get("zahlung") or []]
+    hinweis = (f.get("zahlung_hinweis") or {}).get(lang)
+    return hinweis or ", ".join(teile) or "—"      # ein Hinweis ist vollständig formuliert und ersetzt die Liste
+
+def _quelle_kurz(u):
+    x = urllib.parse.urlsplit(u)
+    return (x.netloc.replace("www.", "") + x.path).rstrip("/")
+
+def fakten_box(q, lang, rel):
+    f = _fakt(q)
+    if not f:
+        return ""
+    ft = FAKT_T[lang]
+    firma = (esc(f["firma"]) + " · " if f.get("firma") else "") + esc(f["sitz"][lang])
+    zeilen = [(ft["firma"], firma), (ft["zahlung"], esc(_zahlung_text(f, lang))), (ft["minimum"], esc(f["minimum"][lang])),
+              (ft["gebuehr"], esc(f["gebuehr"][lang])), (ft["speichert"], esc(ft["s"].get(f["speichert"], "—"))),
+              (ft["training"], esc(ft["tr"].get(f["training"], "—"))), (ft["daten"], esc(f["daten"][lang])),
+              (ft["quellen"], " · ".join(f'<a href="{esc(u)}" target="_blank" rel="nofollow noopener">{esc(_quelle_kurz(u))}</a>' for u in f.get("quellen", [])))]
+    betreff = urllib.parse.quote(f"Anbieter-Angaben / provider info: {ANBIETER[q][0]}")
+    return (f'<h2>{ft["h"]}</h2><div class="tablewrap"><table class="fakten"><tbody>'
+            + "".join(f'<tr><th>{k}</th><td>{v}</td></tr>' for k, v in zeilen)
+            + f'</tbody></table></div><p class="refzeile">{esc(ft["hinweis"].format(d=ref_datum(ANB_FAKTEN.get("stand", ""), lang)))} '
+            f'<a href="mailto:kontakt@aiapicompare.com?subject={betreff}">{esc(ft["melden"])}</a></p>\n')
+
+def fakten_vergleich(lang):
+    if not ANB_FAKTEN.get("anbieter"):
+        return ""
+    ft = FAKT_T[lang]
+    h = (f'<h2>{ft["h_vergl"]}</h2><div class="tablewrap"><table><thead><tr><th></th><th>{ft["sitz"]}</th><th>{ft["zahlung"]}</th>'
+         f'<th>{ft["minimum"]}</th><th>{ft["speichert"]}</th><th>{ft["training"]}</th></tr></thead><tbody>')
+    for q in ANBIETER:
+        f = _fakt(q)
+        if not f:
+            continue
+        name_html = f'<span class="dot" style="background:{ANBIETER[q][1]}"></span>{esc(ANBIETER[q][0])}'
+        if q in ANBIETER_INFOS:          # Anbieter-Seite gibt es nur, wenn der Anbieter Daten geliefert hat
+            name_html = f'<a href="{q}.html">{name_html}</a>'
+        h += (f'<tr><td style="white-space:nowrap">{name_html}</td>'
+              f'<td>{esc(f["sitz"][lang])}</td><td>{esc(_zahlung_text(f, lang))}</td><td>{esc(f["minimum"][lang])}</td>'
+              f'<td>{esc(ft["s"].get(f["speichert"], "—"))}</td><td>{esc(ft["tr"].get(f["training"], "—"))}</td></tr>')
+    return h + (f'</tbody></table></div><p class="refzeile">{esc(ft["hinweis"].format(d=ref_datum(ANB_FAKTEN.get("stand", ""), lang)))} '
+                f'<a href="../{"" if lang == "en" else "../"}methodik.html">{esc(REF_T[lang]["mehr"])}</a></p>\n')
+
 def anbieterindex(lang):
     t, v = T[lang], PV[lang]
     rel = "../" if lang == "en" else "../../"
@@ -1245,6 +1331,7 @@ def anbieterindex(lang):
               f'<td class="num">{len(info["slugs"])}</td><td class="num">{len(info["gratis"])}</td>'
               f'<td>{(esc(name_sauber(ab["name"])) + " · <span class=price>" + esc(preis_text(ab, t)) + "</span>" + ref_tags(dict(ab, alt=None), lang)) if ab else "—"}</td></tr>')
     h += f'</tbody></table></div><p style="font-size:.78rem;color:var(--dim)">{v["hinweis"]} {t["stand"].format(d=esc(STAND))}</p>'
+    h += fakten_vergleich(lang)
     h += fuss(lang, rel)
     return h
 
