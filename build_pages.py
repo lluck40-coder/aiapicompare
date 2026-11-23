@@ -13,7 +13,7 @@ die statischen SEO-Seiten aus out/data.js:
 Aufruf:  python build_pages.py _site        (GitHub-Workflow)
          python build_pages.py vorschau     (lokale Vorschau, dann vorschau/index.html öffnen)
 """
-import json, re, sys, shutil, html
+import json, re, sys, shutil, html, urllib.parse
 from pathlib import Path
 from collections import Counter, defaultdict
 
@@ -322,6 +322,7 @@ def kopf(lang, rel, titel, desc, rest, alternativen=True):
 <link rel="icon" href="{rel}favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{rel}apple-touch-icon.png">
 <link rel="stylesheet" href="{rel}style.css">
+<link rel="alternate" type="application/rss+xml" title="aiapicompare RSS" href="{rel}{pfad(lang, "feed.xml")}">
 <script src="{rel}theme.js"></script>
 <style>
   .seite{{max-width:1000px}} .bc{{font-size:.8rem;color:var(--dim);margin-bottom:.6rem}} .bc a{{color:var(--muted)}}
@@ -525,6 +526,13 @@ def modellseite(info, lang):
     if not info["media"]:
         h += f'<details><summary>{esc(t["q2"].format(name=name))}</summary><p>{t["a2"].format(link=link)}</p></details>'
 
+    # Direkte Vergleiche mit diesem Modell
+    meine = [(x, y) for g, x, y in VS_PAARE if info["slug"] in (x, y)][:12]
+    if meine:
+        h += f'<h2>{VS[lang]["verfuegbar"]}</h2><div class="rel">' + "".join(
+            f'<a class="btn" href="{rel}{pfad(lang, "compare/" + vs_slug(x, y) + ".html")}">{esc(INFOS[x]["name"])} vs. {esc(INFOS[y]["name"])}</a>'
+            for x, y in meine) + "</div>"
+
     # Verwandte Modelle
     if info["entw"]:
         verw = sorted((i for s, i in INFOS.items() if i["entw"] == info["entw"] and s != info["slug"]),
@@ -571,6 +579,326 @@ def verzeichnis(lang):
     h += "</tbody></table></div>" + fuss(lang, rel)
     return h
 
+# ------------------------------------------------------------------ Vergleichsseiten "A vs. B"
+# Eigene Preisdaten + Platzierungen der Arena-Bestenliste (CC BY 4.0, mit Quellenangabe).
+VS = {
+"en": dict(titel="{a} vs {b}: API price & performance compared", desc="{a} vs {b}: cheapest API price, context window, providers and Arena leaderboard ranks side by side. Updated daily.",
+  h1="{a} vs. {b}", bc="Comparisons", preis_billiger="{x} is {p} % cheaper than {y} at the cheapest provider ({px} vs. {py} per 1M input tokens).",
+  preis_billiger_m="{x} is {p} % cheaper than {y} at the cheapest provider ({px} vs. {py}{e}).",
+  preis_gleich="Both cost the same at the cheapest provider ({px}).", arena_vor="In the Arena leaderboard, {x} ranks ahead of {y} in {w} of {n} categories.",
+  arena_gleich="In the Arena leaderboard, both rank ahead of each other equally often ({w} of {n} categories each).", arena_keine="There are no shared Arena rankings for a performance comparison.",
+  t_daten="Prices & key facts", t_arena="Arena leaderboard ranks", t_kosten="Example: monthly cost", kosten_text="10M input + 2M output tokens per month at the cheapest provider:",
+  z_preis="Cheapest price", z_out="Output price / 1M", z_ctx="Context window", z_anb="Providers", z_frei="Also free", z_entw="Developer", ja="yes", nein="no",
+  bereich="Category", platz="Rank {p}", weitere="More comparisons", alle="All comparisons", modellseite="Model page", im_vergleich="Compare all providers",
+  idx_titel="AI model comparisons: price & performance side by side", idx_desc="Head-to-head comparisons of popular AI models: API prices, context windows and Arena leaderboard ranks.",
+  idx_h1="AI model comparisons", idx_lead="Popular models side by side – with the cheapest API price from our daily price check and the ranks from the Arena leaderboard.",
+  g_text="Text & code", g_bild="Image generation", g_video="Video generation", verfuegbar="Comparisons", fuer="Compare {a} with …"),
+"de": dict(titel="{a} vs. {b}: API-Preis & Leistung im Vergleich", desc="{a} vs. {b}: günstigster API-Preis, Kontextfenster, Anbieter und Platzierungen in der Arena-Bestenliste im direkten Vergleich. Täglich aktualisiert.",
+  h1="{a} vs. {b}", bc="Vergleiche", preis_billiger="{x} ist beim günstigsten Anbieter {p} % günstiger als {y} ({px} gegenüber {py} pro 1 Mio. Input-Token).",
+  preis_billiger_m="{x} ist beim günstigsten Anbieter {p} % günstiger als {y} ({px} gegenüber {py}{e}).",
+  preis_gleich="Beide kosten beim günstigsten Anbieter gleich viel ({px}).", arena_vor="In der Arena-Bestenliste liegt {x} in {w} von {n} Bereichen vor {y}.",
+  arena_gleich="In der Arena-Bestenliste liegen beide gleich oft vorn (je {w} von {n} Bereichen).", arena_keine="Für einen Leistungsvergleich gibt es keine gemeinsamen Platzierungen in der Arena-Bestenliste.",
+  t_daten="Preise & Eckdaten", t_arena="Platzierungen in der Arena-Bestenliste", t_kosten="Beispiel: Kosten pro Monat", kosten_text="10 Mio. Input- + 2 Mio. Output-Token pro Monat beim günstigsten Anbieter:",
+  z_preis="Günstigster Preis", z_out="Output-Preis / 1 Mio.", z_ctx="Kontextfenster", z_anb="Anbieter", z_frei="Auch kostenlos", z_entw="Entwickler", ja="ja", nein="nein",
+  bereich="Bereich", platz="Platz {p}", weitere="Weitere Vergleiche", alle="Alle Vergleiche", modellseite="Modellseite", im_vergleich="Alle Anbieter vergleichen",
+  idx_titel="KI-Modelle im Vergleich: Preis & Leistung direkt gegenübergestellt", idx_desc="Direkte Vergleiche beliebter KI-Modelle: API-Preise, Kontextfenster und Platzierungen in der Arena-Bestenliste.",
+  idx_h1="KI-Modelle im direkten Vergleich", idx_lead="Beliebte Modelle nebeneinander – mit dem günstigsten API-Preis aus unserem täglichen Preisvergleich und den Platzierungen der Arena-Bestenliste.",
+  g_text="Text & Code", g_bild="Bilder erzeugen", g_video="Videos erzeugen", verfuegbar="Vergleiche", fuer="{a} vergleichen mit …"),
+"zh": dict(titel="{a} 对比 {b}：API 价格与性能", desc="{a} 对比 {b}：最低 API 价格、上下文窗口、提供商及 Arena 排行榜名次一览。每日更新。",
+  h1="{a} 对比 {b}", bc="对比", preis_billiger="在最便宜的提供商处，{x} 比 {y} 便宜 {p}%（每百万输入 Token {px} 对比 {py}）。",
+  preis_billiger_m="在最便宜的提供商处，{x} 比 {y} 便宜 {p}%（{px} 对比 {py}{e}）。",
+  preis_gleich="两者在最便宜的提供商处价格相同（{px}）。", arena_vor="在 Arena 排行榜中，{x} 在 {n} 个领域中的 {w} 个领先于 {y}。",
+  arena_gleich="在 Arena 排行榜中，两者领先的次数相同（各 {n} 个领域中的 {w} 个）。", arena_keine="Arena 排行榜中没有可用于性能对比的共同排名。",
+  t_daten="价格与关键数据", t_arena="Arena 排行榜名次", t_kosten="示例：每月费用", kosten_text="在最便宜的提供商处，每月 1000 万输入 + 200 万输出 Token：",
+  z_preis="最低价格", z_out="输出价格 / 百万", z_ctx="上下文窗口", z_anb="提供商数量", z_frei="也有免费版", z_entw="开发者", ja="是", nein="否",
+  bereich="领域", platz="第 {p} 名", weitere="更多对比", alle="全部对比", modellseite="模型页面", im_vergleich="比较所有提供商",
+  idx_titel="AI 模型对比：价格与性能", idx_desc="热门 AI 模型的直接对比：API 价格、上下文窗口和 Arena 排行榜名次。",
+  idx_h1="AI 模型直接对比", idx_lead="热门模型并列对比——附我们每日价格查询中的最低 API 价格以及 Arena 排行榜名次。",
+  g_text="文本与代码", g_bild="图像生成", g_video="视频生成", verfuegbar="对比", fuer="将 {a} 与以下模型对比 …"),
+"ru": dict(titel="{a} vs {b}: цена API и качество", desc="{a} vs {b}: самая низкая цена API, контекстное окно, поставщики и места в рейтинге Arena рядом. Обновляется ежедневно.",
+  h1="{a} vs {b}", bc="Сравнения", preis_billiger="У самого дешёвого поставщика {x} на {p} % дешевле, чем {y} ({px} против {py} за 1 млн входных токенов).",
+  preis_billiger_m="У самого дешёвого поставщика {x} на {p} % дешевле, чем {y} ({px} против {py}{e}).",
+  preis_gleich="У самого дешёвого поставщика обе модели стоят одинаково ({px}).", arena_vor="В рейтинге Arena {x} опережает {y} в {w} из {n} областей.",
+  arena_gleich="В рейтинге Arena обе модели опережают друг друга одинаково часто (по {w} из {n} областей).", arena_keine="Общих мест в рейтинге Arena для сравнения качества нет.",
+  t_daten="Цены и основные данные", t_arena="Места в рейтинге Arena", t_kosten="Пример: расходы в месяц", kosten_text="10 млн входных + 2 млн выходных токенов в месяц у самого дешёвого поставщика:",
+  z_preis="Самая низкая цена", z_out="Цена вывода / 1 млн", z_ctx="Контекстное окно", z_anb="Поставщиков", z_frei="Есть бесплатно", z_entw="Разработчик", ja="да", nein="нет",
+  bereich="Область", platz="Место {p}", weitere="Другие сравнения", alle="Все сравнения", modellseite="Страница модели", im_vergleich="Сравнить всех поставщиков",
+  idx_titel="Сравнение AI-моделей: цена и качество", idx_desc="Прямые сравнения популярных AI-моделей: цены API, контекстные окна и места в рейтинге Arena.",
+  idx_h1="AI-модели в прямом сравнении", idx_lead="Популярные модели рядом – с самой низкой ценой API из нашей ежедневной проверки и местами в рейтинге Arena.",
+  g_text="Текст и код", g_bild="Генерация изображений", g_video="Генерация видео", verfuegbar="Сравнения", fuer="Сравнить {a} с …"),
+}
+BEREICH_REIHENFOLGE = [k for k in BEREICH_NAMEN]
+
+def plaetze_von(info):
+    pl = {}
+    for z in info["zeilen"]:
+        for bk, p in ((STAERKEN.get("modelle") or {}).get(re.sub(r":free$", "", z["kanon"])) or {}).items():
+            if bk not in pl or p < pl[bk]:
+                pl[bk] = p
+    return pl
+
+def bezahlt_billig(info):
+    l = [z for z in info["zeilen"] if 0 < z["preis"] < float("inf")]
+    return min(l, key=lambda z: (z["preis"], z["quelle"])) if l else None
+
+def top_slugs(bereiche, n, media):
+    out = []
+    for bk, anzahl in bereiche:
+        genommen = 0
+        for x in ((STAERKEN.get("bereiche") or {}).get(bk) or {}).get("liste", []):
+            for k in x.get("k") or []:
+                s = slug(re.sub(r":free$", "", k))
+                if s in INFOS and INFOS[s]["media"] == media and bezahlt_billig(INFOS[s]):
+                    if s not in out:
+                        out.append(s)
+                        genommen += 1
+                    break
+            if genommen >= anzahl or len(out) >= n:
+                break
+    return out[:n]
+
+VS_GRUPPEN = []     # (Gruppe, [slugs])
+if STAERKEN:
+    VS_GRUPPEN = [("text", top_slugs([("allround", 12), ("coding", 6), ("deutsch", 4)], 16, False)),
+                  ("bild", top_slugs([("bild", 8)], 8, True)),
+                  ("video", top_slugs([("video", 6)], 6, True))]
+VS_PAARE = []       # (Gruppe, a, b) – Reihenfolge nach Platzierung
+for gruppe, slugs in VS_GRUPPEN:
+    for i in range(len(slugs)):
+        for j in range(i + 1, len(slugs)):
+            VS_PAARE.append((gruppe, slugs[i], slugs[j]))
+
+def vs_slug(a, b):
+    return "-vs-".join(sorted([a, b]))
+
+def vs_einheit(z, t):
+    if z["ps"] is not None:
+        return t["einheit"]["second"]
+    return t["einheit"].get(z["einheit"], "")
+
+def vs_preis(z):
+    return z["ps"] if z["ps"] is not None else z["preis"]
+
+def vergleichsseite(gruppe, a, b, lang):
+    t, v = T[lang], VS[lang]
+    rel = "../" if lang == "en" else "../../"
+    A, B = INFOS[a], INFOS[b]
+    rest = f"compare/{vs_slug(a, b)}.html"
+    h = kopf(lang, rel, v["titel"].format(a=A["name"], b=B["name"]) + " | aiapicompare",
+             v["desc"].format(a=A["name"], b=B["name"]), rest)
+    h += (f'<div class="bc"><a href="{rel}index.html">aiapicompare</a> › '
+          f'<a href="{rel}{pfad(lang, "compare/index.html")}">{v["bc"]}</a> › {esc(A["name"])} vs. {esc(B["name"])}</div>\n')
+    h += f'<h1>{esc(v["h1"].format(a=A["name"], b=B["name"]))}</h1>\n'
+    za, zb = bezahlt_billig(A), bezahlt_billig(B)
+    satz = []
+    if za and zb:
+        pa, pb = vs_preis(za), vs_preis(zb)
+        if abs(pa - pb) < 1e-12:
+            satz.append(v["preis_gleich"].format(px=fmt(pa)))
+        else:
+            x, y, px, py = (A, B, pa, pb) if pa < pb else (B, A, pb, pa)
+            proz = round((1 - px / py) * 100)          # Ersparnis in % des teureren Preises
+            proz = ">99" if proz >= 100 else proz
+            vorlage = v["preis_billiger_m"] if A["media"] else v["preis_billiger"]
+            satz.append(vorlage.format(x=x["name"], y=y["name"], p=proz, px=fmt(px), py=fmt(py), e=vs_einheit(za, t)))
+    pla, plb = plaetze_von(A), plaetze_von(B)
+    gemeinsam = [k for k in BEREICH_REIHENFOLGE if k in pla and k in plb]
+    if gemeinsam:
+        wa = sum(1 for k in gemeinsam if pla[k] < plb[k])
+        wb = sum(1 for k in gemeinsam if plb[k] < pla[k])
+        if wa == wb:
+            satz.append(v["arena_gleich"].format(w=wa, n=len(gemeinsam)))
+        else:
+            x, y, w = (A, B, wa) if wa > wb else (B, A, wb)
+            satz.append(v["arena_vor"].format(x=x["name"], y=y["name"], w=w, n=len(gemeinsam)))
+    else:
+        satz.append(v["arena_keine"])
+    h += f'<p class="lead">{esc(("" if lang == "zh" else " ").join(satz))}</p>\n'
+
+    # Preise & Eckdaten
+    def zelle_preis(z):
+        if not z:
+            return "—"
+        return (f'<span class="price">{esc(preis_text(z, t))}</span><br><small style="color:var(--dim)">'
+                f'<span class="dot" style="background:{z["farbe"]}"></span>{esc(z["quelle"])}</small>')
+    zeilen = [(v["z_preis"], zelle_preis(za), zelle_preis(zb))]
+    if not A["media"]:
+        zeilen.append((v["z_out"], esc(fmt(za["out"])) if za and za["out"] is not None else "—",
+                       esc(fmt(zb["out"])) if zb and zb["out"] is not None else "—"))
+        zeilen.append((v["z_ctx"], fmt_ctx(A["ctx"]), fmt_ctx(B["ctx"])))
+    zeilen.append((v["z_anb"], str(A["anbieter"]), str(B["anbieter"])))
+    zeilen.append((v["z_frei"], v["ja"] if A["gratis"] else v["nein"], v["ja"] if B["gratis"] else v["nein"]))
+    if A["entw"] or B["entw"]:
+        zeilen.append((v["z_entw"], esc(A["entw"] or "—"), esc(B["entw"] or "—")))
+    kopfz = (f'<tr><th></th><th><a href="{rel}{pfad(lang, "models/" + a + ".html")}">{esc(A["name"])}</a></th>'
+             f'<th><a href="{rel}{pfad(lang, "models/" + b + ".html")}">{esc(B["name"])}</a></th></tr>')
+    h += f'<h2>{v["t_daten"]}</h2><div class="tablewrap"><table><thead>{kopfz}</thead><tbody>'
+    h += "".join(f'<tr><td>{esc(l)}</td><td>{x}</td><td>{y}</td></tr>' for l, x, y in zeilen) + "</tbody></table></div>\n"
+
+    # Arena-Platzierungen
+    bereiche = [k for k in BEREICH_REIHENFOLGE if k in pla or k in plb]
+    if bereiche:
+        h += f'<h2>{v["t_arena"]}</h2><div class="tablewrap"><table><thead><tr><th>{v["bereich"]}</th><th>{esc(A["name"])}</th><th>{esc(B["name"])}</th></tr></thead><tbody>'
+        for k in bereiche:
+            nm = BEREICH_NAMEN.get(k) or {}
+            ra, rb = pla.get(k), plb.get(k)
+            fa = ra is not None and (rb is None or ra < rb)
+            fb = rb is not None and (ra is None or rb < ra)
+            ca = (("<b>" if fa else "") + v["platz"].format(p=ra) + ("</b>" if fa else "")) if ra else "—"
+            cb = (("<b>" if fb else "") + v["platz"].format(p=rb) + ("</b>" if fb else "")) if rb else "—"
+            h += (f'<tr><td><a href="{rel}bestenliste.html#{k}">{nm.get("ico", "")} {esc(nm.get(lang) or nm.get("en") or k)}</a></td>'
+                  f'<td>{ca}</td><td>{cb}</td></tr>')
+        meta = STAERKEN.get("meta") or {}
+        h += ('</tbody></table></div>\n<p class="hint" style="font-size:.75rem;color:var(--dim)">'
+              f'{t["arena_quelle"].format(stand=esc(meta.get("stand", "")), ds=meta.get("datensatz", ""), lz=meta.get("lizenz_url", ""))}</p>\n')
+
+    # Kostenbeispiel (nur Text)
+    if not A["media"] and za and zb:
+        def kosten(z):
+            pin = z["inp"] if z["inp"] is not None else z["ab"]
+            pout = z["out"] if z["out"] is not None else pin
+            return 10 * pin + 2 * pout
+        h += (f'<h2>{v["t_kosten"]}</h2><p>{v["kosten_text"]}</p><div class="zahlen">'
+              f'<div class="zahl"><span>{esc(A["name"])}</span><b>{esc(fmt(kosten(za)))}</b></div>'
+              f'<div class="zahl"><span>{esc(B["name"])}</span><b>{esc(fmt(kosten(zb)))}</b></div></div>\n')
+
+    such = lambda i: rel + "index.html#q=" + urllib.parse.quote(i["name"])
+    h += (f'<div class="rel" style="margin-top:1rem">'
+          f'<a class="btn" href="{rel}{pfad(lang, "models/" + a + ".html")}">{v["modellseite"]}: {esc(A["name"])}</a>'
+          f'<a class="btn" href="{rel}{pfad(lang, "models/" + b + ".html")}">{v["modellseite"]}: {esc(B["name"])}</a>'
+          f'<a class="btn" href="{such(A)}">{v["im_vergleich"]} ↗</a><a class="btn" href="{rel}kosten.html">{t["nav_kosten"]}</a></div>\n')
+    # Weitere Vergleiche
+    weitere = [(g, x, y) for g, x, y in VS_PAARE if (x in (a, b) or y in (a, b)) and {x, y} != {a, b}][:12]
+    if weitere:
+        h += f'<h2>{v["weitere"]}</h2><div class="rel">' + "".join(
+            f'<a class="btn" href="{vs_slug(x, y)}.html">{esc(INFOS[x]["name"])} vs. {esc(INFOS[y]["name"])}</a>' for _, x, y in weitere) + "</div>\n"
+    h += f'<p style="font-size:.78rem;color:var(--dim)">{t["stand"].format(d=esc(STAND))} {t["ranking"]}</p>'
+    h += fuss(lang, rel)
+    return h
+
+def vergleichsindex(lang):
+    t, v = T[lang], VS[lang]
+    rel = "../" if lang == "en" else "../../"
+    h = kopf(lang, rel, v["idx_titel"] + " | aiapicompare", v["idx_desc"], "compare/index.html")
+    h += f'<h1>{v["idx_h1"]}</h1><p class="lead">{v["idx_lead"]}</p>'
+    for gruppe, slugs in VS_GRUPPEN:
+        paare = [(x, y) for g, x, y in VS_PAARE if g == gruppe]
+        if not paare:
+            continue
+        h += f'<h2>{v["g_" + gruppe]}</h2>'
+        for s in slugs:
+            mit = [(x, y) for x, y in paare if s in (x, y)]
+            h += (f'<p style="margin:.8rem 0 .3rem;font-weight:600">{esc(v["fuer"].format(a=INFOS[s]["name"]))}</p><div class="rel">' +
+                  "".join(f'<a class="btn" href="{vs_slug(x, y)}.html">{esc(INFOS[y if x == s else x]["name"])}</a>' for x, y in mit) + "</div>")
+    meta = STAERKEN.get("meta") or {}
+    if meta:
+        h += (f'<p class="hint" style="font-size:.75rem;color:var(--dim);margin-top:1.2rem">'
+              f'{t["arena_quelle"].format(stand=esc(meta.get("stand", "")), ds=meta.get("datensatz", ""), lz=meta.get("lizenz_url", ""))}</p>')
+    h += fuss(lang, rel)
+    return h
+
+# ------------------------------------------------------------------ RSS-Feed & llms.txt
+NEWS = {}
+if (BASIS / "out" / "news.js").exists():
+    try:
+        NEWS = lade_js(BASIS / "out" / "news.js")
+    except Exception:
+        NEWS = {}
+
+FEED = {
+"en": dict(titel="aiapicompare – AI API price changes & new models", desc="Price cuts, price increases and new AI models across API providers – generated daily from our own price checks.",
+  runter="{name} at {prov}: price cut {p} % ({alt} → {neu}{e})", hoch="{name} at {prov}: price increase +{p} % ({alt} → {neu}{e})",
+  neu="New at {prov}: {name}{preis}", text="/ 1M input tokens", gratis="free"),
+"de": dict(titel="aiapicompare – Preisänderungen & neue KI-Modelle", desc="Preissenkungen, Preiserhöhungen und neue KI-Modelle bei API-Anbietern – täglich aus unseren eigenen Preisabfragen erzeugt.",
+  runter="{name} bei {prov}: Preissenkung {p} % ({alt} → {neu}{e})", hoch="{name} bei {prov}: Preiserhöhung +{p} % ({alt} → {neu}{e})",
+  neu="Neu bei {prov}: {name}{preis}", text="/ 1 Mio. Input-Token", gratis="kostenlos"),
+"zh": dict(titel="aiapicompare – AI API 价格变化与新模型", desc="各 API 提供商的降价、涨价与新模型——根据我们每日的价格查询自动生成。",
+  runter="{prov} 的 {name}：降价 {p}%（{alt} → {neu}{e}）", hoch="{prov} 的 {name}：涨价 +{p}%（{alt} → {neu}{e}）",
+  neu="{prov} 新上线：{name}{preis}", text="/ 百万输入 Token", gratis="免费"),
+"ru": dict(titel="aiapicompare – изменения цен AI API и новые модели", desc="Снижения и повышения цен, новые AI-модели у поставщиков API – ежедневно по нашим собственным проверкам цен.",
+  runter="{name} у {prov}: снижение цены {p} % ({alt} → {neu}{e})", hoch="{name} у {prov}: повышение цены +{p} % ({alt} → {neu}{e})",
+  neu="Новое у {prov}: {name}{preis}", text="/ 1 млн входных токенов", gratis="бесплатно"),
+}
+
+def rss_datum(d):
+    import email.utils, datetime
+    try:
+        return email.utils.format_datetime(datetime.datetime.strptime(d[:10], "%Y-%m-%d").replace(tzinfo=datetime.timezone.utc))
+    except Exception:
+        return email.utils.format_datetime(datetime.datetime.now(datetime.timezone.utc))
+
+def feed(lang):
+    t, f = T[lang], FEED[lang]
+    def einheit(e):
+        return t["einheit"].get(e, "") if e else " " + f["text"]
+    def link(k):
+        s = slug(k)
+        return DOMAIN + pfad(lang, f"models/{s}.html") if s in INFOS else DOMAIN + "news.html"
+    items = []
+    for x in NEWS.get("preis", []):
+        runter = x["neu"] < x["alt"]
+        titel = (f["runter"] if runter else f["hoch"]).format(name=name_sauber(x["n"]), prov=ANBIETER.get(x["q"], (x["q"],))[0],
+                 p=abs(x["pz"] or 0), alt=fmt(x["alt"]), neu=fmt(x["neu"]), e=einheit(x.get("e")))
+        items.append((x["d"], titel, link(x["k"]), f'preis|{x["q"]}|{x["k"]}|{x["d"]}|{x["neu"]}'))
+    for x in NEWS.get("neu", []):
+        if x.get("g"):
+            preis = f' ({f["gratis"]})'
+        elif isinstance(x.get("in"), (int, float)):
+            preis = f' ({fmt(x["in"])} {f["text"]})'
+        elif isinstance(x.get("ab"), (int, float)):
+            preis = f' ({fmt(x["ab"])} {f["text"]})'
+        elif isinstance(x.get("mp"), (int, float)):
+            preis = f' ({fmt(x["mp"])}{t["einheit"].get(x.get("e") or "", "")})'
+        else:
+            preis = ""
+        titel = f["neu"].format(prov=ANBIETER.get(x["q"], (x["q"],))[0], name=name_sauber(x["n"]), preis=preis)
+        items.append((x["d"], titel, link(x["k"]), f'neu|{x["q"]}|{x["k"]}|{x["d"]}'))
+    items.sort(key=lambda i: i[0], reverse=True)
+    selbst = DOMAIN + pfad(lang, "feed.xml")
+    x = ['<?xml version="1.0" encoding="UTF-8"?>',
+         '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>',
+         f'<title>{esc(f["titel"])}</title><link>{DOMAIN}news.html</link><description>{esc(f["desc"])}</description>',
+         f'<language>{T[lang]["htmllang"]}</language><lastBuildDate>{rss_datum(STAND)}</lastBuildDate>',
+         f'<atom:link href="{selbst}" rel="self" type="application/rss+xml"/>']
+    for d, titel, url, guid in items[:60]:
+        x.append(f'<item><title>{esc(titel)}</title><link>{esc(url)}</link><guid isPermaLink="false">{esc(guid)}</guid><pubDate>{rss_datum(d)}</pubDate></item>')
+    x.append("</channel></rss>")
+    return "\n".join(x)
+
+def llms_txt():
+    namen = ", ".join(v[0] for v in ANBIETER.values())
+    zeilen = [
+        "# aiapicompare",
+        "",
+        f"> Independent price comparison for AI model APIs: input/output token prices, image and video prices, context windows and free models for {len(INFOS)} models across {len(ANBIETER)} providers ({namen}). Updated daily. Includes Arena leaderboard ranks per use case and head-to-head model comparisons.",
+        "",
+        "All prices are list prices in USD, collected automatically every night from the providers' public model lists and price pages. There are no paid placements; listings are sorted by price or by the Arena score.",
+        "",
+        "## Main pages",
+        f"- [Price comparison]({DOMAIN}): all models and providers, sortable by price, provider and context window",
+        f"- [Leaderboard – which AI model is best for what]({DOMAIN}bestenliste.html): Arena ranks per use case (coding, math, writing, German, images, video …) with the cheapest API price",
+        f"- [Model comparisons (A vs B)]({DOMAIN}compare/index.html): price and performance of popular models side by side",
+        f"- [All models A–Z]({DOMAIN}models/index.html): one page per model with all providers, price history and FAQ",
+        f"- [Free AI models via API]({DOMAIN}free.html)",
+        f"- [News: new models and price changes]({DOMAIN}news.html)",
+        f"- [Cost calculator]({DOMAIN}kosten.html): monthly cost for tokens, images or video seconds",
+        f"- [Setup guides]({DOMAIN}anbindung.html): base URLs and configuration for VS Code, Cline, Cursor, Hermes and more",
+        "",
+        "## Data",
+        f"- [prices.json]({DOMAIN}api/prices.json): all current prices as JSON",
+        f"- [RSS feed]({DOMAIN}feed.xml): price changes and new models (also /de/feed.xml, /zh/feed.xml, /ru/feed.xml)",
+        "",
+        "## Sources and licenses",
+        "- Prices: own daily collection from the providers' public data.",
+        "- Leaderboard ranks: Arena (arena.ai, formerly LMArena), dataset lmarena-ai/leaderboard-dataset, licensed under CC BY 4.0.",
+        "",
+        "## Languages",
+        "English (site root), German (/de/), Chinese (/zh/), Russian (/ru/).",
+        "",
+        f"Last data update: {STAND}",
+    ]
+    return "\n".join(zeilen) + "\n"
+
 # ------------------------------------------------------------------ Ausgabe
 def schreibe(rel_pfad, inhalt):
     p = ZIEL / rel_pfad
@@ -598,14 +926,28 @@ def main():
     else:
         (ZIEL / "api" / "prices.json").write_text(json.dumps(D, ensure_ascii=False), encoding="utf-8")
 
+    for lang in SPRACHEN:
+        schreibe(pfad(lang, "feed.xml"), feed(lang))
+    schreibe("llms.txt", llms_txt())
+    for f in BASIS.glob("*.txt"):                       # IndexNow-Schlüsseldatei (32 Hex-Zeichen)
+        if re.fullmatch(r"[0-9a-f]{32}\.txt", f.name):
+            shutil.copy2(f, ZIEL / f.name)
+
     urls = []   # (Pfad ohne Sprache, Sprachen, Häufigkeit, Priorität)
     for lang in SPRACHEN:
         for s, info in INFOS.items():
             schreibe(pfad(lang, f"models/{s}.html"), modellseite(info, lang))
         schreibe(pfad(lang, "free.html"), gratisseite(lang))
         schreibe(pfad(lang, "models/index.html"), verzeichnis(lang))
+        if VS_PAARE:
+            for g, a, b in VS_PAARE:
+                schreibe(pfad(lang, f"compare/{vs_slug(a, b)}.html"), vergleichsseite(g, a, b, lang))
+            schreibe(pfad(lang, "compare/index.html"), vergleichsindex(lang))
     urls += [(f"models/{s}.html", True, "daily", "0.7") for s in INFOS]
     urls += [("free.html", True, "daily", "0.9"), ("models/index.html", True, "daily", "0.8")]
+    if VS_PAARE:
+        urls += [(f"compare/{vs_slug(a, b)}.html", True, "daily", "0.7") for g, a, b in VS_PAARE]
+        urls += [("compare/index.html", True, "daily", "0.8")]
 
     # Sitemap mit Sprachvarianten
     x = ['<?xml version="1.0" encoding="UTF-8"?>',
@@ -618,6 +960,7 @@ def main():
             x.append(f"  <url><loc>{DOMAIN}{pfad(l, rest)}</loc>{alts}<changefreq>{freq}</changefreq><priority>{prio}</priority></url>")
     x.append("</urlset>")
     (ZIEL / "sitemap.xml").write_text("\n".join(x), encoding="utf-8")
+    print(f"Vergleichsseiten: {len(VS_PAARE)} Paare × {len(SPRACHEN)} Sprachen")
     print(f"Website in {ZIEL}: {len(INFOS)} Modelle × {len(SPRACHEN)} Sprachen, "
           f"{sum(1 for z in ZEILEN if z['gratis'])} kostenlose Modelle, Sitemap mit {len(x) - 3} Adressen")
 

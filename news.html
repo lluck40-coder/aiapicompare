@@ -9,6 +9,8 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta property="og:image" content="https://aiapicompare.com/og-image.png">
 <link rel="stylesheet" href="style.css">
+<link rel="alternate" type="application/rss+xml" title="aiapicompare RSS (English)" href="feed.xml">
+<link rel="alternate" type="application/rss+xml" title="aiapicompare RSS (Deutsch)" href="de/feed.xml">
 <script src="theme.js"></script>
 <style>
   h2{font-size:1.15rem;margin:1.8rem 0 .6rem}
@@ -53,6 +55,7 @@
 <div class="wrap">
   <h1 data-t="h1"></h1>
   <p class="lead" data-t="lead"></p>
+  <p id="rss" hidden><a id="rsslink" href="feed.xml">📡 <span data-t="rss"></span></a></p>
 
   <h2 data-t="h_preis"></h2>
   <div class="tabs" id="ptabs"></div>
@@ -94,7 +97,7 @@ const L10N = {
 de:{h1:"Neuigkeiten: neue Modelle & Preisänderungen",
   lead:"Was sich in den letzten 30 Tagen bei den KI-API-Anbietern getan hat – automatisch ermittelt aus unseren täglichen Preisabfragen.",
   nav_vergleich:"Preisvergleich", nav_kosten:"Kostenrechner", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
-  h_preis:"Preisänderungen", h_neu:"Neue Modelle", h_offiziell:"Offizielle Neuigkeiten der Anbieter",
+  h_preis:"Preisänderungen", rss:"RSS-Feed abonnieren (neue Modelle & Preisänderungen)", h_neu:"Neue Modelle", h_offiziell:"Offizielle Neuigkeiten der Anbieter",
   offiziell_text:"Ankündigungen, Forschung und neue Modelle direkt auf den Seiten der Hersteller (externe Links):",
   tabs:{alle:"Alle", down:"↓ Günstiger geworden", up:"↑ Teurer geworden"},
   pth:["Datum","Modell","Anbieter","Preis vorher → jetzt","Änderung"], nth:["Seit","Modell","Anbieter","Preis"],
@@ -105,7 +108,7 @@ de:{h1:"Neuigkeiten: neue Modelle & Preisänderungen",
 en:{h1:"News: new models & price changes",
   lead:"What changed at AI API providers in the last 30 days – generated automatically from our daily price checks.",
   nav_vergleich:"Price comparison", nav_kosten:"Cost calculator", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
-  h_preis:"Price changes", h_neu:"New models", h_offiziell:"Official news from the providers",
+  h_preis:"Price changes", rss:"Subscribe to the RSS feed (new models & price changes)", h_neu:"New models", h_offiziell:"Official news from the providers",
   offiziell_text:"Announcements, research and new models directly on the vendors’ websites (external links):",
   tabs:{alle:"All", down:"↓ Cheaper", up:"↑ More expensive"},
   pth:["Date","Model","Provider","Price before → now","Change"], nth:["Since","Model","Provider","Price"],
@@ -116,7 +119,7 @@ en:{h1:"News: new models & price changes",
 zh:{h1:"动态：新模型与价格变化",
   lead:"过去 30 天 AI API 提供商的变化——根据我们每日的价格查询自动生成。",
   nav_vergleich:"价格对比", nav_kosten:"成本计算器", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
-  h_preis:"价格变化", h_neu:"新模型", h_offiziell:"提供商官方动态",
+  h_preis:"价格变化", rss:"订阅 RSS（新模型与价格变化）", h_neu:"新模型", h_offiziell:"提供商官方动态",
   offiziell_text:"直接前往各厂商网站查看公告、研究与新模型（外部链接）：",
   tabs:{alle:"全部", down:"↓ 降价", up:"↑ 涨价"},
   pth:["日期","模型","提供商","原价 → 现价","变化"], nth:["上线","模型","提供商","价格"],
@@ -127,7 +130,7 @@ zh:{h1:"动态：新模型与价格变化",
 ru:{h1:"Новости: новые модели и изменения цен",
   lead:"Что изменилось у поставщиков AI-API за последние 30 дней – автоматически по нашим ежедневным проверкам цен.",
   nav_vergleich:"Сравнение цен", nav_kosten:"Калькулятор", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
-  h_preis:"Изменения цен", h_neu:"Новые модели", h_offiziell:"Официальные новости поставщиков",
+  h_preis:"Изменения цен", rss:"Подписаться на RSS (новые модели и изменения цен)", h_neu:"Новые модели", h_offiziell:"Официальные новости поставщиков",
   offiziell_text:"Анонсы, исследования и новые модели прямо на сайтах разработчиков (внешние ссылки):",
   tabs:{alle:"Все", down:"↓ Подешевело", up:"↑ Подорожало"},
   pth:["Дата","Модель","Поставщик","Цена было → стало","Изменение"], nth:["С","Модель","Поставщик","Цена"],
@@ -158,6 +161,9 @@ function render(){
   document.querySelectorAll(".langbtns button").forEach(function(b){ b.classList.toggle("active", b.dataset.lang === lang); });
   document.getElementById("ptabs").innerHTML = Object.keys(T.tabs).map(function(k){
     return '<button data-f="'+k+'" class="'+(k === filter ? "active" : "")+'">'+T.tabs[k]+'</button>'; }).join("");
+  // RSS-Feed gibt es nur in der zusammengebauten Website
+  document.getElementById("rss").hidden = !window.MODELLSEITEN;
+  document.getElementById("rsslink").href = (lang === "en" ? "" : lang + "/") + "feed.xml";
   document.getElementById("phead").innerHTML = '<tr>'+T.pth.map(function(x,i){ return '<th'+(i>=3?' class="num"':'')+'>'+x+'</th>'; }).join("")+'</tr>';
   document.getElementById("nhead").innerHTML = '<tr>'+T.nth.map(function(x,i){ return '<th'+(i>=3?' class="num"':'')+'>'+x+'</th>'; }).join("")+'</tr>';
   if (!N){

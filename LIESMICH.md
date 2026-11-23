@@ -8,6 +8,10 @@
 | `bestenliste.html` | „Welches Modell wofür?“ – Platzierungen aus der Arena-Bestenliste (CC BY 4.0) mit günstigstem Preis |
 | `news.html` | Neuigkeiten: neue Modelle und Preisänderungen aus den eigenen Preisdaten (keine fremden Texte) |
 | `build_news.py` | erzeugt `out/staerken.js` (Arena-Ranglisten) und `out/news.js` (Neuigkeiten); läuft nachts nach `build_data.py` |
+| `compare/…` (erzeugt) | Vergleichsseiten „Modell A vs. B“ (Preis & Arena-Platzierungen), 4 Sprachen |
+| `feed.xml` (erzeugt) | RSS-Feed mit Preisänderungen und neuen Modellen (auch /de/, /zh/, /ru/) |
+| `llms.txt` (erzeugt) | Kurzbeschreibung der Website für KI-Assistenten |
+| `indexnow.py` + `<Schlüssel>.txt` | meldet neue/geänderte Seiten nachts an Bing & Co. (IndexNow), sobald die Domain live ist |
 | `bereiche.js` | Namen der Anwendungsbereiche in 4 Sprachen |
 | `free.html` | Kostenlose Modelle (funktioniert auch lokal; online ersetzt durch die Sprachfassungen aus `build_pages.py`) |
 | `build_pages.py` | erzeugt Modellseiten (4 Sprachen), Seite „Kostenlose Modelle“, A–Z-Verzeichnis, Sitemap und `/api/prices.json` |
@@ -62,3 +66,9 @@ Beim allerersten Lauf wird nur der Ausgangsstand gespeichert (nichts wird als ne
   Bestenliste, auf jeder Modellseite und (per Link) im Preisvergleich – bitte nicht entfernen.
 - Die Neuigkeiten entstehen nur aus den eigenen Preisdaten. Fremde Schlagzeilen oder Artikeltexte werden
   bewusst nicht übernommen; zu den Anbietern gibt es nur einfache Links.
+
+## Suchmaschinen (einmalig von Hand, nach dem Umstellen der Domain)
+1. **Google Search Console** (search.google.com/search-console): Domain `aiapicompare.com` hinzufügen,
+   per DNS-TXT-Eintrag bei Porkbun bestätigen, dann unter „Sitemaps“ `sitemap.xml` einreichen.
+2. **Bing Webmaster Tools** (bing.com/webmasters): „Import from Google Search Console“ wählen – fertig.
+   Danach meldet `indexnow.py` neue und geänderte Seiten jede Nacht automatisch.

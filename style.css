@@ -70,3 +70,10 @@ th{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.
 
 /* Preisaufschlag gegenüber dem günstigsten Anbieter (Modellseiten) */
 .diff{font-size:.72rem;color:#f59e0b;margin-left:.3rem;white-space:nowrap}
+
+/* Mittlere Breiten: Menü in eine zweite Zeile, damit nichts über den Rand ragt */
+@media (min-width:761px) and (max-width:1380px){
+  .topbar{flex-wrap:wrap;row-gap:.35rem}
+  .nav{order:6;flex-basis:100%;overflow-x:auto}
+  .themebtn{margin-left:auto}
+}

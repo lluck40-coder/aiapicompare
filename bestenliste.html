@@ -32,6 +32,23 @@
   .quelle{margin-top:1.2rem;font-size:.78rem;color:var(--dim);line-height:1.6}
   .leer{padding:2rem;text-align:center;color:var(--muted)}
   .erkl{font-size:.82rem;color:var(--muted);margin:.2rem 0 0}
+  /* Preis-Leistungs-Diagramm (Farben geprüft: blau/orange, hell + dunkel) */
+  .viz{--c-rest:#3987e5;--c-front:#d95926;margin:0 0 1.2rem;position:relative}
+  [data-theme=light] .viz{--c-rest:#2a78d6;--c-front:#eb6834}
+  .viz h2{font-size:1rem;margin:0 0 .2rem}
+  .viz .unter{font-size:.8rem;color:var(--muted);margin:0 0 .5rem}
+  .viz .legende{display:flex;gap:1rem;font-size:.8rem;color:var(--muted);margin-bottom:.3rem}
+  .viz .legende i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:.35rem;vertical-align:-1px}
+  .viz svg{width:100%;height:auto;display:block}
+  .viz .grid line{stroke:var(--border);stroke-width:1}
+  .viz .achse text{fill:var(--dim);font-size:11px;font-family:var(--mono)}
+  .viz .titel-achse{fill:var(--muted);font-size:11px}
+  .viz .lbl{fill:var(--fg);font-size:11px;font-weight:600;pointer-events:none}
+  .viz .pt{stroke:var(--panel);stroke-width:2}
+  .viz .hit{fill:transparent;cursor:pointer}
+  .viz .hit:focus{outline:none}
+  .viz .tip{position:absolute;pointer-events:none;background:var(--panel2);border:1px solid var(--border2);border-radius:.45rem;padding:.45rem .6rem;font-size:.78rem;line-height:1.45;color:var(--fg);box-shadow:0 6px 20px rgba(0,0,0,.25);max-width:260px;z-index:5}
+  .viz .tip small{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -60,6 +77,15 @@
   <p class="erkl" id="erkl"></p>
   <div class="opt">
     <label><input type="checkbox" id="nurpreis"> <span data-t="nur_preis"></span></label>
+    <a id="vslink" href="compare/index.html" hidden style="margin-left:auto" data-t="vs_link"></a>
+  </div>
+
+  <div class="card viz" id="viz" hidden>
+    <h2 id="viztitel"></h2>
+    <p class="unter" id="vizunter"></p>
+    <div class="legende"><span><i style="background:var(--c-front)"></i><span data-t="leg_front"></span></span><span><i style="background:var(--c-rest)"></i><span data-t="leg_rest"></span></span></div>
+    <svg id="vizsvg" viewBox="0 0 900 380" role="img"></svg>
+    <div class="tip" id="viztip" hidden></div>
   </div>
 
   <div class="tablewrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
@@ -90,44 +116,44 @@ const L10N = {
 de:{h1:"Welches KI-Modell ist wofür am besten?",
   lead:"Platzierungen je Anwendungsbereich aus der Arena-Bestenliste – dort vergleichen Nutzer weltweit die Antworten zweier anonymer Modelle und stimmen für die bessere. Dazu zeigen wir den günstigsten API-Preis aus unserem Preisvergleich.",
   nav_vergleich:"Preisvergleich", nav_kosten:"Kostenrechner", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
-  text:"Text & Code", media:"Bilder & Video", nur_preis:"Nur Modelle mit API-Preis in unserem Vergleich",
+  text:"Text & Code", media:"Bilder & Video", nur_preis:"Nur Modelle mit API-Preis in unserem Vergleich", vs_link:"Modelle direkt vergleichen (A vs. B) →",
   th:["Platz","Modell","Arena-Punkte","Stimmen","Günstigster API-Preis",""], vergleichen:"Preise vergleichen →",
   keinpreis:"bei unseren Anbietern nicht gelistet", tipp:"Preis-Tipp", tipp_t:"Günstigstes Modell unter den ersten 10 mit Preis", frei:"auch kostenlos",
   pro:{text:" / 1 Mio. Input-Token", bild:" pro Bild", video:" pro Sekunde"}, ab:"ab", gratis:"kostenlos",
-  erkl:"Höhere Punktzahl = wurde in direkten Vergleichen häufiger bevorzugt. Kleine Punktunterschiede (unter ca. 10) sind statistisch oft nicht eindeutig.",
+  viz_titel:function(b){ return "Preis-Leistung: "+b; }, viz_unter:"Jeder Punkt ist ein Modell. Orange: Kein anderes Modell ist zugleich günstiger und besser bewertet.", leg_front:"Bestes Preis-Leistungs-Verhältnis", leg_rest:"Weitere Modelle", achse_x:{text:"Günstigster Input-Preis pro 1 Mio. Token (logarithmisch)", bild:"Günstigster Preis pro Bild (logarithmisch)", video:"Günstigster Preis pro Sekunde (logarithmisch)"}, achse_y:"Arena-Punkte", erkl:"Höhere Punktzahl = wurde in direkten Vergleichen häufiger bevorzugt. Kleine Punktunterschiede (unter ca. 10) sind statistisch oft nicht eindeutig.",
   leer:"Die Bestenliste wird beim nächsten täglichen Datenabruf erstellt.",
   quelle:function(m){ return "Quelle der Platzierungen: "+m.quelle+", Datensatz <a href=\""+m.datensatz+"\" target=\"_blank\" rel=\"noopener\">lmarena-ai/leaderboard-dataset</a>, lizenziert unter <a href=\""+m.lizenz_url+"\" target=\"_blank\" rel=\"noopener\">CC BY 4.0</a>, Stand "+m.stand+". Änderungen durch aiapicompare: Auszug der ersten 50 Plätze je Bereich; Varianten eines Modells mit unterschiedlichem Denkaufwand sind zusammengefasst (die beste zählt), daher kann die Platznummer von der Arena abweichen; Zuordnung zu unseren Preisdaten. Keine Verbindung zu Arena; die Platzierungen geben die Bewertungen der Arena-Nutzer wieder und sind keine Empfehlung von aiapicompare. Die Reihenfolge wird nicht durch Partnerprogramme beeinflusst."; },
   disclosure:function(k){ return "<b>Transparenz:</b> Links mit dem Hinweis „"+k+"“ sind Affiliate-Links (Werbung). Wir erhalten ggf. eine Provision – für dich ändert sich der Preis nicht. Die Reihenfolge wird dadurch nicht beeinflusst."; }},
 en:{h1:"Which AI model is best for what?",
   lead:"Rankings per use case from the Arena leaderboard – users worldwide compare the answers of two anonymous models and vote for the better one. Next to it we show the cheapest API price from our price comparison.",
   nav_vergleich:"Price comparison", nav_kosten:"Cost calculator", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
-  text:"Text & code", media:"Images & video", nur_preis:"Only models with an API price in our comparison",
+  text:"Text & code", media:"Images & video", nur_preis:"Only models with an API price in our comparison", vs_link:"Compare models head to head (A vs B) →",
   th:["Rank","Model","Arena score","Votes","Cheapest API price",""], vergleichen:"Compare prices →",
   keinpreis:"not listed at our providers", tipp:"Price tip", tipp_t:"Cheapest model among the top 10 with a price", frei:"also free",
   pro:{text:" / 1M input tokens", bild:" per image", video:" per second"}, ab:"from", gratis:"free",
-  erkl:"Higher score = preferred more often in head-to-head comparisons. Small differences (below about 10 points) are often not statistically clear.",
+  viz_titel:function(b){ return "Price vs. performance: "+b; }, viz_unter:"Each dot is a model. Orange: no other model is both cheaper and rated higher.", leg_front:"Best value for money", leg_rest:"Other models", achse_x:{text:"Cheapest input price per 1M tokens (log scale)", bild:"Cheapest price per image (log scale)", video:"Cheapest price per second (log scale)"}, achse_y:"Arena score", erkl:"Higher score = preferred more often in head-to-head comparisons. Small differences (below about 10 points) are often not statistically clear.",
   leer:"The leaderboard will be created with the next daily data update.",
   quelle:function(m){ return "Source of the rankings: "+m.quelle+", dataset <a href=\""+m.datensatz+"\" target=\"_blank\" rel=\"noopener\">lmarena-ai/leaderboard-dataset</a>, licensed under <a href=\""+m.lizenz_url+"\" target=\"_blank\" rel=\"noopener\">CC BY 4.0</a>, as of "+m.stand+". Changes by aiapicompare: excerpt of the top 50 per category; variants of a model with different reasoning effort are merged (the best counts), so the rank number may differ from the Arena; matched to our price data. Not affiliated with Arena; the rankings reflect the votes of Arena users and are not a recommendation by aiapicompare. The order is not influenced by affiliate programs."; },
   disclosure:function(k){ return "<b>Transparency:</b> Links marked “"+k+"” are affiliate links (advertising). We may receive a commission – the price stays the same for you. Ranking is not affected."; }},
 zh:{h1:"哪个 AI 模型最适合做什么？",
   lead:"各应用领域的排名来自 Arena 排行榜——全球用户比较两个匿名模型的回答，并投票选出更好的一个。旁边显示我们价格对比中最便宜的 API 价格。",
   nav_vergleich:"价格对比", nav_kosten:"成本计算器", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
-  text:"文本与代码", media:"图像与视频", nur_preis:"仅显示在我们对比中有 API 价格的模型",
+  text:"文本与代码", media:"图像与视频", nur_preis:"仅显示在我们对比中有 API 价格的模型", vs_link:"模型直接对比（A 对比 B）→",
   th:["名次","模型","Arena 分数","投票数","最低 API 价格",""], vergleichen:"比较价格 →",
   keinpreis:"我们的提供商未收录", tipp:"性价比之选", tipp_t:"前 10 名中有价格的最便宜模型", frei:"也有免费版",
   pro:{text:" / 百万输入 Token", bild:" / 张", video:" / 秒"}, ab:"起", gratis:"免费",
-  erkl:"分数越高 = 在两两比较中越常被选中。较小的分差（约 10 分以内）在统计上往往并不明确。",
+  viz_titel:function(b){ return "性价比："+b; }, viz_unter:"每个点代表一个模型。橙色：没有其他模型既更便宜又评分更高。", leg_front:"性价比最佳", leg_rest:"其他模型", achse_x:{text:"每百万输入 Token 最低价格（对数刻度）", bild:"每张图片最低价格（对数刻度）", video:"每秒最低价格（对数刻度）"}, achse_y:"Arena 分数", erkl:"分数越高 = 在两两比较中越常被选中。较小的分差（约 10 分以内）在统计上往往并不明确。",
   leer:"排行榜将在下一次每日数据更新时生成。",
   quelle:function(m){ return "排名来源："+m.quelle+"，数据集 <a href=\""+m.datensatz+"\" target=\"_blank\" rel=\"noopener\">lmarena-ai/leaderboard-dataset</a>，采用 <a href=\""+m.lizenz_url+"\" target=\"_blank\" rel=\"noopener\">CC BY 4.0</a> 许可，数据日期 "+m.stand+"。aiapicompare 所做修改：每个领域仅摘取前 50 名；同一模型不同推理强度的版本已合并（取最佳），因此名次可能与 Arena 不同；并与我们的价格数据对应。与 Arena 无关联；排名反映 Arena 用户的投票，并非 aiapicompare 的推荐。排序不受推广计划影响。"; },
   disclosure:function(k){ return "<b>透明声明：</b>标有“"+k+"”的链接为推广（联盟）链接，属于广告。我们可能获得佣金，您的价格不变，排序不受影响。"; }},
 ru:{h1:"Какая AI-модель для чего лучше?",
   lead:"Места по областям применения из рейтинга Arena – пользователи со всего мира сравнивают ответы двух анонимных моделей и голосуют за лучший. Рядом – самая низкая цена API из нашего сравнения.",
   nav_vergleich:"Сравнение цен", nav_kosten:"Калькулятор", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
-  text:"Текст и код", media:"Изображения и видео", nur_preis:"Только модели с ценой API в нашем сравнении",
+  text:"Текст и код", media:"Изображения и видео", nur_preis:"Только модели с ценой API в нашем сравнении", vs_link:"Сравнить модели напрямую (A vs B) →",
   th:["Место","Модель","Баллы Arena","Голоса","Самая низкая цена API",""], vergleichen:"Сравнить цены →",
   keinpreis:"нет у наших поставщиков", tipp:"Выгодно", tipp_t:"Самая дешёвая модель среди первых 10 с ценой", frei:"есть бесплатно",
   pro:{text:" / 1 млн входных токенов", bild:" за изображение", video:" за секунду"}, ab:"от", gratis:"бесплатно",
-  erkl:"Больше баллов = чаще выбиралась в парных сравнениях. Небольшая разница (меньше ~10 баллов) статистически часто неоднозначна.",
+  viz_titel:function(b){ return "Цена и качество: "+b; }, viz_unter:"Каждая точка – модель. Оранжевые: нет другой модели, которая одновременно дешевле и оценена выше.", leg_front:"Лучшее соотношение цены и качества", leg_rest:"Другие модели", achse_x:{text:"Самая низкая цена за 1 млн входных токенов (лог. шкала)", bild:"Самая низкая цена за изображение (лог. шкала)", video:"Самая низкая цена за секунду (лог. шкала)"}, achse_y:"Баллы Arena", erkl:"Больше баллов = чаще выбиралась в парных сравнениях. Небольшая разница (меньше ~10 баллов) статистически часто неоднозначна.",
   leer:"Рейтинг будет создан при следующем ежедневном обновлении данных.",
   quelle:function(m){ return "Источник мест: "+m.quelle+", набор данных <a href=\""+m.datensatz+"\" target=\"_blank\" rel=\"noopener\">lmarena-ai/leaderboard-dataset</a>, лицензия <a href=\""+m.lizenz_url+"\" target=\"_blank\" rel=\"noopener\">CC BY 4.0</a>, данные на "+m.stand+". Изменения aiapicompare: выборка первых 50 мест по каждой области; варианты модели с разным уровнем рассуждения объединены (учитывается лучший), поэтому номер места может отличаться от Arena; сопоставление с нашими ценами. Не связано с Arena; места отражают голоса пользователей Arena и не являются рекомендацией aiapicompare. Партнёрские программы не влияют на порядок."; },
   disclosure:function(k){ return "<b>Прозрачность:</b> ссылки с пометкой «"+k+"» – партнёрские (реклама). Мы можем получить комиссию, цена для вас не меняется."; }}
@@ -185,6 +211,8 @@ function render(){
   document.title = T.h1 + " – aiapicompare";
   document.querySelectorAll("[data-t]").forEach(function(el){ el.textContent = T[el.dataset.t]; });
   document.querySelectorAll(".langbtns button").forEach(function(b){ b.classList.toggle("active", b.dataset.lang === lang); });
+  const vl = document.getElementById("vslink");   // Vergleichsseiten gibt es nur in der zusammengebauten Website
+  vl.hidden = !window.MODELLSEITEN; vl.href = (lang === "en" ? "" : lang + "/") + "compare/index.html";
   const dis = document.getElementById("disclosure");
   dis.hidden = !C.hatAffiliate();
   if (C.hatAffiliate()) dis.innerHTML = '<span class="adlabel">'+esc(C.kennzeichnung)+'</span><span>'+T.disclosure(C.kennzeichnung)+'</span>';
@@ -229,7 +257,79 @@ function render(){
       '<td class="num org">'+(x.v ? x.v.toLocaleString("de-DE") : "—")+'</td>'+
       '<td class="num">'+preis+'</td><td class="num">'+link+'</td></tr>';
   }).join("");
+  zeichneDiagramm(zeilen, art, T, VORHANDEN.filter(function(b){ return b.k === bereich; })[0]);
   try { history.replaceState(null, "", "#" + bereich); } catch(e){}
+}
+
+/* ---------- Preis-Leistungs-Diagramm (SVG, ohne fremde Bibliotheken) ---------- */
+function kurzName(n){ return String(n).replace(/\s*\([^)]*\)\s*/g, " ").trim(); }
+function zeichneDiagramm(zeilen, art, T, b){
+  const box = document.getElementById("viz"), svg = document.getElementById("vizsvg"), tip = document.getElementById("viztip");
+  const pk = zeilen.filter(function(z){ return z.best && z.x.r !== null; });
+  if (pk.length < 3){ box.hidden = true; return; }
+  box.hidden = false;
+  document.getElementById("viztitel").textContent = T.viz_titel(b[lang] || b.en);
+  document.getElementById("vizunter").textContent = T.viz_unter;
+  // Preis-Leistungs-Grenze: kein anderes Modell ist günstiger UND besser bewertet
+  const sortiert = pk.slice().sort(function(a, c){ return a.best.p - c.best.p || c.x.r - a.x.r; });
+  let maxR = -Infinity; const front = [];
+  sortiert.forEach(function(z){ if (z.x.r > maxR){ front.push(z); maxR = z.x.r; } });
+  const W = 900, H = 380, L = 58, Rr = 20, O = 16, U = 52;
+  const lx = pk.map(function(z){ return Math.log10(z.best.p); });
+  let x0 = Math.floor(Math.min.apply(null, lx)), x1 = Math.ceil(Math.max.apply(null, lx));
+  if (x1 === x0) x1 = x0 + 1;
+  const rs = pk.map(function(z){ return z.x.r; });
+  let y0 = Math.floor((Math.min.apply(null, rs) - 5) / 10) * 10, y1 = Math.ceil((Math.max.apply(null, rs) + 5) / 10) * 10;
+  const sx = function(p){ return L + (Math.log10(p) - x0) / (x1 - x0) * (W - L - Rr); };
+  const sy = function(r){ return O + (1 - (r - y0) / (y1 - y0)) * (H - O - U); };
+  let h = '<g class="grid">';
+  for (let e = x0; e <= x1; e++) h += '<line x1="'+sx(Math.pow(10,e))+'" x2="'+sx(Math.pow(10,e))+'" y1="'+O+'" y2="'+(H-U)+'"/>';
+  const schritt = (y1 - y0) > 120 ? 40 : (y1 - y0) > 60 ? 20 : 10;
+  for (let r = y0; r <= y1; r += schritt) h += '<line x1="'+L+'" x2="'+(W-Rr)+'" y1="'+sy(r)+'" y2="'+sy(r)+'"/>';
+  h += '</g><g class="achse">';
+  for (let e = x0; e <= x1; e++){ const p = Math.pow(10,e); h += '<text x="'+sx(p)+'" y="'+(H-U+16)+'" text-anchor="middle">$'+(p >= 1 ? p.toFixed(0) : p.toString())+'</text>'; }
+  for (let r = y0; r <= y1; r += schritt) h += '<text x="'+(L-8)+'" y="'+(sy(r)+4)+'" text-anchor="end">'+r+'</text>';
+  h += '</g><text class="titel-achse" x="'+((L+W-Rr)/2)+'" y="'+(H-12)+'" text-anchor="middle">'+esc(T.achse_x[art])+'</text>';
+  h += '<text class="titel-achse" transform="translate(14,'+((O+H-U)/2)+') rotate(-90)" text-anchor="middle">'+esc(T.achse_y)+'</text>';
+  // Linie entlang der Grenze
+  if (front.length > 1) h += '<polyline fill="none" stroke="var(--c-front)" stroke-width="2" stroke-opacity=".45" points="'+front.map(function(z){ return sx(z.best.p)+","+sy(z.x.r); }).join(" ")+'"/>';
+  const istFront = function(z){ return front.indexOf(z) >= 0; };
+  // erst die übrigen, dann die Grenz-Punkte obenauf
+  pk.filter(function(z){ return !istFront(z); }).concat(front).forEach(function(z){
+    const i = zeilen.indexOf(z);
+    h += '<circle class="pt" cx="'+sx(z.best.p)+'" cy="'+sy(z.x.r)+'" r="5" fill="var('+(istFront(z) ? "--c-front" : "--c-rest")+')"/>';
+    h += '<circle class="hit" data-i="'+i+'" tabindex="0" cx="'+sx(z.best.p)+'" cy="'+sy(z.x.r)+'" r="12"/>';
+  });
+  // Beschriftung nur für die Grenz-Punkte, ohne Überlappung (sonst nur im Tooltip)
+  const belegt = [];
+  front.slice().sort(function(a, c){ return c.x.r - a.x.r; }).forEach(function(z){
+    const t = kurzName(z.x.n), bw = t.length * 6.4 + 4, bh = 13, cx = sx(z.best.p), cy = sy(z.x.r);
+    const versuche = [[cx + 9, cy - 9, "start"], [cx - 9, cy - 9, "end"], [cx + 9, cy + 16, "start"], [cx - 9, cy + 16, "end"]];
+    for (let k = 0; k < versuche.length; k++){
+      const v = versuche[k], bx = v[2] === "start" ? v[0] : v[0] - bw, by = v[1] - 11;
+      if (bx < L || bx + bw > W - Rr || by < 0 || by + bh > H - U) continue;
+      const kollidiert = belegt.some(function(q){ return bx < q[0] + q[2] && bx + bw > q[0] && by < q[1] + q[3] && by + bh > q[1]; }) ||
+        pk.some(function(o){ const ox = sx(o.best.p), oy = sy(o.x.r); return ox > bx - 4 && ox < bx + bw + 4 && oy > by - 4 && oy < by + bh + 4; });
+      if (!kollidiert){ belegt.push([bx, by, bw, bh]); h += '<text class="lbl" x="'+v[0]+'" y="'+v[1]+'" text-anchor="'+v[2]+'">'+esc(t)+'</text>'; break; }
+    }
+  });
+  svg.innerHTML = h;
+  svg.setAttribute("aria-label", T.viz_titel(b[lang] || b.en));
+  const zeige = function(el){
+    const z = zeilen[+el.getAttribute("data-i")];
+    tip.innerHTML = '<b>'+esc(z.x.n)+'</b><br>'+esc(T.th[0])+' '+z.x.p+' · '+z.x.r+' '+esc(T.achse_y)+'<br><small>'+T.ab+' '+fmtP(z.best.p)+T.pro[art]+' · '+esc(QUELLEN[z.best.a.q])+'</small>';
+    tip.hidden = false;
+    const r = box.getBoundingClientRect(), c = el.getBoundingClientRect();
+    let left = c.left - r.left + 16, top = c.top - r.top - 10;
+    if (left + 260 > r.width) left = c.left - r.left - 270;
+    tip.style.left = Math.max(4, left) + "px"; tip.style.top = Math.max(4, top) + "px";
+  };
+  svg.querySelectorAll(".hit").forEach(function(el){
+    el.addEventListener("mouseenter", function(){ zeige(el); });
+    el.addEventListener("focus", function(){ zeige(el); });
+    el.addEventListener("mouseleave", function(){ tip.hidden = true; });
+    el.addEventListener("blur", function(){ tip.hidden = true; });
+  });
 }
 
 document.addEventListener("click", function(e){
