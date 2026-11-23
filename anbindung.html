@@ -51,6 +51,7 @@
   <nav class="nav">
     <a href="index.html" data-t="nav_vergleich"></a>
     <a href="kosten.html" data-t="nav_kosten"></a>
+    <a href="finder.html" data-t="nav_finder"></a>
     <a href="free.html" data-t="nav_gratis"></a>
     <a href="bestenliste.html" data-t="nav_best"></a>
     <a href="news.html" data-t="nav_news"></a>
@@ -119,7 +120,7 @@ const C = window.SITE_CONFIG || {kennzeichnung:"Anzeige", hatAffiliate:function(
 /* ================= Texte ================= */
 const L10N = {
 de:{
-  titel:"Anbieter anbinden", nav_kosten:"Kostenrechner", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", nav_vergleich:"Preisvergleich", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
+  titel:"Anbieter anbinden", nav_kosten:"Kostenrechner", nav_finder:"Modell-Finder", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", nav_vergleich:"Preisvergleich", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
   lead:"Alle Anbieter sprechen die <b>OpenAI-kompatible API</b>. Jedes Tool braucht deshalb nur drei Angaben: <b>Base-URL</b>, <b>API-Key</b> und <b>Modell-ID</b>. Wähle links Anbieter und Modell, dann das Tool – die Konfiguration unten wird automatisch ausgefüllt.",
   schritt1:"1 · Anbieter", schritt2:"2 · Modell", schritt3:"3 · Konto & Key", modelle:"Modelle",
   uebersicht:"Übersicht aller Anbieter", th_anbieter:"Anbieter", th_key:"Key-Format", th_info:"Besonderheiten",
@@ -167,7 +168,7 @@ de:{
   tools:{hermes:"Hermes Agent", copilot:"VS Code · Copilot Chat", cline:"VS Code · Cline / Roo / Kilo", continue:"Continue", cursor:"Cursor", openwebui:"Open WebUI", aider:"Aider", code:"Eigener Code"}
 },
 en:{
-  titel:"Connect a provider", nav_kosten:"Cost calculator", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", nav_vergleich:"Price comparison", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
+  titel:"Connect a provider", nav_kosten:"Cost calculator", nav_finder:"Model finder", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", nav_vergleich:"Price comparison", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
   lead:"All providers speak the <b>OpenAI-compatible API</b>. Every tool therefore needs only three values: <b>base URL</b>, <b>API key</b> and <b>model ID</b>. Pick a provider and model on the left, then the tool – the configuration below fills in automatically.",
   schritt1:"1 · Provider", schritt2:"2 · Model", schritt3:"3 · Account & key", modelle:"models",
   uebersicht:"All providers at a glance", th_anbieter:"Provider", th_key:"Key format", th_info:"Notes",
@@ -215,7 +216,7 @@ en:{
   tools:{hermes:"Hermes Agent", copilot:"VS Code · Copilot Chat", cline:"VS Code · Cline / Roo / Kilo", continue:"Continue", cursor:"Cursor", openwebui:"Open WebUI", aider:"Aider", code:"Your own code"}
 },
 zh:{
-  titel:"接入提供商", nav_kosten:"成本计算器", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", nav_vergleich:"价格对比", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
+  titel:"接入提供商", nav_kosten:"成本计算器", nav_finder:"模型推荐", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", nav_vergleich:"价格对比", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
   lead:"所有提供商都支持 <b>OpenAI 兼容 API</b>，因此每个工具只需三项信息：<b>Base URL</b>、<b>API Key</b> 和 <b>模型 ID</b>。在左侧选择提供商和模型，再选择工具，下方配置会自动填好。",
   schritt1:"1 · 提供商", schritt2:"2 · 模型", schritt3:"3 · 账号与密钥", modelle:"个模型",
   uebersicht:"所有提供商一览", th_anbieter:"提供商", th_key:"密钥格式", th_info:"说明",

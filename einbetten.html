@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Embed AI model prices on your website (free widget) – aiapicompare</title>
+<meta name="description" content="Free price widget for blogs and websites: show the current cheapest API price of an AI model, updated daily. Copy the code and paste it.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:image" content="https://aiapicompare.com/og-image.png">
+<link rel="stylesheet" href="style.css">
+<script src="theme.js"></script>
+<style>
+  .form{display:grid;grid-template-columns:2fr 1fr 1fr;gap:.8rem;align-items:end;margin:1rem 0}
+  @media (max-width:700px){ .form{grid-template-columns:1fr} }
+  .form label{display:block;font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem}
+  .form input,.form select{width:100%;padding:.55rem .7rem;border:1px solid var(--border2);border-radius:.45rem;background:var(--input);color:var(--fg);font-size:.95rem}
+  .treffer{display:flex;flex-wrap:wrap;gap:.35rem;margin:.4rem 0 1rem}
+  .treffer button{padding:.3rem .65rem;border:1px solid var(--border2);border-radius:2rem;background:var(--input);cursor:pointer;font-size:.82rem;color:var(--muted)}
+  .treffer button.active{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+  .vorschau{padding:1rem;border:1px dashed var(--border2);border-radius:.6rem;margin:.6rem 0;min-height:130px}
+  textarea{width:100%;min-height:90px;font-family:var(--mono);font-size:.82rem;padding:.6rem;border:1px solid var(--border2);border-radius:.45rem;background:var(--codebg,var(--input));color:var(--fg)}
+  .hinweis{font-size:.8rem;color:var(--muted);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="index.html" aria-label="aiapicompare"><img class="logo-d" src="logo/logo.svg" alt="aiapicompare" width="166" height="30"><img class="logo-l" src="logo/logo-hell.svg" alt="aiapicompare" width="166" height="30"></a>
+  <nav class="nav">
+    <a href="index.html" data-t="nav_vergleich"></a>
+    <a href="kosten.html" data-t="nav_kosten"></a>
+    <a href="finder.html" data-t="nav_finder"></a>
+    <a href="free.html" data-t="nav_gratis"></a>
+    <a href="bestenliste.html" data-t="nav_best"></a>
+    <a href="news.html" data-t="nav_news"></a>
+    <a href="anbindung.html" data-t="nav_anbindung"></a>
+  </nav>
+  <button class="themebtn" title="Light / dark"><span class="ti-l">☀</span><span class="ti-d">☾</span></button>
+  <div class="langbtns">
+    <button data-lang="de">DE</button><button data-lang="en">EN</button><button data-lang="zh">中文</button><button data-lang="ru">RU</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <h1 data-t="h1"></h1>
+  <p class="lead" data-t="lead"></p>
+
+  <div class="form">
+    <div><label for="suche" data-t="modell"></label><input id="suche" type="search" autocomplete="off"></div>
+    <div><label for="wlang" data-t="sprache"></label><select id="wlang"><option value="de">Deutsch</option><option value="en">English</option><option value="zh">中文</option><option value="ru">Русский</option></select></div>
+    <div><label for="wtheme" data-t="design"></label><select id="wtheme"></select></div>
+  </div>
+  <div class="treffer" id="treffer"></div>
+
+  <h2 data-t="h_vorschau"></h2>
+  <div class="vorschau" id="vorschau"></div>
+  <h2 data-t="h_code"></h2>
+  <textarea id="code" readonly></textarea>
+  <p><button class="btn" id="kopieren" data-t="kopieren"></button></p>
+  <p class="hinweis" data-t="hinweis"></p>
+
+  <div class="legal">
+    <a href="index.html" data-t="nav_vergleich"></a><a href="impressum.html" data-t="impressum"></a><a href="datenschutz.html" data-t="datenschutz"></a>
+  </div>
+</div>
+
+<script src="out/data.js"></script>
+<script>
+"use strict";
+const D = window.API_DATEN || {};
+const L10N = {
+de:{h1:"Preis-Widget für deine Website", lead:"Zeige auf deinem Blog oder deiner Website den aktuellen günstigsten API-Preis eines KI-Modells – täglich automatisch aktualisiert, kostenlos. Modell wählen, Code kopieren, einfügen.",
+  nav_vergleich:"Preisvergleich", nav_kosten:"Kostenrechner", nav_finder:"Modell-Finder", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
+  modell:"Modell suchen", sprache:"Sprache des Widgets", design:"Design", h_vorschau:"Vorschau", h_code:"Code zum Einfügen", kopieren:"Code kopieren", kopiert:"Kopiert ✓",
+  themes:{auto:"Automatisch (wie Besucher)", light:"Hell", dark:"Dunkel"}, ph:"z. B. claude, gemini, deepseek …",
+  lokal:"Die Vorschau erscheint auf aiapicompare.com (die Widgets werden beim Zusammenbau der Website erzeugt).",
+  hinweis:"Das Widget setzt keine Cookies und lädt keine fremden Inhalte. Beim Abruf überträgt der Browser technisch nötige Daten (z. B. IP-Adresse) an unseren Hoster GitHub – bitte erwähne das ggf. in deiner Datenschutzerklärung. Klicks führen zur Modellseite auf aiapicompare.com."},
+en:{h1:"Price widget for your website", lead:"Show the current cheapest API price of an AI model on your blog or website – updated daily, free of charge. Pick a model, copy the code, paste it.",
+  nav_vergleich:"Price comparison", nav_kosten:"Cost calculator", nav_finder:"Model finder", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
+  modell:"Search model", sprache:"Widget language", design:"Theme", h_vorschau:"Preview", h_code:"Code to paste", kopieren:"Copy code", kopiert:"Copied ✓",
+  themes:{auto:"Automatic (like visitor)", light:"Light", dark:"Dark"}, ph:"e.g. claude, gemini, deepseek …",
+  lokal:"The preview appears on aiapicompare.com (widgets are generated when the website is built).",
+  hinweis:"The widget sets no cookies and loads no third-party content. When it loads, the browser transmits technically necessary data (e.g. IP address) to our host GitHub – please mention this in your privacy policy if required. Clicks lead to the model page on aiapicompare.com."},
+zh:{h1:"适用于你网站的价格小组件", lead:"在你的博客或网站上显示某个 AI 模型当前最低的 API 价格——每日自动更新，免费。选择模型，复制代码，粘贴即可。",
+  nav_vergleich:"价格对比", nav_kosten:"成本计算器", nav_finder:"模型推荐", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
+  modell:"搜索模型", sprache:"小组件语言", design:"外观", h_vorschau:"预览", h_code:"嵌入代码", kopieren:"复制代码", kopiert:"已复制 ✓",
+  themes:{auto:"自动（跟随访客）", light:"浅色", dark:"深色"}, ph:"如 claude、gemini、deepseek …",
+  lokal:"预览将在 aiapicompare.com 上显示（小组件在构建网站时生成）。",
+  hinweis:"小组件不使用 Cookie，也不加载第三方内容。加载时浏览器会向我们的托管商 GitHub 传输技术上必要的数据（如 IP 地址）——如有需要，请在你的隐私政策中说明。点击将进入 aiapicompare.com 上的模型页面。"},
+ru:{h1:"Виджет цен для вашего сайта", lead:"Показывайте на блоге или сайте актуальную самую низкую цену API для AI-модели – ежедневно обновляется, бесплатно. Выберите модель, скопируйте код, вставьте.",
+  nav_vergleich:"Сравнение цен", nav_kosten:"Калькулятор", nav_finder:"Подбор модели", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
+  modell:"Найти модель", sprache:"Язык виджета", design:"Оформление", h_vorschau:"Предпросмотр", h_code:"Код для вставки", kopieren:"Скопировать код", kopiert:"Скопировано ✓",
+  themes:{auto:"Автоматически (как у посетителя)", light:"Светлое", dark:"Тёмное"}, ph:"напр. claude, gemini, deepseek …",
+  lokal:"Предпросмотр появится на aiapicompare.com (виджеты создаются при сборке сайта).",
+  hinweis:"Виджет не использует cookies и не загружает сторонний контент. При загрузке браузер передаёт технически необходимые данные (например, IP-адрес) нашему хостингу GitHub – при необходимости укажите это в своей политике конфиденциальности. Клик ведёт на страницу модели на aiapicompare.com."}
+};
+function slug(k){ return String(k).replace(/:free$/, "").replace(/^media-/, "").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, ""); }
+// Modelle (eine Zeile je Modellseite)
+const MODELLE = {};
+Object.keys(D).forEach(function(q){
+  if (q === "meta" || typeof D[q] !== "object") return;
+  Object.keys(D[q]).forEach(function(k){
+    const s = slug(k); if (!s) return;
+    const n = String(D[q][k].name || D[q][k].roh_id || k).replace(/^[^:]{1,30}:\s*/, "").replace(/\s*\((free|kostenlos)\)\s*$/i, "");
+    const m = MODELLE[s] = MODELLE[s] || {s:s, n:n, anz:0};
+    m.anz++;
+  });
+});
+const LISTE = Object.keys(MODELLE).map(function(s){ return MODELLE[s]; }).sort(function(a, b){ return b.anz - a.anz || a.n.localeCompare(b.n); });
+
+function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+let lang = lsGet("lang") || (navigator.language || "").slice(0,2);
+if (!L10N[lang]) lang = "en";
+const S = {s:"", q:"", wlang:lang, theme:"auto"};
+S.s = (LISTE.filter(function(m){ return /claude|gpt|gemini/.test(m.s); })[0] || LISTE[0] || {s:""}).s;
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+function code(){
+  const url = "https://aiapicompare.com/widget/" + S.s + ".html?lang=" + S.wlang + (S.theme !== "auto" ? "&theme=" + S.theme : "");
+  return '<iframe src="' + url + '" width="340" height="120" style="border:0;max-width:100%" loading="lazy" title="' + esc((MODELLE[S.s] || {}).n || S.s) + ' – API price (aiapicompare)"></iframe>';
+}
+function render(){
+  const T = L10N[lang];
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+  document.title = T.h1 + " – aiapicompare";
+  document.querySelectorAll("[data-t]").forEach(function(el){ el.textContent = T[el.dataset.t]; });
+  document.querySelectorAll(".langbtns button").forEach(function(b){ b.classList.toggle("active", b.dataset.lang === lang); });
+  document.getElementById("suche").placeholder = T.ph;
+  document.getElementById("wtheme").innerHTML = Object.keys(T.themes).map(function(k){ return '<option value="'+k+'"'+(k === S.theme ? " selected" : "")+'>'+T.themes[k]+'</option>'; }).join("");
+  document.getElementById("wlang").value = S.wlang;
+  const q = S.q.trim().toLowerCase();
+  const treffer = (q ? LISTE.filter(function(m){ return (m.n + " " + m.s).toLowerCase().indexOf(q) >= 0; }) : LISTE).slice(0, 14);
+  if (treffer.length && !treffer.some(function(m){ return m.s === S.s; }) && q) S.s = treffer[0].s;
+  document.getElementById("treffer").innerHTML = treffer.map(function(m){ return '<button data-s="'+m.s+'" class="'+(m.s === S.s ? "active" : "")+'">'+esc(m.n)+'</button>'; }).join("");
+  const c = code();
+  document.getElementById("code").value = c;
+  document.getElementById("vorschau").innerHTML = window.MODELLSEITEN
+    ? '<iframe src="widget/' + S.s + '.html?lang=' + S.wlang + (S.theme !== "auto" ? "&theme=" + S.theme : "") + '" width="340" height="120" style="border:0;max-width:100%" title="Vorschau"></iframe>'
+    : '<span class="hinweis">' + T.lokal + '</span>';
+}
+document.addEventListener("click", function(e){
+  const l = e.target.closest("button[data-lang]");
+  if (l){ lang = l.dataset.lang; lsSet("lang", lang); render(); return; }
+  const m = e.target.closest("button[data-s]");
+  if (m){ S.s = m.dataset.s; render(); }
+});
+document.getElementById("suche").addEventListener("input", function(e){ S.q = e.target.value; render(); });
+document.getElementById("wlang").addEventListener("change", function(e){ S.wlang = e.target.value; render(); });
+document.getElementById("wtheme").addEventListener("change", function(e){ S.theme = e.target.value; render(); });
+document.getElementById("kopieren").addEventListener("click", function(){
+  const t = document.getElementById("code"), b = document.getElementById("kopieren");
+  const ok = function(){ b.textContent = L10N[lang].kopiert; setTimeout(function(){ b.textContent = L10N[lang].kopieren; }, 1500); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t.value).then(ok, function(){});
+  else { t.select(); try { document.execCommand("copy"); ok(); } catch(err){} }
+});
+render();
+</script>
+</body>
+</html>

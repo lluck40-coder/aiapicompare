@@ -193,6 +193,68 @@ def baue_news(daten):
     return {"stand": (daten.get("meta") or {}).get("erstellt", ""), "neu": neu[:150], "preis": preis[:150]}
 
 
+# ------------------------------------------------------------------ KI-Preisindex aus dem eigenen Preisverlauf
+def baue_preisindex(daten, staerken):
+    """Index = 100 × geometrisches Mittel (Preis am Tag / Preis am Starttag) über einen festen Warenkorb:
+    alle Textmodelle (Input-Preis > 0), die seit dem Starttag erfasst sind. Zweite Reihe: nur die
+    Top 30 der Arena-Bestenliste (Allround). Dazu Monatswerte: Preissenkungen, -erhöhungen, neue Modelle."""
+    import math
+    try:
+        verlauf = json.loads((OUT / "verlauf.json").read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    text = {}
+    for q, eintraege in daten.items():
+        if q == "meta" or not isinstance(eintraege, dict):
+            continue
+        for k, v in eintraege.items():
+            if isinstance(v.get("in"), (int, float)) or isinstance(v.get("price"), (int, float)):
+                text[q + "|" + k] = re.sub(r":free$", "", k)
+    reihen = {key: h["p"] for key, h in verlauf.items() if key != "_quellen" and isinstance(h, dict) and h.get("p") and key in text}
+    if not reihen:
+        return None
+    start = min(p[0][0] for p in reihen.values())
+    heute = time.strftime("%Y-%m-%d", time.gmtime())
+    korb = {key: p for key, p in reihen.items() if p[0][0] == start and p[0][1] and p[0][1] > 0}
+    top = {k for k, b in ((staerken or {}).get("modelle") or {}).items() if b.get("allround") and b["allround"] <= 30}
+    korb_top = {key: p for key, p in korb.items() if text[key] in top}
+    tage = sorted({d for p in korb.values() for d, _ in p} | {heute})
+
+    def preis_am(p, tag):
+        wert = None
+        for d, x in p:
+            if d <= tag:
+                wert = x
+            else:
+                break
+        return wert
+
+    def index(k, tag):
+        logs = []
+        for p in k.values():
+            x = preis_am(p, tag)
+            if x and x > 0:
+                logs.append(math.log(x / p[0][1]))
+        return round(100 * math.exp(sum(logs) / len(logs)), 2) if logs else None
+
+    punkte = [[tag, index(korb, tag), index(korb_top, tag) if korb_top else None] for tag in tage]
+    monate = {}
+    for key, h in verlauf.items():
+        if key == "_quellen" or not isinstance(h, dict):
+            continue
+        p = h.get("p") or []
+        for (d0, a), (d1, b) in zip(p, p[1:]):
+            m = monate.setdefault(d1[:7], {"runter": 0, "hoch": 0, "neu": 0})
+            if a and b and b < a:
+                m["runter"] += 1
+            elif a and b and b > a:
+                m["hoch"] += 1
+        if h.get("seit"):
+            monate.setdefault(h["seit"][:7], {"runter": 0, "hoch": 0, "neu": 0})["neu"] += 1
+    return {"start": start, "stand": heute, "n_alle": len(korb), "n_top": len(korb_top), "punkte": punkte,
+            "monate": [dict(m=k, **v) for k, v in sorted(monate.items(), reverse=True)]}
+
+
 def schreibe_js(pfad, variable, obj):
     pfad.write_text(f"window.{variable} = " + json.dumps(obj, ensure_ascii=False, separators=(",", ":")) + ";\n",
                     encoding="utf-8")
@@ -210,6 +272,14 @@ def main():
             print("(!) Keine Ranglisten erhalten – vorhandene out/staerken.js bleibt bestehen")
     except Exception as e:
         print(f"(!) Ranglisten fehlgeschlagen: {e} – vorhandene Datei bleibt bestehen")
+    try:
+        st_daten = json.loads((OUT / "staerken.js").read_text(encoding="utf-8").split("=", 1)[1].rstrip().rstrip(";"))
+    except Exception:
+        st_daten = {}
+    pi = baue_preisindex(daten, st_daten)
+    if pi:
+        schreibe_js(OUT / "preisindex.js", "PREISINDEX", pi)
+        print(f"out/preisindex.js: Start {pi['start']}, Warenkorb {pi['n_alle']} Modelle (Top: {pi['n_top']}), {len(pi['punkte'])} Datenpunkte")
     nw = baue_news(daten)
     schreibe_js(OUT / "news.js", "NEWS", nw)
     print(f"out/news.js: {len(nw['neu'])} neue Modelle, {len(nw['preis'])} Preisänderungen (30 Tage)")

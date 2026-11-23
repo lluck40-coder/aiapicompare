@@ -4,7 +4,7 @@
 | Datei | Zweck |
 |---|---|
 | `index.html` | Preisvergleich (Hauptseite) |
-| `kosten.html` | Kostenrechner (Text, Bilder, Video) |
+| `kosten.html` | Kostenrechner (Text, Bilder, Video) und Token-Rechner („Text einfügen“: Token-Schätzung im Browser, der Text wird nicht gespeichert oder übertragen) |
 | `bestenliste.html` | „Welches Modell wofür?“ – Platzierungen aus der Arena-Bestenliste (CC BY 4.0) mit günstigstem Preis |
 | `news.html` | Neuigkeiten: neue Modelle und Preisänderungen aus den eigenen Preisdaten (keine fremden Texte) |
 | `build_news.py` | erzeugt `out/staerken.js` (Arena-Ranglisten) und `out/news.js` (Neuigkeiten); läuft nachts nach `build_data.py` |
@@ -13,6 +13,12 @@
 | `llms.txt` (erzeugt) | Kurzbeschreibung der Website für KI-Assistenten |
 | `indexnow.py` + `<Schlüssel>.txt` | meldet neue/geänderte Seiten nachts an Bing & Co. (IndexNow), sobald die Domain live ist |
 | `bereiche.js` | Namen der Anwendungsbereiche in 4 Sprachen |
+| `finder.html` | Modell-Finder: 3 Fragen (Zweck, Budget, Qualität vs. Preis) → passende Modelle aus Arena-Platzierung + Preis |
+| `preisindex.html` | KI-Preisindex: Entwicklung der API-Preise seit dem Starttag (Daten: `out/preisindex.js`, erzeugt von `build_news.py`) |
+| `einbetten.html` | Preis-Widget für fremde Websites (Code zum Kopieren); die Widgets selbst liegen unter `widget/<modell>.html` (erzeugt) |
+| `providers/…` (erzeugt) | Anbieter-Seiten (Modelle, günstigste Modelle, Arena-Top, Anbindung), 4 Sprachen |
+| `404.html` (erzeugt) | eigene Fehlerseite mit Suche und Links |
+| `pruefen.py` | automatische Kontrolle nach jedem Lauf: fehlgeschlagene Abrufe, veraltete Daten, tote Links → GitHub-Issue (E-Mail von GitHub), schließt sich selbst, wenn alles wieder geht |
 | `free.html` | Kostenlose Modelle (funktioniert auch lokal; online ersetzt durch die Sprachfassungen aus `build_pages.py`) |
 | `build_pages.py` | erzeugt Modellseiten (4 Sprachen), Seite „Kostenlose Modelle“, A–Z-Verzeichnis, Sitemap und `/api/prices.json` |
 | `theme.js` | heller/dunkler Modus |
@@ -72,3 +78,13 @@ Beim allerersten Lauf wird nur der Ausgangsstand gespeichert (nichts wird als ne
    per DNS-TXT-Eintrag bei Porkbun bestätigen, dann unter „Sitemaps“ `sitemap.xml` einreichen.
 2. **Bing Webmaster Tools** (bing.com/webmasters): „Import from Google Search Console“ wählen – fertig.
    Danach meldet `indexnow.py` neue und geänderte Seiten jede Nacht automatisch.
+
+## Automatische Kontrolle
+Nach jedem nächtlichen Lauf prüft `pruefen.py` die Daten und alle internen Links. Bei Problemen legt GitHub
+ein Issue „Automatische Kontrolle: Probleme gefunden“ an – GitHub schickt dir dazu eine E-Mail
+(Einstellung: github.com → Settings → Notifications). Ist alles wieder in Ordnung, wird das Issue automatisch geschlossen.
+Lokal: `python pruefen.py vorschau`.
+
+## Preisindex
+Startet automatisch mit dem ersten Tag, an dem `out/verlauf.json` Daten hat. Aussagekräftig wird er nach einigen Wochen;
+bis mindestens zwei Messpunkte vorliegen, zeigt die Seite einen Hinweis statt des Diagramms.

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI model finder: which AI model suits me? – aiapicompare</title>
+<meta name="description" content="Three quick questions – use case, budget, quality vs. price – and you get matching AI models with the cheapest API price, based on the Arena leaderboard.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:image" content="https://aiapicompare.com/og-image.png">
+<link rel="stylesheet" href="style.css">
+<script src="theme.js"></script>
+<style>
+  .frage{margin:1.3rem 0 .4rem;font-weight:700}
+  .frage small{font-weight:400;color:var(--muted);margin-left:.4rem}
+  .chips{display:flex;flex-wrap:wrap;gap:.4rem}
+  .chips button{padding:.5rem .85rem;border:1px solid var(--border2);border-radius:2rem;background:var(--input);cursor:pointer;font-size:.88rem;color:var(--muted)}
+  .chips button:hover{border-color:var(--accent);color:var(--fg)}
+  .chips button.active{border-color:var(--accent);color:var(--accent);background:var(--accent-bg);font-weight:600}
+  .ergebnisse{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.8rem;margin:1.4rem 0 .6rem}
+  .vorschlag{border:1px solid var(--border);border-radius:.7rem;background:var(--panel);padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.35rem}
+  .vorschlag.erste{border-color:var(--accent)}
+  .vorschlag .nr{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .vorschlag .name{font-size:1.1rem;font-weight:700}
+  .vorschlag .preis{font-family:var(--mono);font-size:1.15rem;font-weight:700;color:var(--accent)}
+  .vorschlag .preis small{font-family:inherit;font-size:.75rem;font-weight:500;color:var(--muted)}
+  .vorschlag .info{font-size:.82rem;color:var(--muted)}
+  .vorschlag .aktionen{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.4rem}
+  .vorschlag .aktionen a{font-size:.82rem}
+  .hinweis{font-size:.78rem;color:var(--dim);line-height:1.6}
+  .leer{padding:1.2rem;border:1px dashed var(--border2);border-radius:.6rem;color:var(--muted);margin:1.4rem 0}
+  .warum{font-size:.85rem;color:var(--muted);margin:.2rem 0 0}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="index.html" aria-label="aiapicompare"><img class="logo-d" src="logo/logo.svg" alt="aiapicompare" width="166" height="30"><img class="logo-l" src="logo/logo-hell.svg" alt="aiapicompare" width="166" height="30"></a>
+  <nav class="nav">
+    <a href="index.html" data-t="nav_vergleich"></a>
+    <a href="kosten.html" data-t="nav_kosten"></a>
+    <a href="finder.html" class="active" data-t="nav_finder"></a>
+    <a href="free.html" data-t="nav_gratis"></a>
+    <a href="bestenliste.html" data-t="nav_best"></a>
+    <a href="news.html" data-t="nav_news"></a>
+    <a href="anbindung.html" data-t="nav_anbindung"></a>
+  </nav>
+  <button class="themebtn" title="Light / dark"><span class="ti-l">☀</span><span class="ti-d">☾</span></button>
+  <div class="langbtns">
+    <button data-lang="de">DE</button><button data-lang="en">EN</button><button data-lang="zh">中文</button><button data-lang="ru">RU</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="disclosure" id="disclosure" hidden></div>
+  <h1 data-t="h1"></h1>
+  <p class="lead" data-t="lead"></p>
+
+  <div class="frage">1. <span data-t="f1"></span></div><div class="chips" id="c1"></div>
+  <div class="frage">2. <span data-t="f2"></span> <small id="f2u"></small></div><div class="chips" id="c2"></div>
+  <div class="frage">3. <span data-t="f3"></span></div><div class="chips" id="c3"></div>
+
+  <p class="warum" id="warum"></p>
+  <div id="ergebnis"></div>
+  <p class="hinweis" id="hinweis"></p>
+
+  <div class="legal">
+    <a href="index.html" data-t="nav_vergleich"></a><a href="bestenliste.html" data-t="nav_best"></a><a href="impressum.html" data-t="impressum"></a><a href="datenschutz.html" data-t="datenschutz"></a>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="out/data.js"></script>
+<script src="out/staerken.js"></script>
+<script src="bereiche.js"></script>
+<script>
+"use strict";
+const D = window.API_DATEN || {};
+const ST = window.STAERKEN || null;
+const C = window.SITE_CONFIG || {kennzeichnung:"Anzeige", hatAffiliate:function(){return false;},
+  linkHtml:function(k,u,t,c){ return u ? '<a class="'+(c||"")+'" href="'+u+'" target="_blank" rel="noopener">'+t+'</a>' : ""; }};
+const QUELLEN = {openrouter:"OpenRouter", uplinkswitch:"UplinkSwitch", anymodel:"AnyModel", nanogpt:"NanoGPT", chutes:"Chutes",
+  deepinfra:"DeepInfra", novita:"Novita AI", cometapi:"CometAPI", kyma:"Kyma API"};
+// Anwendungsfälle -> Bereiche der Bestenliste
+const ZWECKE = ["allround","coding","webdev","creative","math","deutsch","vision","bild","video"];
+// Budget-Grenzen je Preisart (Text: $/1M Input, Bild: $/Bild, Video: $/Sekunde)
+const BUDGET = {egal:{text:Infinity, bild:Infinity, video:Infinity}, guenstig:{text:1, bild:0.05, video:0.1}, sehrguenstig:{text:0.2, bild:0.02, video:0.03}, frei:{text:0, bild:0, video:0}};
+
+const L10N = {
+de:{h1:"Modell-Finder: Welches KI-Modell passt zu mir?", lead:"Drei kurze Fragen – und du bekommst passende Modelle mit dem günstigsten API-Preis. Grundlage sind die Platzierungen der Arena-Bestenliste und unser täglicher Preisvergleich.",
+  nav_vergleich:"Preisvergleich", nav_kosten:"Kostenrechner", nav_finder:"Modell-Finder", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
+  f1:"Wofür brauchst du das Modell?", f2:"Wie viel darf es kosten?", f3:"Was ist dir wichtiger?",
+  budget:{egal:"Egal", guenstig:"Günstig", sehrguenstig:"Sehr günstig", frei:"Kostenlos"},
+  budget_info:{text:"(günstig: bis $1, sehr günstig: bis $0.20 pro 1 Mio. Input-Token)", bild:"(günstig: bis $0.05, sehr günstig: bis $0.02 pro Bild)", video:"(günstig: bis $0.10, sehr günstig: bis $0.03 pro Sekunde)"},
+  prio:{qualitaet:"Beste Qualität", ausgewogen:"Ausgewogen", preis:"Möglichst günstig"},
+  warum:{qualitaet:"Sortiert nach Platzierung in der Arena-Bestenliste – innerhalb deines Budgets.", ausgewogen:"Gute Platzierung bei moderatem Preis: Kombination aus Arena-Punkten und Preis.", preis:"Die günstigsten Modelle unter den 20 bestplatzierten – innerhalb deines Budgets."},
+  vorschlag:"Vorschlag", platz:function(p){ return "Platz " + p + " in der Arena-Bestenliste"; }, punkte:"Arena-Punkte", ab:"ab", bei:"bei", gratis:"kostenlos",
+  pauschal:" / 1 Mio. Token (Pauschalpreis)", pro:{text:" / 1 Mio. Input-Token", bild:" pro Bild", video:" pro Sekunde"}, zum:"Zum Anbieter ↗", vergleichen:"Alle Preise", modellseite:"Modellseite", kosten:"Kosten berechnen",
+  leer:"Für diese Kombination gibt es kein passendes Modell mit Preis bei unseren Anbietern. Probiere ein höheres Budget.",
+  frei_media:"Kostenlose Bild- und Video-Modelle gibt es bei unseren Anbietern derzeit nicht.",
+  keine:"Der Modell-Finder braucht die Bestenliste – sie wird beim nächsten täglichen Datenabruf erstellt.",
+  hinweis:function(m){ return "Vorschläge auf Basis der Platzierungen von Arena (arena.ai, ehemals LMArena; Datensatz lmarena-ai/leaderboard-dataset, Lizenz CC BY 4.0, Stand " + m.stand + ") und unserer Preisdaten – keine persönliche Beratung. Partnerprogramme beeinflussen die Vorschläge nicht."; },
+  disclosure:function(k){ return "<b>Transparenz:</b> Links mit dem Hinweis „"+k+"“ sind Affiliate-Links (Werbung). Wir erhalten ggf. eine Provision – für dich ändert sich der Preis nicht. Die Vorschläge werden dadurch nicht beeinflusst."; }},
+en:{h1:"Model finder: which AI model suits me?", lead:"Three quick questions – and you get matching models with the cheapest API price. Based on the Arena leaderboard ranks and our daily price comparison.",
+  nav_vergleich:"Price comparison", nav_kosten:"Cost calculator", nav_finder:"Model finder", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
+  f1:"What do you need the model for?", f2:"How much may it cost?", f3:"What matters more to you?",
+  budget:{egal:"Any", guenstig:"Cheap", sehrguenstig:"Very cheap", frei:"Free"},
+  budget_info:{text:"(cheap: up to $1, very cheap: up to $0.20 per 1M input tokens)", bild:"(cheap: up to $0.05, very cheap: up to $0.02 per image)", video:"(cheap: up to $0.10, very cheap: up to $0.03 per second)"},
+  prio:{qualitaet:"Best quality", ausgewogen:"Balanced", preis:"Lowest price"},
+  warum:{qualitaet:"Sorted by Arena leaderboard rank – within your budget.", ausgewogen:"Good rank at a moderate price: a combination of Arena score and price.", preis:"The cheapest models among the 20 best-ranked – within your budget."},
+  vorschlag:"Suggestion", platz:function(p){ return "Rank " + p + " in the Arena leaderboard"; }, punkte:"Arena score", ab:"from", bei:"at", gratis:"free",
+  pauschal:" / 1M tokens (flat price)", pro:{text:" / 1M input tokens", bild:" per image", video:" per second"}, zum:"Go to provider ↗", vergleichen:"All prices", modellseite:"Model page", kosten:"Calculate cost",
+  leer:"There is no matching model with a price at our providers for this combination. Try a higher budget.",
+  frei_media:"There are currently no free image or video models at our providers.",
+  keine:"The model finder needs the leaderboard – it will be created with the next daily data update.",
+  hinweis:function(m){ return "Suggestions based on the ranks from Arena (arena.ai, formerly LMArena; dataset lmarena-ai/leaderboard-dataset, license CC BY 4.0, as of " + m.stand + ") and our price data – not personal advice. Affiliate programs do not influence the suggestions."; },
+  disclosure:function(k){ return "<b>Transparency:</b> Links marked “"+k+"” are affiliate links (advertising). We may receive a commission – the price stays the same for you. Suggestions are not affected."; }},
+zh:{h1:"模型推荐：哪个 AI 模型适合我？", lead:"回答三个简单问题，即可获得合适的模型及最低 API 价格。依据 Arena 排行榜名次和我们的每日价格对比。",
+  nav_vergleich:"价格对比", nav_kosten:"成本计算器", nav_finder:"模型推荐", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
+  f1:"你需要模型做什么？", f2:"预算是多少？", f3:"你更看重什么？",
+  budget:{egal:"不限", guenstig:"便宜", sehrguenstig:"非常便宜", frei:"免费"},
+  budget_info:{text:"（便宜：每百万输入 Token 最多 $1，非常便宜：最多 $0.20）", bild:"（便宜：每张最多 $0.05，非常便宜：最多 $0.02）", video:"（便宜：每秒最多 $0.10，非常便宜：最多 $0.03）"},
+  prio:{qualitaet:"最佳质量", ausgewogen:"均衡", preis:"最低价格"},
+  warum:{qualitaet:"按 Arena 排行榜名次排序——在你的预算内。", ausgewogen:"名次好且价格适中：综合 Arena 分数与价格。", preis:"排名前 20 中最便宜的模型——在你的预算内。"},
+  vorschlag:"推荐", platz:function(p){ return "Arena 排行榜第 " + p + " 名"; }, punkte:"Arena 分数", ab:"起", bei:"于", gratis:"免费",
+  pauschal:" / 百万 Token（统一价）", pro:{text:" / 百万输入 Token", bild:" / 张", video:" / 秒"}, zum:"前往提供商 ↗", vergleichen:"全部价格", modellseite:"模型页面", kosten:"计算费用",
+  leer:"此组合下没有在我们提供商处有价格的合适模型。请尝试提高预算。",
+  frei_media:"我们的提供商目前没有免费的图像或视频模型。",
+  keine:"模型推荐需要排行榜数据——将在下一次每日数据更新时生成。",
+  hinweis:function(m){ return "推荐依据 Arena（arena.ai，原 LMArena；数据集 lmarena-ai/leaderboard-dataset，CC BY 4.0 许可，数据日期 " + m.stand + "）的名次和我们的价格数据——并非个人建议。推广计划不影响推荐结果。"; },
+  disclosure:function(k){ return "<b>透明声明：</b>标有“"+k+"”的链接为推广（联盟）链接，属于广告。我们可能获得佣金，您的价格不变，推荐不受影响。"; }},
+ru:{h1:"Подбор модели: какая AI-модель мне подходит?", lead:"Три коротких вопроса – и вы получите подходящие модели с самой низкой ценой API. На основе мест в рейтинге Arena и нашего ежедневного сравнения цен.",
+  nav_vergleich:"Сравнение цен", nav_kosten:"Калькулятор", nav_finder:"Подбор модели", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
+  f1:"Для чего нужна модель?", f2:"Сколько она может стоить?", f3:"Что для вас важнее?",
+  budget:{egal:"Неважно", guenstig:"Дёшево", sehrguenstig:"Очень дёшево", frei:"Бесплатно"},
+  budget_info:{text:"(дёшево: до $1, очень дёшево: до $0.20 за 1 млн входных токенов)", bild:"(дёшево: до $0.05, очень дёшево: до $0.02 за изображение)", video:"(дёшево: до $0.10, очень дёшево: до $0.03 за секунду)"},
+  prio:{qualitaet:"Лучшее качество", ausgewogen:"Баланс", preis:"Самая низкая цена"},
+  warum:{qualitaet:"По месту в рейтинге Arena – в рамках бюджета.", ausgewogen:"Хорошее место при умеренной цене: сочетание баллов Arena и цены.", preis:"Самые дешёвые среди 20 лучших – в рамках бюджета."},
+  vorschlag:"Вариант", platz:function(p){ return "Место " + p + " в рейтинге Arena"; }, punkte:"Баллы Arena", ab:"от", bei:"у", gratis:"бесплатно",
+  pauschal:" / 1 млн токенов (единая цена)", pro:{text:" / 1 млн входных токенов", bild:" за изображение", video:" за секунду"}, zum:"К поставщику ↗", vergleichen:"Все цены", modellseite:"Страница модели", kosten:"Рассчитать расходы",
+  leer:"Для этой комбинации нет подходящей модели с ценой у наших поставщиков. Попробуйте больший бюджет.",
+  frei_media:"Бесплатных моделей для изображений и видео у наших поставщиков сейчас нет.",
+  keine:"Для подбора нужен рейтинг – он будет создан при следующем ежедневном обновлении данных.",
+  hinweis:function(m){ return "Варианты на основе мест Arena (arena.ai, ранее LMArena; набор данных lmarena-ai/leaderboard-dataset, лицензия CC BY 4.0, данные на " + m.stand + ") и наших цен – не персональная консультация. Партнёрские программы не влияют на варианты."; },
+  disclosure:function(k){ return "<b>Прозрачность:</b> ссылки с пометкой «"+k+"» – партнёрские (реклама). Мы можем получить комиссию, цена для вас не меняется."; }}
+};
+
+/* ---------- Angebote (wie in der Bestenliste) ---------- */
+const ANGEBOTE = {};
+Object.keys(QUELLEN).forEach(function(q){
+  const src = D[q] || {};
+  Object.keys(src).forEach(function(k){
+    const v = src[k], basis = k.replace(/:free$/, "");
+    const a = {q:q, roh:v.roh_id || k, url:v.url || (q === "openrouter" ? "https://openrouter.ai/" + (v.roh_id || k) : ""),
+      inp: typeof v.in === "number" ? v.in : null, ab: (typeof v.in !== "number" && typeof v.price === "number") ? v.price : null,
+      mp: typeof v.media_preis === "number" ? v.media_preis : null, e: v.einheit || "", g: !!v.gratis, df: v.dauer_fix || 0};
+    a.ps = a.mp !== null ? (a.e === "second" ? a.mp : (a.e === "generation" && a.df ? a.mp / a.df : null)) : null;
+    (ANGEBOTE[basis] = ANGEBOTE[basis] || []).push(a);
+  });
+});
+function preisVon(a, art){ if (art === "text") return a.g ? 0 : (a.inp !== null ? a.inp : a.ab); if (art === "bild") return a.e === "image" ? a.mp : null; return a.ps; }
+function angebot(keys, art, frei){
+  let best = null;
+  (keys || []).forEach(function(k){
+    if (art !== "text" && !/^media-/.test(k)) return;
+    (ANGEBOTE[k] || []).forEach(function(a){
+      const p = preisVon(a, art);
+      if (p === null || p === undefined) return;
+      if (frei ? p !== 0 : p === 0) return;
+      if (!best || p < best.p) best = {a:a, p:p, k:k};
+    });
+  });
+  return best;
+}
+function slug(k){ return String(k).replace(/:free$/, "").replace(/^media-/, "").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, ""); }
+
+/* ---------- Zustand ---------- */
+function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+let lang = lsGet("lang") || (navigator.language || "").slice(0,2);
+if (!L10N[lang]) lang = "en";
+const S = {zweck:"coding", budget:"egal", prio:"ausgewogen"};
+function ausHash(){ const p = new URLSearchParams(location.hash.slice(1)); ["zweck","budget","prio"].forEach(function(k){ if (p.get(k)) S[k] = p.get(k); }); }
+ausHash();
+window.addEventListener("hashchange", function(){ ausHash(); render(); });
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function fmtP(n){ return "$" + (n >= 100 ? n.toFixed(0) : n >= 1 ? n.toFixed(2) : n >= 0.01 ? n.toFixed(3) : n.toFixed(4)); }
+function bereichName(k){ const b = (window.BEREICHE || []).filter(function(x){ return x.k === k; })[0]; return b ? b.ico + " " + (b[lang] || b.en) : k; }
+function pfad(){ return lang === "en" ? "" : lang + "/"; }
+
+function vorschlaege(){
+  const B = ST.bereiche[S.zweck]; if (!B) return [];
+  const art = B.art, frei = S.budget === "frei", grenze = BUDGET[S.budget][art];
+  let kand = B.liste.map(function(x){ return {x:x, o:angebot(x.k, art, frei)}; }).filter(function(z){ return z.o && (frei || z.o.p <= grenze); });
+  if (S.prio === "qualitaet") return kand.slice(0, 3);
+  if (S.prio === "preis") return kand.filter(function(z){ return z.x.p <= 20; }).sort(function(a, b){ return a.o.p - b.o.p || a.x.p - b.x.p; }).slice(0, 3);
+  // ausgewogen: Punkte und (logarithmischer) Preis gleich gewichtet, nur die ersten 30 Plätze
+  kand = kand.filter(function(z){ return z.x.p <= 30 && z.x.r !== null; });
+  if (kand.length <= 3) return kand;
+  const rs = kand.map(function(z){ return z.x.r; }), ps = kand.map(function(z){ return Math.log10(Math.max(z.o.p, 1e-6)); });
+  const rmin = Math.min.apply(null, rs), rmax = Math.max.apply(null, rs), pmin = Math.min.apply(null, ps), pmax = Math.max.apply(null, ps);
+  kand.forEach(function(z, i){ z.s = (rmax > rmin ? (z.x.r - rmin) / (rmax - rmin) : 1) - 0.5 * (pmax > pmin ? (ps[i] - pmin) / (pmax - pmin) : 0); });
+  return kand.sort(function(a, b){ return b.s - a.s; }).slice(0, 3);
+}
+
+function render(){
+  const T = L10N[lang];
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+  document.title = T.h1 + " – aiapicompare";
+  document.querySelectorAll("[data-t]").forEach(function(el){ el.textContent = T[el.dataset.t]; });
+  document.querySelectorAll(".langbtns button").forEach(function(b){ b.classList.toggle("active", b.dataset.lang === lang); });
+  const dis = document.getElementById("disclosure");
+  dis.hidden = !C.hatAffiliate();
+  if (C.hatAffiliate()) dis.innerHTML = '<span class="adlabel">'+esc(C.kennzeichnung)+'</span><span>'+T.disclosure(C.kennzeichnung)+'</span>';
+  if (!BUDGET[S.budget]) S.budget = "egal";
+  if (!T.prio[S.prio]) S.prio = "ausgewogen";
+  if (!ST){ document.getElementById("ergebnis").innerHTML = '<div class="leer">'+T.keine+'</div>'; return; }
+  const zwecke = ZWECKE.filter(function(k){ return ST.bereiche[k]; });
+  if (zwecke.indexOf(S.zweck) < 0) S.zweck = zwecke[0];
+  const art = ST.bereiche[S.zweck].art;
+  const chips = function(id, liste, key, label){ document.getElementById(id).innerHTML = liste.map(function(k){
+    return '<button data-k="'+key+'" data-v="'+k+'" class="'+(S[key] === k ? "active" : "")+'">'+esc(label(k))+'</button>'; }).join(""); };
+  chips("c1", zwecke, "zweck", bereichName);
+  chips("c2", Object.keys(BUDGET), "budget", function(k){ return T.budget[k]; });
+  chips("c3", Object.keys(T.prio), "prio", function(k){ return T.prio[k]; });
+  document.getElementById("f2u").textContent = T.budget_info[art];
+  document.getElementById("warum").textContent = T.warum[S.prio];
+  const v = vorschlaege();
+  let h;
+  if (!v.length) h = '<div class="leer">'+(S.budget === "frei" && art !== "text" ? T.frei_media : T.leer)+'</div>';
+  else h = '<div class="ergebnisse">' + v.map(function(z, i){
+    const a = z.o.a, preis = z.o.p === 0 ? esc(T.gratis) : esc(T.ab + " " + fmtP(z.o.p)) + '<small>' + esc(art === "text" && a.inp === null && !a.g ? T.pauschal : T.pro[art]) + '</small>';
+    const name = z.x.n;
+    return '<div class="vorschlag'+(i === 0 ? " erste" : "")+'"><span class="nr">'+T.vorschlag+' '+(i+1)+'</span>'+
+      '<span class="name">'+esc(name)+'</span>'+
+      '<span class="preis">'+preis+'</span>'+
+      '<span class="info">'+T.bei+' '+esc(QUELLEN[a.q])+' · '+esc(T.platz(z.x.p))+' · '+(z.x.r || "—")+' '+esc(T.punkte)+'</span>'+
+      '<div class="aktionen">'+C.linkHtml(a.q, a.url, T.zum, "btn", QUELLEN[a.q])+
+        '<a class="btn" href="index.html#q='+encodeURIComponent(name.replace(/\([^)]*\)/g, "").trim())+'">'+T.vergleichen+'</a>'+
+        (window.MODELLSEITEN ? '<a class="btn" href="'+pfad()+'models/'+slug(z.o.k)+'.html">'+T.modellseite+'</a>' : '')+
+        (art === "text" ? '<a class="btn" href="kosten.html#modus=text&modell='+encodeURIComponent(name.replace(/\([^)]*\)/g, "").trim())+'">'+T.kosten+'</a>' : '')+
+      '</div></div>';
+  }).join("") + '</div>';
+  document.getElementById("ergebnis").innerHTML = h;
+  document.getElementById("hinweis").textContent = T.hinweis(ST.meta);
+  try { history.replaceState(null, "", "#zweck=" + S.zweck + "&budget=" + S.budget + "&prio=" + S.prio); } catch(e){}
+}
+document.addEventListener("click", function(e){
+  const l = e.target.closest("button[data-lang]");
+  if (l){ lang = l.dataset.lang; lsSet("lang", lang); render(); return; }
+  const c = e.target.closest("button[data-k]");
+  if (c){ S[c.dataset.k] = c.dataset.v; render(); }
+});
+render();
+</script>
+</body>
+</html>

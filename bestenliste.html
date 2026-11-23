@@ -57,6 +57,7 @@
   <nav class="nav">
     <a href="index.html" data-t="nav_vergleich"></a>
     <a href="kosten.html" data-t="nav_kosten"></a>
+    <a href="finder.html" data-t="nav_finder"></a>
     <a href="free.html" data-t="nav_gratis"></a>
     <a href="bestenliste.html" class="active" data-t="nav_best"></a>
     <a href="news.html" data-t="nav_news"></a>
@@ -115,7 +116,7 @@ const FARBE = {openrouter:"#a78bfa", uplinkswitch:"#f472b6", anymodel:"#fbbf24",
 const L10N = {
 de:{h1:"Welches KI-Modell ist wofür am besten?",
   lead:"Platzierungen je Anwendungsbereich aus der Arena-Bestenliste – dort vergleichen Nutzer weltweit die Antworten zweier anonymer Modelle und stimmen für die bessere. Dazu zeigen wir den günstigsten API-Preis aus unserem Preisvergleich.",
-  nav_vergleich:"Preisvergleich", nav_kosten:"Kostenrechner", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
+  nav_vergleich:"Preisvergleich", nav_kosten:"Kostenrechner", nav_finder:"Modell-Finder", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
   text:"Text & Code", media:"Bilder & Video", nur_preis:"Nur Modelle mit API-Preis in unserem Vergleich", vs_link:"Modelle direkt vergleichen (A vs. B) →",
   th:["Platz","Modell","Arena-Punkte","Stimmen","Günstigster API-Preis",""], vergleichen:"Preise vergleichen →",
   keinpreis:"bei unseren Anbietern nicht gelistet", tipp:"Preis-Tipp", tipp_t:"Günstigstes Modell unter den ersten 10 mit Preis", frei:"auch kostenlos",
@@ -126,7 +127,7 @@ de:{h1:"Welches KI-Modell ist wofür am besten?",
   disclosure:function(k){ return "<b>Transparenz:</b> Links mit dem Hinweis „"+k+"“ sind Affiliate-Links (Werbung). Wir erhalten ggf. eine Provision – für dich ändert sich der Preis nicht. Die Reihenfolge wird dadurch nicht beeinflusst."; }},
 en:{h1:"Which AI model is best for what?",
   lead:"Rankings per use case from the Arena leaderboard – users worldwide compare the answers of two anonymous models and vote for the better one. Next to it we show the cheapest API price from our price comparison.",
-  nav_vergleich:"Price comparison", nav_kosten:"Cost calculator", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
+  nav_vergleich:"Price comparison", nav_kosten:"Cost calculator", nav_finder:"Model finder", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
   text:"Text & code", media:"Images & video", nur_preis:"Only models with an API price in our comparison", vs_link:"Compare models head to head (A vs B) →",
   th:["Rank","Model","Arena score","Votes","Cheapest API price",""], vergleichen:"Compare prices →",
   keinpreis:"not listed at our providers", tipp:"Price tip", tipp_t:"Cheapest model among the top 10 with a price", frei:"also free",
@@ -137,7 +138,7 @@ en:{h1:"Which AI model is best for what?",
   disclosure:function(k){ return "<b>Transparency:</b> Links marked “"+k+"” are affiliate links (advertising). We may receive a commission – the price stays the same for you. Ranking is not affected."; }},
 zh:{h1:"哪个 AI 模型最适合做什么？",
   lead:"各应用领域的排名来自 Arena 排行榜——全球用户比较两个匿名模型的回答，并投票选出更好的一个。旁边显示我们价格对比中最便宜的 API 价格。",
-  nav_vergleich:"价格对比", nav_kosten:"成本计算器", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
+  nav_vergleich:"价格对比", nav_kosten:"成本计算器", nav_finder:"模型推荐", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
   text:"文本与代码", media:"图像与视频", nur_preis:"仅显示在我们对比中有 API 价格的模型", vs_link:"模型直接对比（A 对比 B）→",
   th:["名次","模型","Arena 分数","投票数","最低 API 价格",""], vergleichen:"比较价格 →",
   keinpreis:"我们的提供商未收录", tipp:"性价比之选", tipp_t:"前 10 名中有价格的最便宜模型", frei:"也有免费版",
@@ -148,7 +149,7 @@ zh:{h1:"哪个 AI 模型最适合做什么？",
   disclosure:function(k){ return "<b>透明声明：</b>标有“"+k+"”的链接为推广（联盟）链接，属于广告。我们可能获得佣金，您的价格不变，排序不受影响。"; }},
 ru:{h1:"Какая AI-модель для чего лучше?",
   lead:"Места по областям применения из рейтинга Arena – пользователи со всего мира сравнивают ответы двух анонимных моделей и голосуют за лучший. Рядом – самая низкая цена API из нашего сравнения.",
-  nav_vergleich:"Сравнение цен", nav_kosten:"Калькулятор", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
+  nav_vergleich:"Сравнение цен", nav_kosten:"Калькулятор", nav_finder:"Подбор модели", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
   text:"Текст и код", media:"Изображения и видео", nur_preis:"Только модели с ценой API в нашем сравнении", vs_link:"Сравнить модели напрямую (A vs B) →",
   th:["Место","Модель","Баллы Arena","Голоса","Самая низкая цена API",""], vergleichen:"Сравнить цены →",
   keinpreis:"нет у наших поставщиков", tipp:"Выгодно", tipp_t:"Самая дешёвая модель среди первых 10 с ценой", frei:"есть бесплатно",
