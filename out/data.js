@@ -1,7 +1,7 @@
 // Auto-generiert von build_data.py — nicht manuell bearbeiten.
 window.API_DATEN = {
   "meta": {
-    "erstellt": "2026-11-23 10:28 UTC",
+    "erstellt": "2026-11-23 16:17 UTC",
     "quellen": {
       "OpenRouter": {
         "anbieter": "OpenRouter",
@@ -575,8 +575,8 @@ window.API_DATEN = {
       "roh_id": "minimax/minimax-m3.1-flash",
       "name": "MiniMax: MiniMax M3.1 Flash",
       "context": 1048576,
-      "in": 0.15,
-      "out": 0.6,
+      "in": 0.075,
+      "out": 0.3,
       "typ": [
         "text"
       ]
@@ -1542,8 +1542,8 @@ window.API_DATEN = {
       "roh_id": "tencent/hy4-preview",
       "name": "Tencent: Hy4 preview",
       "context": 1048576,
-      "in": 0.834,
-      "out": 2.501,
+      "in": 0.7506,
+      "out": 2.2509,
       "typ": [
         "text"
       ]
@@ -1554,7 +1554,7 @@ window.API_DATEN = {
       "name": "Z.ai: GLM Flash Latest",
       "context": 1048576,
       "in": 0.0399,
-      "out": 0.0784,
+      "out": 0.074,
       "typ": [
         "text"
       ]
@@ -1576,7 +1576,7 @@ window.API_DATEN = {
       "name": "Z.ai: GLM 5.3 Flash",
       "context": 1048576,
       "in": 0.0399,
-      "out": 0.0784,
+      "out": 0.074,
       "typ": [
         "text"
       ]
@@ -6848,8 +6848,8 @@ window.API_DATEN = {
       "name": "Uplink Uncensored Gemini 4 Carbon",
       "entwickler": "Google",
       "context": 0,
-      "in": 2,
-      "out": 2,
+      "in": 1.0326,
+      "out": 5.1629,
       "typ": [
         "text"
       ]
@@ -6872,8 +6872,8 @@ window.API_DATEN = {
       "name": "Uplink Uncensored Gemini 4 Hydrogen",
       "entwickler": "Google",
       "context": 0,
-      "in": null,
-      "out": null,
+      "in": 0.9471,
+      "out": 4.7353,
       "typ": [
         "text"
       ]
@@ -8156,8 +8156,8 @@ window.API_DATEN = {
       "name": "Uplink Uncensored GLM 4.5",
       "entwickler": "Z.ai",
       "context": 0,
-      "in": 2.4,
-      "out": 8.8,
+      "in": 1.92,
+      "out": 7.04,
       "typ": [
         "text"
       ]
@@ -8204,8 +8204,8 @@ window.API_DATEN = {
       "name": "Uplink Uncensored GLM 5",
       "entwickler": "Z.ai",
       "context": 0,
-      "in": null,
-      "out": null,
+      "in": 0.3824,
+      "out": 1.2235,
       "typ": [
         "text"
       ]
@@ -8228,8 +8228,8 @@ window.API_DATEN = {
       "name": "Uplink Uncensored GLM 5.1",
       "entwickler": "Z.ai",
       "context": 0,
-      "in": 0.2898,
-      "out": 0.9108,
+      "in": 0.3824,
+      "out": 1.2017,
       "typ": [
         "text"
       ]
@@ -8588,8 +8588,8 @@ window.API_DATEN = {
       "name": "Uplink Uncensored GPT-5.4",
       "entwickler": "OpenAI",
       "context": 0,
-      "in": 0.75,
-      "out": 4.5,
+      "in": 1.5,
+      "out": 9,
       "typ": [
         "text"
       ]
@@ -9008,8 +9008,8 @@ window.API_DATEN = {
       "name": "Uplink Uncensored GPT 6.2 Astra",
       "entwickler": "OpenAI",
       "context": 0,
-      "in": null,
-      "out": null,
+      "in": 0.6471,
+      "out": 3.2353,
       "typ": [
         "text"
       ]
@@ -9056,8 +9056,8 @@ window.API_DATEN = {
       "name": "Uplink Uncensored GPT 6.2 SOL",
       "entwickler": "OpenAI",
       "context": 0,
-      "in": 0.6,
-      "out": 0.6,
+      "in": 0.1765,
+      "out": 0.8824,
       "typ": [
         "text"
       ]
@@ -9656,8 +9656,8 @@ window.API_DATEN = {
       "name": "Uplink Uncensored Kimi K2.8",
       "entwickler": "Moonshot AI",
       "context": 0,
-      "in": null,
-      "out": null,
+      "in": 0.5294,
+      "out": 2.5718,
       "typ": [
         "text"
       ]
@@ -10328,8 +10328,8 @@ window.API_DATEN = {
       "name": "Uplink Uncensored Muse Spark 1.3",
       "entwickler": "iFlytek",
       "context": 0,
-      "in": null,
-      "out": null,
+      "in": 1.1765,
+      "out": 4,
       "typ": [
         "text"
       ]
@@ -18404,8 +18404,8 @@ window.API_DATEN = {
       "name": "GPT 5.1 Codex Max",
       "entwickler": "OpenAI",
       "context": 400000,
-      "in": 2.5,
-      "out": 20.0,
+      "in": 1.25,
+      "out": 10.0,
       "typ": [
         "text"
       ],
@@ -19199,19 +19199,6 @@ window.API_DATEN = {
       "context": 262144,
       "in": 0.4,
       "out": 1.8,
-      "typ": [
-        "text"
-      ],
-      "url": "https://nano-gpt.com/api-pricing"
-    },
-    "kimi-k2-thinking": {
-      "anbieter": "NanoGPT",
-      "roh_id": "moonshotai/kimi-k2-thinking",
-      "name": "Kimi K2 Thinking",
-      "entwickler": "Moonshot AI",
-      "context": 262144,
-      "in": 0.6,
-      "out": 2.5,
       "typ": [
         "text"
       ],
@@ -22993,8 +22980,8 @@ window.API_DATEN = {
       "name": "OpenAI o3-pro (2025-06-10)",
       "entwickler": "OpenAI",
       "context": 200000,
-      "in": 22.0,
-      "out": 88.0,
+      "in": 20.0,
+      "out": 80.0,
       "typ": [
         "text"
       ],
@@ -23366,6 +23353,19 @@ window.API_DATEN = {
       ],
       "url": "https://chutes.ai/models"
     },
+    "deepseek-v4-flash-0731-tee": {
+      "anbieter": "Chutes",
+      "roh_id": "deepseek-ai/DeepSeek-V4-Flash-0731-TEE",
+      "name": "DeepSeek V4 Flash 0731 TEE",
+      "entwickler": "DeepSeek",
+      "context": 1048576,
+      "in": 0.44,
+      "out": 1.32,
+      "typ": [
+        "text"
+      ],
+      "url": "https://chutes.ai/models"
+    },
     "deepseek-v4-1-flash-1017": {
       "anbieter": "Chutes",
       "roh_id": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
@@ -23400,19 +23400,6 @@ window.API_DATEN = {
       "context": 1048576,
       "in": 1.25,
       "out": 3.95,
-      "typ": [
-        "text"
-      ],
-      "url": "https://chutes.ai/models"
-    },
-    "deepseek-v4-flash-0731-tee": {
-      "anbieter": "Chutes",
-      "roh_id": "deepseek-ai/DeepSeek-V4-Flash-0731-TEE",
-      "name": "DeepSeek V4 Flash 0731 TEE",
-      "entwickler": "DeepSeek",
-      "context": 1048576,
-      "in": 0.44,
-      "out": 1.32,
       "typ": [
         "text"
       ],
@@ -23483,10 +23470,36 @@ window.API_DATEN = {
       ],
       "url": "https://chutes.ai/models"
     },
+    "kimi-k2-7-code": {
+      "anbieter": "Chutes",
+      "roh_id": "moonshotai/Kimi-K2.7-Code",
+      "name": "Kimi K2.7 Code",
+      "entwickler": "Moonshot AI",
+      "context": 262144,
+      "in": 0.832,
+      "out": 3.5,
+      "typ": [
+        "text"
+      ],
+      "url": "https://chutes.ai/models"
+    },
     "qwen3-8-max-0902": {
       "anbieter": "Chutes",
       "roh_id": "Qwen/Qwen3.8-Max-0902",
       "name": "Qwen3.8 Max 0902",
+      "entwickler": "Qwen",
+      "context": 1000000,
+      "in": 2.0,
+      "out": 6.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://chutes.ai/models"
+    },
+    "qwen3-8-2-4t-a95b": {
+      "anbieter": "Chutes",
+      "roh_id": "Qwen/Qwen3.8-2.4T-A95B",
+      "name": "Qwen3.8 2.4T A95B",
       "entwickler": "Qwen",
       "context": 1000000,
       "in": 2.0,
@@ -23509,32 +23522,6 @@ window.API_DATEN = {
       ],
       "url": "https://chutes.ai/models"
     },
-    "qwen3-8-2-4t-a95b": {
-      "anbieter": "Chutes",
-      "roh_id": "Qwen/Qwen3.8-2.4T-A95B",
-      "name": "Qwen3.8 2.4T A95B",
-      "entwickler": "Qwen",
-      "context": 1000000,
-      "in": 2.0,
-      "out": 6.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://chutes.ai/models"
-    },
-    "kimi-k2-7-code": {
-      "anbieter": "Chutes",
-      "roh_id": "moonshotai/Kimi-K2.7-Code",
-      "name": "Kimi K2.7 Code",
-      "entwickler": "Moonshot AI",
-      "context": 262144,
-      "in": 0.832,
-      "out": 3.5,
-      "typ": [
-        "text"
-      ],
-      "url": "https://chutes.ai/models"
-    },
     "hy4": {
       "anbieter": "Chutes",
       "roh_id": "tencent/Hy4",
@@ -23550,1488 +23537,6 @@ window.API_DATEN = {
     }
   },
   "deepinfra": {
-    "glm-4-7-flash": {
-      "anbieter": "DeepInfra",
-      "roh_id": "zai-org/GLM-4.7-Flash",
-      "name": "GLM 4.7 Flash",
-      "entwickler": "Z.ai",
-      "context": 202752,
-      "in": 0.06,
-      "out": 0.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/zai-org/GLM-4.7-Flash"
-    },
-    "glm-4-6": {
-      "anbieter": "DeepInfra",
-      "roh_id": "zai-org/GLM-4.6",
-      "name": "GLM 4.6",
-      "entwickler": "Z.ai",
-      "context": 202752,
-      "in": 0.5,
-      "out": 2.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/zai-org/GLM-4.6"
-    },
-    "minimax-m2-5": {
-      "anbieter": "DeepInfra",
-      "roh_id": "MiniMaxAI/MiniMax-M2.5",
-      "name": "MiniMax M2.5",
-      "entwickler": "minimaxai",
-      "context": 196608,
-      "in": 0.15,
-      "out": 1.15,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/MiniMaxAI/MiniMax-M2.5"
-    },
-    "gpt-oss-120b-turbo": {
-      "anbieter": "DeepInfra",
-      "roh_id": "openai/gpt-oss-120b-Turbo",
-      "name": "gpt oss 120b Turbo",
-      "entwickler": "OpenAI",
-      "context": 131072,
-      "in": 0.15,
-      "out": 0.6,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/openai/gpt-oss-120b-Turbo"
-    },
-    "qwen3-vl-8b-thinking": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-VL-8B-Thinking",
-      "name": "Qwen3 VL 8B Thinking",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.18,
-      "out": 2.09,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-VL-8B-Thinking"
-    },
-    "claude-sonnet-4-6": {
-      "anbieter": "DeepInfra",
-      "roh_id": "anthropic/claude-sonnet-4-6",
-      "name": "claude sonnet 4 6",
-      "entwickler": "Anthropic",
-      "context": 1000000,
-      "in": 3.0,
-      "out": 15.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/anthropic/claude-sonnet-4-6"
-    },
-    "qwen3-next-80b-a3b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-Next-80B-A3B-Instruct",
-      "name": "Qwen3 Next 80B A3B Instruct",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.09,
-      "out": 1.1,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-Next-80B-A3B-Instruct"
-    },
-    "step-5-preview": {
-      "anbieter": "DeepInfra",
-      "roh_id": "stepfun-ai/Step-5-Preview",
-      "name": "Step 5 Preview",
-      "entwickler": "stepfun-ai",
-      "context": 1048576,
-      "in": 1.0,
-      "out": 2.7,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/stepfun-ai/Step-5-Preview"
-    },
-    "qwen3-5-2b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3.5-2B",
-      "name": "Qwen3.5 2B",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.02,
-      "out": 0.1,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3.5-2B"
-    },
-    "qwen3-coder-480b-a35b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-Coder-480B-A35B-Instruct",
-      "name": "Qwen3 Coder 480B A35B Instruct",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.4,
-      "out": 1.6,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-Coder-480B-A35B-Instruct"
-    },
-    "kimi-k3": {
-      "anbieter": "DeepInfra",
-      "roh_id": "moonshotai/Kimi-K3",
-      "name": "Kimi K3",
-      "entwickler": "Moonshot AI",
-      "context": 1048576,
-      "in": 2.85,
-      "out": 14.25,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/moonshotai/Kimi-K3"
-    },
-    "qvq-72b-preview": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/QVQ-72B-Preview",
-      "name": "QVQ 72B Preview",
-      "entwickler": "Qwen",
-      "context": 32000,
-      "in": 0.25,
-      "out": 0.5,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/QVQ-72B-Preview"
-    },
-    "glm-4-7": {
-      "anbieter": "DeepInfra",
-      "roh_id": "zai-org/GLM-4.7",
-      "name": "GLM 4.7",
-      "entwickler": "Z.ai",
-      "context": 202752,
-      "in": 0.4,
-      "out": 1.75,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/zai-org/GLM-4.7"
-    },
-    "gemini-2-0-flash-001": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/gemini-2.0-flash-001",
-      "name": "gemini 2.0 flash 001",
-      "entwickler": "Google",
-      "context": 1000000,
-      "in": 0.1,
-      "out": 0.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/google/gemini-2.0-flash-001"
-    },
-    "olmocr-7b-0825": {
-      "anbieter": "DeepInfra",
-      "roh_id": "allenai/olmOCR-7B-0825",
-      "name": "olmOCR 7B 0825",
-      "entwickler": "allenai",
-      "context": 16384,
-      "in": 0.14,
-      "out": 0.8,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/allenai/olmOCR-7B-0825"
-    },
-    "qwen3-8-2-4t-a95b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3.8-2.4T-A95B",
-      "name": "Qwen3.8 2.4T A95B",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 2.0,
-      "out": 6.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3.8-2.4T-A95B"
-    },
-    "llama-guard-4-12b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Llama-Guard-4-12B",
-      "name": "Llama Guard 4 12B",
-      "entwickler": "Meta",
-      "context": 163840,
-      "in": 0.18,
-      "out": 0.18,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-llama/Llama-Guard-4-12B"
-    },
-    "devstral-small-2505": {
-      "anbieter": "DeepInfra",
-      "roh_id": "mistralai/Devstral-Small-2505",
-      "name": "Devstral Small 2505",
-      "entwickler": "Mistral",
-      "context": 128000,
-      "in": 0.06,
-      "out": 0.12,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/mistralai/Devstral-Small-2505"
-    },
-    "nemotron-3-nano-30b-a3b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "nvidia/Nemotron-3-Nano-30B-A3B",
-      "name": "Nemotron 3 Nano 30B A3B",
-      "entwickler": "NVIDIA",
-      "context": 262144,
-      "in": 0.05,
-      "out": 0.2,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/nvidia/Nemotron-3-Nano-30B-A3B"
-    },
-    "mimo-v2-5": {
-      "anbieter": "DeepInfra",
-      "roh_id": "XiaomiMiMo/MiMo-V2.5",
-      "name": "MiMo V2.5",
-      "entwickler": "xiaomimimo",
-      "context": 262144,
-      "in": 0.14,
-      "out": 0.28,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/XiaomiMiMo/MiMo-V2.5"
-    },
-    "chronos-hermes-13b-v2": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Austism/chronos-hermes-13b-v2",
-      "name": "chronos hermes 13b v2",
-      "entwickler": "austism",
-      "context": 4096,
-      "in": 0.13,
-      "out": 0.13,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Austism/chronos-hermes-13b-v2"
-    },
-    "glm-4-5": {
-      "anbieter": "DeepInfra",
-      "roh_id": "zai-org/GLM-4.5",
-      "name": "GLM 4.5",
-      "entwickler": "Z.ai",
-      "context": 131072,
-      "in": 0.38,
-      "out": 1.6,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/zai-org/GLM-4.5"
-    },
-    "deepseek-r1": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-R1",
-      "name": "DeepSeek R1",
-      "entwickler": "DeepSeek",
-      "context": 163840,
-      "in": 0.7,
-      "out": 2.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-R1"
-    },
-    "hy4": {
-      "anbieter": "DeepInfra",
-      "roh_id": "tencent/Hy4",
-      "name": "Hy4",
-      "entwickler": "Tencent",
-      "context": 1048576,
-      "in": 0.834,
-      "out": 2.501,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/tencent/Hy4"
-    },
-    "claude-3-7-sonnet-latest": {
-      "anbieter": "DeepInfra",
-      "roh_id": "anthropic/claude-3-7-sonnet-latest",
-      "name": "claude 3 7 sonnet latest",
-      "entwickler": "Anthropic",
-      "context": 200000,
-      "in": 3.3,
-      "out": 16.5,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/anthropic/claude-3-7-sonnet-latest"
-    },
-    "olmocr-2": {
-      "anbieter": "DeepInfra",
-      "roh_id": "allenai/olmOCR-2",
-      "name": "olmOCR 2",
-      "entwickler": "allenai",
-      "context": 16384,
-      "in": 0.14,
-      "out": 0.8,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/allenai/olmOCR-2"
-    },
-    "mimo-v2-5-pro": {
-      "anbieter": "DeepInfra",
-      "roh_id": "XiaomiMiMo/MiMo-V2.5-Pro",
-      "name": "MiMo V2.5 Pro",
-      "entwickler": "xiaomimimo",
-      "context": 1048576,
-      "in": 1.0,
-      "out": 3.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/XiaomiMiMo/MiMo-V2.5-Pro"
-    },
-    "gemma-4-31b-it": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/gemma-4-31B-it",
-      "name": "gemma 4 31B it",
-      "entwickler": "Google",
-      "context": 262144,
-      "in": 0.2,
-      "out": 0.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/google/gemma-4-31B-it"
-    },
-    "llama-3-3-70b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Llama-3.3-70B-Instruct",
-      "name": "Llama 3.3 70B Instruct",
-      "entwickler": "Meta",
-      "context": 131072,
-      "in": 0.23,
-      "out": 0.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-llama/Llama-3.3-70B-Instruct"
-    },
-    "llama-2-13b-chat-hf": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Llama-2-13b-chat-hf",
-      "name": "Llama 2 13b chat hf",
-      "entwickler": "Meta",
-      "context": 4096,
-      "in": 0.13,
-      "out": 0.13,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-llama/Llama-2-13b-chat-hf"
-    },
-    "qwen3-vl-30b-a3b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-VL-30B-A3B-Instruct",
-      "name": "Qwen3 VL 30B A3B Instruct",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.15,
-      "out": 0.6,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-VL-30B-A3B-Instruct"
-    },
-    "claude-sonnet-5-5": {
-      "anbieter": "DeepInfra",
-      "roh_id": "anthropic/claude-sonnet-5-5",
-      "name": "claude sonnet 5 5",
-      "entwickler": "Anthropic",
-      "context": 1000000,
-      "in": 2.0,
-      "out": 10.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/anthropic/claude-sonnet-5-5"
-    },
-    "nvidia-nemotron-3-ultra-550b-a55b-bf16": {
-      "anbieter": "DeepInfra",
-      "roh_id": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
-      "name": "NVIDIA Nemotron 3 Ultra 550B A55B BF16",
-      "entwickler": "NVIDIA",
-      "context": 262144,
-      "in": 1.0,
-      "out": 5.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16"
-    },
-    "gemma-1-1-7b-it": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/gemma-1.1-7b-it",
-      "name": "gemma 1.1 7b it",
-      "entwickler": "Google",
-      "context": 8192,
-      "in": 0.07,
-      "out": 0.07,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/google/gemma-1.1-7b-it"
-    },
-    "gemini-3-5-flash": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/gemini-3.5-flash",
-      "name": "gemini 3.5 flash",
-      "entwickler": "Google",
-      "context": 1000000,
-      "in": 1.5,
-      "out": 9.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/google/gemini-3.5-flash"
-    },
-    "qwen3-235b-a22b-thinking-2507": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-235B-A22B-Thinking-2507",
-      "name": "Qwen3 235B A22B Thinking 2507",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.23,
-      "out": 2.3,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-235B-A22B-Thinking-2507"
-    },
-    "claude-4-sonnet": {
-      "anbieter": "DeepInfra",
-      "roh_id": "anthropic/claude-4-sonnet",
-      "name": "claude 4 sonnet",
-      "entwickler": "Anthropic",
-      "context": 200000,
-      "in": 3.3,
-      "out": 16.5,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/anthropic/claude-4-sonnet"
-    },
-    "deepseek-r1-turbo": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-R1-Turbo",
-      "name": "DeepSeek R1 Turbo",
-      "entwickler": "DeepSeek",
-      "context": 40960,
-      "in": 1.0,
-      "out": 3.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-R1-Turbo"
-    },
-    "ling-3-1-flash": {
-      "anbieter": "DeepInfra",
-      "roh_id": "inclusionAI/Ling-3.1-flash",
-      "name": "Ling 3.1 flash",
-      "entwickler": "inclusionAI",
-      "context": 262144,
-      "in": 0.3,
-      "out": 0.9,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/inclusionAI/Ling-3.1-flash"
-    },
-    "llama-4-maverick-17b-128e-instruct-turbo": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-Turbo",
-      "name": "Llama 4 Maverick 17B 128E Instruct Turbo",
-      "entwickler": "Meta",
-      "context": 8192,
-      "in": 0.5,
-      "out": 0.5,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-llama/Llama-4-Maverick-17B-128E-Instruct-Turbo"
-    },
-    "meta-llama-3-1-8b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Meta-Llama-3.1-8B-Instruct",
-      "name": "Meta Llama 3.1 8B Instruct",
-      "entwickler": "Meta",
-      "context": 131072,
-      "in": 0.02,
-      "out": 0.05,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-llama/Meta-Llama-3.1-8B-Instruct"
-    },
-    "minimax-m3": {
-      "anbieter": "DeepInfra",
-      "roh_id": "MiniMaxAI/MiniMax-M3",
-      "name": "MiniMax M3",
-      "entwickler": "minimaxai",
-      "context": 524288,
-      "in": 0.28,
-      "out": 1.1,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/MiniMaxAI/MiniMax-M3"
-    },
-    "glm-5-3-flash": {
-      "anbieter": "DeepInfra",
-      "roh_id": "zai-org/GLM-5.3-Flash",
-      "name": "GLM 5.3 Flash",
-      "entwickler": "Z.ai",
-      "context": 1048576,
-      "in": 0.15,
-      "out": 0.5,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/zai-org/GLM-5.3-Flash"
-    },
-    "kimi-k2-instruct-0905": {
-      "anbieter": "DeepInfra",
-      "roh_id": "moonshotai/Kimi-K2-Instruct-0905",
-      "name": "Kimi K2 Instruct 0905",
-      "entwickler": "Moonshot AI",
-      "context": 131072,
-      "in": 0.4,
-      "out": 2.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/moonshotai/Kimi-K2-Instruct-0905"
-    },
-    "openchat-3-5": {
-      "anbieter": "DeepInfra",
-      "roh_id": "openchat/openchat_3.5",
-      "name": "openchat_3.5",
-      "entwickler": "openchat",
-      "context": 8192,
-      "in": 0.055,
-      "out": 0.055,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/openchat/openchat_3.5"
-    },
-    "minimax-m2-7": {
-      "anbieter": "DeepInfra",
-      "roh_id": "MiniMaxAI/MiniMax-M2.7",
-      "name": "MiniMax M2.7",
-      "entwickler": "minimaxai",
-      "context": 196608,
-      "in": 0.25,
-      "out": 1.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/MiniMaxAI/MiniMax-M2.7"
-    },
-    "gemma-4-31b-it-ultra": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/gemma-4-31B-it-Ultra",
-      "name": "gemma 4 31B it Ultra",
-      "entwickler": "Google",
-      "context": 131072,
-      "in": 0.27,
-      "out": 0.76,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/google/gemma-4-31B-it-Ultra"
-    },
-    "nvidia-nemotron-3-super-120b-a12b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B",
-      "name": "NVIDIA Nemotron 3 Super 120B A12B",
-      "entwickler": "NVIDIA",
-      "context": 262144,
-      "in": 0.075,
-      "out": 0.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B"
-    },
-    "qwen3-6-35b-a3b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3.6-35B-A3B",
-      "name": "Qwen3.6 35B A3B",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.1,
-      "out": 0.95,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3.6-35B-A3B"
-    },
-    "qwen4-max": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen4-Max",
-      "name": "Qwen4 Max",
-      "entwickler": "Qwen",
-      "context": 1000000,
-      "in": 1.413,
-      "out": 4.24,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen4-Max"
-    },
-    "olmocr-2-7b-1025": {
-      "anbieter": "DeepInfra",
-      "roh_id": "allenai/olmOCR-2-7B-1025",
-      "name": "olmOCR 2 7B 1025",
-      "entwickler": "allenai",
-      "context": 16384,
-      "in": 0.09,
-      "out": 0.19,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/allenai/olmOCR-2-7B-1025"
-    },
-    "ling-3-0-flash-fin": {
-      "anbieter": "DeepInfra",
-      "roh_id": "inclusionAI/Ling-3.0-flash-Fin",
-      "name": "Ling 3.0 flash Fin",
-      "entwickler": "inclusionAI",
-      "context": 262144,
-      "in": 0.06,
-      "out": 0.18,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/inclusionAI/Ling-3.0-flash-Fin"
-    },
-    "qwq-32b-preview": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/QwQ-32B-Preview",
-      "name": "QwQ 32B Preview",
-      "entwickler": "Qwen",
-      "context": 32768,
-      "in": 0.12,
-      "out": 0.18,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/QwQ-32B-Preview"
-    },
-    "ling-3-0-flash": {
-      "anbieter": "DeepInfra",
-      "roh_id": "inclusionAI/Ling-3.0-flash",
-      "name": "Ling 3.0 flash",
-      "entwickler": "inclusionAI",
-      "context": 131072,
-      "in": 0.06,
-      "out": 0.18,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/inclusionAI/Ling-3.0-flash"
-    },
-    "kimi-k3-1-pro": {
-      "anbieter": "DeepInfra",
-      "roh_id": "moonshotai/Kimi-K3.1-Pro",
-      "name": "Kimi K3.1 Pro",
-      "entwickler": "Moonshot AI",
-      "context": 1048576,
-      "in": 2.0,
-      "out": 10.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/moonshotai/Kimi-K3.1-Pro"
-    },
-    "gemini-3-7-flash": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/gemini-3.7-flash",
-      "name": "gemini 3.7 flash",
-      "entwickler": "Google",
-      "context": 1000000,
-      "in": 0.75,
-      "out": 3.75,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/google/gemini-3.7-flash"
-    },
-    "phi-4-multimodal-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "microsoft/Phi-4-multimodal-instruct",
-      "name": "Phi 4 multimodal instruct",
-      "entwickler": "Microsoft",
-      "context": 131072,
-      "in": 0.05,
-      "out": 0.1,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/microsoft/Phi-4-multimodal-instruct"
-    },
-    "kimi-k2-thinking": {
-      "anbieter": "DeepInfra",
-      "roh_id": "moonshotai/Kimi-K2-Thinking",
-      "name": "Kimi K2 Thinking",
-      "entwickler": "Moonshot AI",
-      "context": 131072,
-      "in": 0.47,
-      "out": 2.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/moonshotai/Kimi-K2-Thinking"
-    },
-    "qwen3-5-9b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3.5-9B",
-      "name": "Qwen3.5 9B",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.1,
-      "out": 0.15,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3.5-9B"
-    },
-    "inkling-2-small": {
-      "anbieter": "DeepInfra",
-      "roh_id": "thinkingmachines/Inkling-2-Small",
-      "name": "Inkling 2 Small",
-      "entwickler": "thinkingmachines",
-      "context": 1048576,
-      "in": 0.3,
-      "out": 1.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/thinkingmachines/Inkling-2-Small"
-    },
-    "gpt-oss-120b-ultra": {
-      "anbieter": "DeepInfra",
-      "roh_id": "openai/gpt-oss-120b-Ultra",
-      "name": "gpt oss 120b Ultra",
-      "entwickler": "OpenAI",
-      "context": 131072,
-      "in": 0.2,
-      "out": 0.95,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/openai/gpt-oss-120b-Ultra"
-    },
-    "qwen3-7-max": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3.7-Max",
-      "name": "Qwen3.7 Max",
-      "entwickler": "Qwen",
-      "context": 256000,
-      "in": 2.5,
-      "out": 7.5,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3.7-Max"
-    },
-    "meta-llama-3-1-8b-instruct-turbo": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
-      "name": "Meta Llama 3.1 8B Instruct Turbo",
-      "entwickler": "Meta",
-      "context": 131072,
-      "in": 0.02,
-      "out": 0.04,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
-    },
-    "qwen3-vl-8b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-VL-8B-Instruct",
-      "name": "Qwen3 VL 8B Instruct",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.18,
-      "out": 0.69,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-VL-8B-Instruct"
-    },
-    "glm-5-2": {
-      "anbieter": "DeepInfra",
-      "roh_id": "zai-org/GLM-5.2",
-      "name": "GLM 5.2",
-      "entwickler": "Z.ai",
-      "context": 1048576,
-      "in": 0.75,
-      "out": 2.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/zai-org/GLM-5.2"
-    },
-    "granite-4-2-3b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "ibm-granite/granite-4.2-3b",
-      "name": "granite 4.2 3b",
-      "entwickler": "ibm-granite",
-      "context": 131072,
-      "in": 0.03,
-      "out": 0.12,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/ibm-granite/granite-4.2-3b"
-    },
-    "glm-4-5-air": {
-      "anbieter": "DeepInfra",
-      "roh_id": "zai-org/GLM-4.5-Air",
-      "name": "GLM 4.5 Air",
-      "entwickler": "Z.ai",
-      "context": 131072,
-      "in": 0.2,
-      "out": 1.1,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/zai-org/GLM-4.5-Air"
-    },
-    "l3-8b-lunaris-v1": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Sao10K/L3-8B-Lunaris-v1",
-      "name": "L3 8B Lunaris v1",
-      "entwickler": "sao10k",
-      "context": 8192,
-      "in": 0.03,
-      "out": 0.06,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Sao10K/L3-8B-Lunaris-v1"
-    },
-    "dolphin-2-6-mixtral-8x7b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "cognitivecomputations/dolphin-2.6-mixtral-8x7b",
-      "name": "dolphin 2.6 mixtral 8x7b",
-      "entwickler": "cognitivecomputations",
-      "context": 32768,
-      "in": 0.24,
-      "out": 0.24,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/cognitivecomputations/dolphin-2.6-mixtral-8x7b"
-    },
-    "olmocr-7b-1025": {
-      "anbieter": "DeepInfra",
-      "roh_id": "allenai/olmOCR-7B-1025",
-      "name": "olmOCR 7B 1025",
-      "entwickler": "allenai",
-      "context": 16384,
-      "in": 0.14,
-      "out": 0.8,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/allenai/olmOCR-7B-1025"
-    },
-    "qwen3-vl-4b-thinking": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-VL-4B-Thinking",
-      "name": "Qwen3 VL 4B Thinking",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.1,
-      "out": 1.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-VL-4B-Thinking"
-    },
-    "kimi-k2-5": {
-      "anbieter": "DeepInfra",
-      "roh_id": "moonshotai/Kimi-K2.5",
-      "name": "Kimi K2.5",
-      "entwickler": "Moonshot AI",
-      "context": 262144,
-      "in": 0.45,
-      "out": 2.25,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/moonshotai/Kimi-K2.5"
-    },
-    "qwen3-8-27b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3.8-27B",
-      "name": "Qwen3.8 27B",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.2,
-      "out": 2.5,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3.8-27B"
-    },
-    "claude-4-opus": {
-      "anbieter": "DeepInfra",
-      "roh_id": "anthropic/claude-4-opus",
-      "name": "claude 4 opus",
-      "entwickler": "Anthropic",
-      "context": 200000,
-      "in": 16.5,
-      "out": 82.5,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/anthropic/claude-4-opus"
-    },
-    "llama-3-2-3b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Llama-3.2-3B-Instruct",
-      "name": "Llama 3.2 3B Instruct",
-      "entwickler": "Meta",
-      "context": 131072,
-      "in": 0.02,
-      "out": 0.02,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-llama/Llama-3.2-3B-Instruct"
-    },
-    "qwen3-vl-235b-a22b-thinking": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-VL-235B-A22B-Thinking",
-      "name": "Qwen3 VL 235B A22B Thinking",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.45,
-      "out": 3.49,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-VL-235B-A22B-Thinking"
-    },
-    "deepseek-v3-1": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-V3.1",
-      "name": "DeepSeek V3.1",
-      "entwickler": "DeepSeek",
-      "context": 163840,
-      "in": 0.25,
-      "out": 0.95,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V3.1"
-    },
-    "qwen3-8-flash": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3.8-Flash",
-      "name": "Qwen3.8 Flash",
-      "entwickler": "Qwen",
-      "context": 1000000,
-      "in": 0.113,
-      "out": 0.382,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3.8-Flash"
-    },
-    "wizardlm-2-8x22b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "microsoft/WizardLM-2-8x22B",
-      "name": "WizardLM 2 8x22B",
-      "entwickler": "Microsoft",
-      "context": 65536,
-      "in": 0.48,
-      "out": 0.48,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/microsoft/WizardLM-2-8x22B"
-    },
-    "nemotron-content-safety-3-5": {
-      "anbieter": "DeepInfra",
-      "roh_id": "nvidia/Nemotron-Content-Safety-3.5",
-      "name": "Nemotron Content Safety 3.5",
-      "entwickler": "NVIDIA",
-      "context": 131072,
-      "in": 0.2,
-      "out": 0.2,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/nvidia/Nemotron-Content-Safety-3.5"
-    },
-    "qwen3-vl-235b-a22b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-VL-235B-A22B-Instruct",
-      "name": "Qwen3 VL 235B A22B Instruct",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.2,
-      "out": 0.88,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-VL-235B-A22B-Instruct"
-    },
-    "phi-4-reasoning-plus": {
-      "anbieter": "DeepInfra",
-      "roh_id": "microsoft/phi-4-reasoning-plus",
-      "name": "phi 4 reasoning plus",
-      "entwickler": "Microsoft",
-      "context": 32768,
-      "in": 0.07,
-      "out": 0.35,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/microsoft/phi-4-reasoning-plus"
-    },
-    "mimo-v2-6-pro": {
-      "anbieter": "DeepInfra",
-      "roh_id": "XiaomiMiMo/MiMo-V2.6-Pro",
-      "name": "MiMo V2.6 Pro",
-      "entwickler": "xiaomimimo",
-      "context": 1048576,
-      "in": 0.43,
-      "out": 0.87,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/XiaomiMiMo/MiMo-V2.6-Pro"
-    },
-    "deepseek-v3-0324-turbo": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-V3-0324-Turbo",
-      "name": "DeepSeek V3 0324 Turbo",
-      "entwickler": "DeepSeek",
-      "context": 32768,
-      "in": 1.0,
-      "out": 3.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V3-0324-Turbo"
-    },
-    "qwen3-max-thinking": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-Max-Thinking",
-      "name": "Qwen3 Max Thinking",
-      "entwickler": "Qwen",
-      "context": 256000,
-      "in": 1.2,
-      "out": 6.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-Max-Thinking"
-    },
-    "nvidia-nemotron-nano-12b-v2-vl": {
-      "anbieter": "DeepInfra",
-      "roh_id": "nvidia/NVIDIA-Nemotron-Nano-12B-v2-VL",
-      "name": "NVIDIA Nemotron Nano 12B v2 VL",
-      "entwickler": "NVIDIA",
-      "context": 131072,
-      "in": 0.2,
-      "out": 0.6,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/nvidia/NVIDIA-Nemotron-Nano-12B-v2-VL"
-    },
-    "claude-opus-5": {
-      "anbieter": "DeepInfra",
-      "roh_id": "anthropic/claude-opus-5",
-      "name": "claude opus 5",
-      "entwickler": "Anthropic",
-      "context": 1000000,
-      "in": 5.0,
-      "out": 25.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/anthropic/claude-opus-5"
-    },
-    "phind-codellama-34b-v2": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Phind/Phind-CodeLlama-34B-v2",
-      "name": "Phind CodeLlama 34B v2",
-      "entwickler": "phind",
-      "context": 4096,
-      "in": 0.6,
-      "out": 0.6,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Phind/Phind-CodeLlama-34B-v2"
-    },
-    "llama-3-2-11b-vision-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Llama-3.2-11B-Vision-Instruct",
-      "name": "Llama 3.2 11B Vision Instruct",
-      "entwickler": "Meta",
-      "context": 131072,
-      "in": 0.345,
-      "out": 0.345,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-llama/Llama-3.2-11B-Vision-Instruct"
-    },
-    "granite-4-2-30b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "ibm-granite/granite-4.2-30b",
-      "name": "granite 4.2 30b",
-      "entwickler": "ibm-granite",
-      "context": 131072,
-      "in": 0.16,
-      "out": 0.65,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/ibm-granite/granite-4.2-30b"
-    },
-    "llama-3-3-nemotron-super-49b-v1-5": {
-      "anbieter": "DeepInfra",
-      "roh_id": "nvidia/Llama-3.3-Nemotron-Super-49B-v1.5",
-      "name": "Llama 3.3 Nemotron Super 49B v1.5",
-      "entwickler": "NVIDIA",
-      "context": 131072,
-      "in": 0.4,
-      "out": 0.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/nvidia/Llama-3.3-Nemotron-Super-49B-v1.5"
-    },
-    "gemma-4-31b-it-turbo": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/gemma-4-31B-it-turbo",
-      "name": "gemma 4 31B it turbo",
-      "entwickler": "Google",
-      "context": 262144,
-      "in": 0.09,
-      "out": 0.34,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/google/gemma-4-31B-it-turbo"
-    },
-    "meta-llama-3-8b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Meta-Llama-3-8B-Instruct",
-      "name": "Meta Llama 3 8B Instruct",
-      "entwickler": "Meta",
-      "context": 8192,
-      "in": 0.03,
-      "out": 0.04,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-llama/Meta-Llama-3-8B-Instruct"
-    },
-    "deepseek-r1-distill-llama-70b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
-      "name": "DeepSeek R1 Distill Llama 70B",
-      "entwickler": "DeepSeek",
-      "context": 131072,
-      "in": 0.7,
-      "out": 0.8,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-R1-Distill-Llama-70B"
-    },
-    "seed-2-0-code": {
-      "anbieter": "DeepInfra",
-      "roh_id": "ByteDance/Seed-2.0-code",
-      "name": "Seed 2.0 code",
-      "entwickler": "bytedance",
-      "context": 256000,
-      "in": 0.5,
-      "out": 3.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/ByteDance/Seed-2.0-code"
-    },
-    "mistral-small-24b-instruct-2501": {
-      "anbieter": "DeepInfra",
-      "roh_id": "mistralai/Mistral-Small-24B-Instruct-2501",
-      "name": "Mistral Small 24B Instruct 2501",
-      "entwickler": "Mistral",
-      "context": 32768,
-      "in": 0.05,
-      "out": 0.08,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/mistralai/Mistral-Small-24B-Instruct-2501"
-    },
-    "nvidia-nemotron-3-5-super-vl": {
-      "anbieter": "DeepInfra",
-      "roh_id": "nvidia/NVIDIA-Nemotron-3.5-Super-VL",
-      "name": "NVIDIA Nemotron 3.5 Super VL",
-      "entwickler": "NVIDIA",
-      "context": 262144,
-      "in": 0.15,
-      "out": 0.5,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/nvidia/NVIDIA-Nemotron-3.5-Super-VL"
-    },
-    "meta-llama-3-1-70b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Meta-Llama-3.1-70B-Instruct",
-      "name": "Meta Llama 3.1 70B Instruct",
-      "entwickler": "Meta",
-      "context": 131072,
-      "in": 0.4,
-      "out": 0.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-llama/Meta-Llama-3.1-70B-Instruct"
-    },
-    "mistral-7b-instruct-v0-3": {
-      "anbieter": "DeepInfra",
-      "roh_id": "mistralai/Mistral-7B-Instruct-v0.3",
-      "name": "Mistral 7B Instruct v0.3",
-      "entwickler": "Mistral",
-      "context": 32768,
-      "in": 0.028,
-      "out": 0.054,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/mistralai/Mistral-7B-Instruct-v0.3"
-    },
-    "llama2-13b-tiefighter": {
-      "anbieter": "DeepInfra",
-      "roh_id": "KoboldAI/LLaMA2-13B-Tiefighter",
-      "name": "LLaMA2 13B Tiefighter",
-      "entwickler": "koboldai",
-      "context": 4096,
-      "in": 0.1,
-      "out": 0.1,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/KoboldAI/LLaMA2-13B-Tiefighter"
-    },
-    "claude-sonnet-5": {
-      "anbieter": "DeepInfra",
-      "roh_id": "anthropic/claude-sonnet-5",
-      "name": "claude sonnet 5",
-      "entwickler": "Anthropic",
-      "context": 1000000,
-      "in": 3.0,
-      "out": 15.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/anthropic/claude-sonnet-5"
-    },
-    "deepseek-r1-distill-qwen-32b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
-      "name": "DeepSeek R1 Distill Qwen 32B",
-      "entwickler": "DeepSeek",
-      "context": 131072,
-      "in": 0.27,
-      "out": 0.27,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-R1-Distill-Qwen-32B"
-    },
-    "deepseek-r1-0528": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-R1-0528",
-      "name": "DeepSeek R1 0528",
-      "entwickler": "DeepSeek",
-      "context": 163840,
-      "in": 0.5,
-      "out": 2.15,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-R1-0528"
-    },
-    "gemma-4-26b-a4b-it": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/gemma-4-26B-A4B-it",
-      "name": "gemma 4 26B A4B it",
-      "entwickler": "Google",
-      "context": 262144,
-      "in": 0.07,
-      "out": 0.34,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/google/gemma-4-26B-A4B-it"
-    },
-    "qwen3-5-4b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3.5-4B",
-      "name": "Qwen3.5 4B",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.03,
-      "out": 0.15,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3.5-4B"
-    },
-    "granite-4-2-8b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "ibm-granite/granite-4.2-8b",
-      "name": "granite 4.2 8b",
-      "entwickler": "ibm-granite",
-      "context": 131072,
-      "in": 0.06,
-      "out": 0.25,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/ibm-granite/granite-4.2-8b"
-    },
-    "codegemma-7b-it": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/codegemma-7b-it",
-      "name": "codegemma 7b it",
-      "entwickler": "Google",
-      "context": 8192,
-      "in": 0.07,
-      "out": 0.07,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/google/codegemma-7b-it"
-    },
-    "nvidia-nemotron-nano-9b-v2": {
-      "anbieter": "DeepInfra",
-      "roh_id": "nvidia/NVIDIA-Nemotron-Nano-9B-v2",
-      "name": "NVIDIA Nemotron Nano 9B v2",
-      "entwickler": "NVIDIA",
-      "context": 131072,
-      "in": 0.04,
-      "out": 0.16,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/nvidia/NVIDIA-Nemotron-Nano-9B-v2"
-    },
-    "qwen3-5-122b-a10b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3.5-122B-A10B",
-      "name": "Qwen3.5 122B A10B",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.29,
-      "out": 2.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3.5-122B-A10B"
-    },
-    "glm-5": {
-      "anbieter": "DeepInfra",
-      "roh_id": "zai-org/GLM-5",
-      "name": "GLM 5",
-      "entwickler": "Z.ai",
-      "context": 202752,
-      "in": 0.6,
-      "out": 2.08,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/zai-org/GLM-5"
-    },
-    "minimax-m2-7-turbo": {
-      "anbieter": "DeepInfra",
-      "roh_id": "MiniMaxAI/MiniMax-M2.7-Turbo",
-      "name": "MiniMax M2.7 Turbo",
-      "entwickler": "minimaxai",
-      "context": 196608,
-      "in": 0.38,
-      "out": 1.7,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/MiniMaxAI/MiniMax-M2.7-Turbo"
-    },
-    "gemma-4-e4b-it": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/gemma-4-E4B-it",
-      "name": "gemma 4 E4B it",
-      "entwickler": "Google",
-      "context": 131072,
-      "in": 0.02,
-      "out": 0.1,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/google/gemma-4-E4B-it"
-    },
-    "qwen3-235b-a22b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-235B-A22B",
-      "name": "Qwen3 235B A22B",
-      "entwickler": "Qwen",
-      "context": 40960,
-      "in": 0.18,
-      "out": 0.54,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-235B-A22B"
-    },
-    "kimi-k2-6": {
-      "anbieter": "DeepInfra",
-      "roh_id": "moonshotai/Kimi-K2.6",
-      "name": "Kimi K2.6",
-      "entwickler": "Moonshot AI",
-      "context": 262144,
-      "in": 0.75,
-      "out": 3.5,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/moonshotai/Kimi-K2.6"
-    },
     "llama-4-maverick-17b-128e-instruct-fp8": {
       "anbieter": "DeepInfra",
       "roh_id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
@@ -25044,773 +23549,6 @@ window.API_DATEN = {
         "text"
       ],
       "url": "https://deepinfra.com/meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8"
-    },
-    "mistral-small-3-2-24b-instruct-2506": {
-      "anbieter": "DeepInfra",
-      "roh_id": "mistralai/Mistral-Small-3.2-24B-Instruct-2506",
-      "name": "Mistral Small 3.2 24B Instruct 2506",
-      "entwickler": "Mistral",
-      "context": 128000,
-      "in": 0.075,
-      "out": 0.2,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/mistralai/Mistral-Small-3.2-24B-Instruct-2506"
-    },
-    "sky-t1-32b-preview": {
-      "anbieter": "DeepInfra",
-      "roh_id": "NovaSky-AI/Sky-T1-32B-Preview",
-      "name": "Sky T1 32B Preview",
-      "entwickler": "novasky-ai",
-      "context": 32768,
-      "in": 0.12,
-      "out": 0.18,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/NovaSky-AI/Sky-T1-32B-Preview"
-    },
-    "airoboros-70b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepinfra/airoboros-70b",
-      "name": "airoboros 70b",
-      "entwickler": "deepinfra",
-      "context": 4096,
-      "in": 0.7,
-      "out": 0.9,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepinfra/airoboros-70b"
-    },
-    "gpt-oss-120b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "openai/gpt-oss-120b",
-      "name": "gpt oss 120b",
-      "entwickler": "OpenAI",
-      "context": 131072,
-      "in": 0.037,
-      "out": 0.17,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/openai/gpt-oss-120b"
-    },
-    "glm-5-3": {
-      "anbieter": "DeepInfra",
-      "roh_id": "zai-org/GLM-5.3",
-      "name": "GLM 5.3",
-      "entwickler": "Z.ai",
-      "context": 1048576,
-      "in": 0.9,
-      "out": 4.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/zai-org/GLM-5.3"
-    },
-    "deepseek-ocr": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-OCR",
-      "name": "DeepSeek OCR",
-      "entwickler": "DeepSeek",
-      "context": 8192,
-      "in": 0.03,
-      "out": 0.1,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-OCR"
-    },
-    "deepseek-v4-1-flash": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-V4.1-Flash",
-      "name": "DeepSeek V4.1 Flash",
-      "entwickler": "DeepSeek",
-      "context": 1048576,
-      "in": 0.2,
-      "out": 0.6,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V4.1-Flash"
-    },
-    "daisyrose-27b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "RadixArk/DaisyRose-27B",
-      "name": "DaisyRose 27B",
-      "entwickler": "radixark",
-      "context": 262144,
-      "in": 0.2,
-      "out": 2.5,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/RadixArk/DaisyRose-27B"
-    },
-    "qwen3-5-35b-a3b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3.5-35B-A3B",
-      "name": "Qwen3.5 35B A3B",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.14,
-      "out": 1.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3.5-35B-A3B"
-    },
-    "gemma-2-27b-it": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/gemma-2-27b-it",
-      "name": "gemma 2 27b it",
-      "entwickler": "Google",
-      "context": 8192,
-      "in": 0.27,
-      "out": 0.27,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/google/gemma-2-27b-it"
-    },
-    "hy4-preview": {
-      "anbieter": "DeepInfra",
-      "roh_id": "tencent/Hy4-preview",
-      "name": "Hy4 preview",
-      "entwickler": "Tencent",
-      "context": 1048576,
-      "in": 0.834,
-      "out": 2.501,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/tencent/Hy4-preview"
-    },
-    "gemma-3-27b-it": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/gemma-3-27b-it",
-      "name": "gemma 3 27b it",
-      "entwickler": "Google",
-      "context": 131072,
-      "in": 0.08,
-      "out": 0.16,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/google/gemma-3-27b-it"
-    },
-    "meta-llama-3-1-70b-instruct-turbo": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
-      "name": "Meta Llama 3.1 70B Instruct Turbo",
-      "entwickler": "Meta",
-      "context": 131072,
-      "in": 0.4,
-      "out": 0.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
-    },
-    "muse-glimmer-30b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-models/Muse-Glimmer-30B",
-      "name": "Muse Glimmer 30B",
-      "entwickler": "meta-models",
-      "context": 131072,
-      "in": 0.3,
-      "out": 1.2,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-models/Muse-Glimmer-30B"
-    },
-    "qwen3-5-0-8b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3.5-0.8B",
-      "name": "Qwen3.5 0.8B",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.01,
-      "out": 0.05,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3.5-0.8B"
-    },
-    "l3-3-70b-euryale-v2-3": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Sao10K/L3.3-70B-Euryale-v2.3",
-      "name": "L3.3 70B Euryale v2.3",
-      "entwickler": "sao10k",
-      "context": 131072,
-      "in": 0.85,
-      "out": 0.85,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Sao10K/L3.3-70B-Euryale-v2.3"
-    },
-    "minicpm-llama3-v-2-5": {
-      "anbieter": "DeepInfra",
-      "roh_id": "openbmb/MiniCPM-Llama3-V-2_5",
-      "name": "MiniCPM Llama3 V 2_5",
-      "entwickler": "openbmb",
-      "context": 8192,
-      "in": 0.34,
-      "out": 0.34,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/openbmb/MiniCPM-Llama3-V-2_5"
-    },
-    "qwen2-72b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen2-72B-Instruct",
-      "name": "Qwen2 72B Instruct",
-      "entwickler": "Qwen",
-      "context": 32768,
-      "in": 0.35,
-      "out": 0.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen2-72B-Instruct"
-    },
-    "llama-guard-3-8b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Llama-Guard-3-8B",
-      "name": "Llama Guard 3 8B",
-      "entwickler": "Meta",
-      "context": 131072,
-      "in": 0.055,
-      "out": 0.055,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-llama/Llama-Guard-3-8B"
-    },
-    "qwen3-5-397b-a17b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3.5-397B-A17B",
-      "name": "Qwen3.5 397B A17B",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.45,
-      "out": 3.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3.5-397B-A17B"
-    },
-    "inkling-small": {
-      "anbieter": "DeepInfra",
-      "roh_id": "thinkingmachines/Inkling-Small",
-      "name": "Inkling Small",
-      "entwickler": "thinkingmachines",
-      "context": 524288,
-      "in": 0.45,
-      "out": 1.2,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/thinkingmachines/Inkling-Small"
-    },
-    "qwen3-vl-30b-a3b-thinking": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-VL-30B-A3B-Thinking",
-      "name": "Qwen3 VL 30B A3B Thinking",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.29,
-      "out": 0.99,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-VL-30B-A3B-Thinking"
-    },
-    "lzlv-70b-fp16-hf": {
-      "anbieter": "DeepInfra",
-      "roh_id": "lizpreciatior/lzlv_70b_fp16_hf",
-      "name": "lzlv_70b_fp16_hf",
-      "entwickler": "lizpreciatior",
-      "context": 4096,
-      "in": 0.35,
-      "out": 0.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/lizpreciatior/lzlv_70b_fp16_hf"
-    },
-    "l3-1-70b-euryale-v2-2": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Sao10K/L3.1-70B-Euryale-v2.2",
-      "name": "L3.1 70B Euryale v2.2",
-      "entwickler": "sao10k",
-      "context": 131072,
-      "in": 0.85,
-      "out": 0.85,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Sao10K/L3.1-70B-Euryale-v2.2"
-    },
-    "glm-5-1": {
-      "anbieter": "DeepInfra",
-      "roh_id": "zai-org/GLM-5.1",
-      "name": "GLM 5.1",
-      "entwickler": "Z.ai",
-      "context": 202752,
-      "in": 1.05,
-      "out": 3.5,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/zai-org/GLM-5.1"
-    },
-    "nemotron-3-nano-omni-30b-a3b-reasoning": {
-      "anbieter": "DeepInfra",
-      "roh_id": "nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning",
-      "name": "Nemotron 3 Nano Omni 30B A3B Reasoning",
-      "entwickler": "NVIDIA",
-      "context": 262144,
-      "in": 0.2,
-      "out": 0.8,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning"
-    },
-    "qwen3-coder-30b-a3b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
-      "name": "Qwen3 Coder 30B A3B Instruct",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.07,
-      "out": 0.26,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-Coder-30B-A3B-Instruct"
-    },
-    "gemma-2-9b-it": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/gemma-2-9b-it",
-      "name": "gemma 2 9b it",
-      "entwickler": "Google",
-      "context": 8192,
-      "in": 0.03,
-      "out": 0.06,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/google/gemma-2-9b-it"
-    },
-    "qwen2-5-coder-32b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen2.5-Coder-32B-Instruct",
-      "name": "Qwen2.5 Coder 32B Instruct",
-      "entwickler": "Qwen",
-      "context": 32768,
-      "in": 0.06,
-      "out": 0.15,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen2.5-Coder-32B-Instruct"
-    },
-    "seed-2-0-pro": {
-      "anbieter": "DeepInfra",
-      "roh_id": "ByteDance/Seed-2.0-pro",
-      "name": "Seed 2.0 pro",
-      "entwickler": "bytedance",
-      "context": 256000,
-      "in": 0.5,
-      "out": 3.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/ByteDance/Seed-2.0-pro"
-    },
-    "mistral-nemo-instruct-2407": {
-      "anbieter": "DeepInfra",
-      "roh_id": "mistralai/Mistral-Nemo-Instruct-2407",
-      "name": "Mistral Nemo Instruct 2407",
-      "entwickler": "Mistral",
-      "context": 131072,
-      "in": 0.029,
-      "out": 0.03,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/mistralai/Mistral-Nemo-Instruct-2407"
-    },
-    "qwen3-coder-480b-a35b-instruct-turbo": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-Coder-480B-A35B-Instruct-Turbo",
-      "name": "Qwen3 Coder 480B A35B Instruct Turbo",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.3,
-      "out": 1.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-Coder-480B-A35B-Instruct-Turbo"
-    },
-    "hy3": {
-      "anbieter": "DeepInfra",
-      "roh_id": "tencent/Hy3",
-      "name": "Hy3",
-      "entwickler": "Tencent",
-      "context": 262144,
-      "in": 0.13,
-      "out": 0.53,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/tencent/Hy3"
-    },
-    "phi-3-medium-4k-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "microsoft/Phi-3-medium-4k-instruct",
-      "name": "Phi 3 medium 4k instruct",
-      "entwickler": "Microsoft",
-      "context": 4096,
-      "in": 0.14,
-      "out": 0.14,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/microsoft/Phi-3-medium-4k-instruct"
-    },
-    "claude-haiku-4-5": {
-      "anbieter": "DeepInfra",
-      "roh_id": "anthropic/claude-haiku-4-5",
-      "name": "claude haiku 4 5",
-      "entwickler": "Anthropic",
-      "context": 200000,
-      "in": 1.0,
-      "out": 5.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/anthropic/claude-haiku-4-5"
-    },
-    "qwen2-5-72b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen2.5-72B-Instruct",
-      "name": "Qwen2.5 72B Instruct",
-      "entwickler": "Qwen",
-      "context": 32768,
-      "in": 0.36,
-      "out": 0.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen2.5-72B-Instruct"
-    },
-    "nvidia-nemotron-3-5-lightning": {
-      "anbieter": "DeepInfra",
-      "roh_id": "nvidia/NVIDIA-Nemotron-3.5-Lightning",
-      "name": "NVIDIA Nemotron 3.5 Lightning",
-      "entwickler": "NVIDIA",
-      "context": 262144,
-      "in": 0.06,
-      "out": 0.16,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/nvidia/NVIDIA-Nemotron-3.5-Lightning"
-    },
-    "phi-4": {
-      "anbieter": "DeepInfra",
-      "roh_id": "microsoft/phi-4",
-      "name": "phi 4",
-      "entwickler": "Microsoft",
-      "context": 16384,
-      "in": 0.07,
-      "out": 0.14,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/microsoft/phi-4"
-    },
-    "deepseek-v4-flash-0731": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-V4-Flash-0731",
-      "name": "DeepSeek V4 Flash 0731",
-      "entwickler": "DeepSeek",
-      "context": 1048576,
-      "in": 0.06,
-      "out": 0.18,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V4-Flash-0731"
-    },
-    "mixtral-8x7b-instruct-v0-1": {
-      "anbieter": "DeepInfra",
-      "roh_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
-      "name": "Mixtral 8x7B Instruct v0.1",
-      "entwickler": "Mistral",
-      "context": 32768,
-      "in": 0.54,
-      "out": 0.54,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/mistralai/Mixtral-8x7B-Instruct-v0.1"
-    },
-    "meta-llama-3-70b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Meta-Llama-3-70B-Instruct",
-      "name": "Meta Llama 3 70B Instruct",
-      "entwickler": "Meta",
-      "context": 8192,
-      "in": 0.3,
-      "out": 0.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-llama/Meta-Llama-3-70B-Instruct"
-    },
-    "deepseek-v3-2": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-V3.2",
-      "name": "DeepSeek V3.2",
-      "entwickler": "DeepSeek",
-      "context": 163840,
-      "in": 0.26,
-      "out": 0.38,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V3.2"
-    },
-    "claude-fable-5": {
-      "anbieter": "DeepInfra",
-      "roh_id": "anthropic/claude-fable-5",
-      "name": "claude fable 5",
-      "entwickler": "Anthropic",
-      "context": 1000000,
-      "in": 10.0,
-      "out": 50.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/anthropic/claude-fable-5"
-    },
-    "qwen3-5-27b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3.5-27B",
-      "name": "Qwen3.5 27B",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.26,
-      "out": 2.6,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3.5-27B"
-    },
-    "mythomax-l2-13b-turbo": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Gryphe/MythoMax-L2-13b-turbo",
-      "name": "MythoMax L2 13b turbo",
-      "entwickler": "gryphe",
-      "context": 4096,
-      "in": 0.13,
-      "out": 0.13,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Gryphe/MythoMax-L2-13b-turbo"
-    },
-    "minimax-m2": {
-      "anbieter": "DeepInfra",
-      "roh_id": "MiniMaxAI/MiniMax-M2",
-      "name": "MiniMax M2",
-      "entwickler": "minimaxai",
-      "context": 262144,
-      "in": 0.254,
-      "out": 1.02,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/MiniMaxAI/MiniMax-M2"
-    },
-    "deepseek-prover-v2-671b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-Prover-V2-671B",
-      "name": "DeepSeek Prover V2 671B",
-      "entwickler": "DeepSeek",
-      "context": 163840,
-      "in": 0.5,
-      "out": 2.18,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-Prover-V2-671B"
-    },
-    "mimo-v2-6-flash": {
-      "anbieter": "DeepInfra",
-      "roh_id": "XiaomiMiMo/MiMo-V2.6-Flash",
-      "name": "MiMo V2.6 Flash",
-      "entwickler": "xiaomimimo",
-      "context": 1048576,
-      "in": 0.14,
-      "out": 0.28,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/XiaomiMiMo/MiMo-V2.6-Flash"
-    },
-    "deepseek-v3-0324": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-V3-0324",
-      "name": "DeepSeek V3 0324",
-      "entwickler": "DeepSeek",
-      "context": 163840,
-      "in": 0.24,
-      "out": 0.9,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V3-0324"
-    },
-    "gemini-2-5-pro": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/gemini-2.5-pro",
-      "name": "gemini 2.5 pro",
-      "entwickler": "Google",
-      "context": 1000000,
-      "in": 1.25,
-      "out": 10.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/google/gemini-2.5-pro"
-    },
-    "deepseek-v3-2-exp": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-V3.2-Exp",
-      "name": "DeepSeek V3.2 Exp",
-      "entwickler": "DeepSeek",
-      "context": 163840,
-      "in": 0.21,
-      "out": 0.32,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V3.2-Exp"
-    },
-    "step-3-5-flash": {
-      "anbieter": "DeepInfra",
-      "roh_id": "stepfun-ai/Step-3.5-Flash",
-      "name": "Step 3.5 Flash",
-      "entwickler": "stepfun-ai",
-      "context": 262144,
-      "in": 0.09,
-      "out": 0.3,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/stepfun-ai/Step-3.5-Flash"
-    },
-    "mistral-7b-instruct-v0-1": {
-      "anbieter": "DeepInfra",
-      "roh_id": "mistralai/Mistral-7B-Instruct-v0.1",
-      "name": "Mistral 7B Instruct v0.1",
-      "entwickler": "Mistral",
-      "context": 32768,
-      "in": 0.055,
-      "out": 0.055,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/mistralai/Mistral-7B-Instruct-v0.1"
-    },
-    "wizardlm-2-7b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "microsoft/WizardLM-2-7B",
-      "name": "WizardLM 2 7B",
-      "entwickler": "Microsoft",
-      "context": 32768,
-      "in": 0.055,
-      "out": 0.055,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/microsoft/WizardLM-2-7B"
-    },
-    "olmo-3-1-32b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "allenai/Olmo-3.1-32B-Instruct",
-      "name": "Olmo 3.1 32B Instruct",
-      "entwickler": "allenai",
-      "context": 65536,
-      "in": 0.2,
-      "out": 0.6,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/allenai/Olmo-3.1-32B-Instruct"
-    },
-    "meta-llama-3-1-405b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Meta-Llama-3.1-405B-Instruct",
-      "name": "Meta Llama 3.1 405B Instruct",
-      "entwickler": "Meta",
-      "context": 32768,
-      "in": 0.8,
-      "out": 0.8,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-llama/Meta-Llama-3.1-405B-Instruct"
-    },
-    "minimax-m2-1": {
-      "anbieter": "DeepInfra",
-      "roh_id": "MiniMaxAI/MiniMax-M2.1",
-      "name": "MiniMax M2.1",
-      "entwickler": "minimaxai",
-      "context": 196608,
-      "in": 0.27,
-      "out": 0.95,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/MiniMaxAI/MiniMax-M2.1"
-    },
-    "seed-1-8": {
-      "anbieter": "DeepInfra",
-      "roh_id": "ByteDance/Seed-1.8",
-      "name": "Seed 1.8",
-      "entwickler": "bytedance",
-      "context": 256000,
-      "in": 0.25,
-      "out": 2.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/ByteDance/Seed-1.8"
-    },
-    "deepseek-v4-pro": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-V4-Pro",
-      "name": "DeepSeek V4 Pro",
-      "entwickler": "DeepSeek",
-      "context": 1048576,
-      "in": 1.3,
-      "out": 2.6,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V4-Pro"
     },
     "glm-4-6v": {
       "anbieter": "DeepInfra",
@@ -25825,330 +23563,31 @@ window.API_DATEN = {
       ],
       "url": "https://deepinfra.com/zai-org/GLM-4.6V"
     },
-    "deepseek-v4-flash": {
+    "nemotron-3-nano-30b-a3b": {
       "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-V4-Flash",
-      "name": "DeepSeek V4 Flash",
-      "entwickler": "DeepSeek",
-      "context": 1048576,
-      "in": 0.09,
-      "out": 0.18,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V4-Flash"
-    },
-    "llama-3-2-1b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Llama-3.2-1B-Instruct",
-      "name": "Llama 3.2 1B Instruct",
-      "entwickler": "Meta",
-      "context": 131072,
-      "in": 0.005,
-      "out": 0.01,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-llama/Llama-3.2-1B-Instruct"
-    },
-    "nvidia-nemotron-3-ultra-550b-a55b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B",
-      "name": "NVIDIA Nemotron 3 Ultra 550B A55B",
+      "roh_id": "nvidia/Nemotron-3-Nano-30B-A3B",
+      "name": "Nemotron 3 Nano 30B A3B",
       "entwickler": "NVIDIA",
       "context": 262144,
-      "in": 0.5,
-      "out": 2.2,
+      "in": 0.05,
+      "out": 0.2,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B"
+      "url": "https://deepinfra.com/nvidia/Nemotron-3-Nano-30B-A3B"
     },
-    "deepseek-v4-flash-vision-exp": {
+    "kimi-k2-instruct-0905": {
       "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-V4-Flash-Vision-Exp",
-      "name": "DeepSeek V4 Flash Vision Exp",
-      "entwickler": "DeepSeek",
-      "context": 1048576,
-      "in": 0.44,
-      "out": 1.32,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
-    },
-    "deepseek-v4-pro-0813": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-V4-Pro-0813",
-      "name": "DeepSeek V4 Pro 0813",
-      "entwickler": "DeepSeek",
-      "context": 1048576,
-      "in": 1.3,
-      "out": 2.6,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V4-Pro-0813"
-    },
-    "reflection-llama-3-1-70b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "mattshumer/Reflection-Llama-3.1-70B",
-      "name": "Reflection Llama 3.1 70B",
-      "entwickler": "mattshumer",
-      "context": 8192,
-      "in": 0.35,
-      "out": 0.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/mattshumer/Reflection-Llama-3.1-70B"
-    },
-    "hermes-3-llama-3-1-70b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "NousResearch/Hermes-3-Llama-3.1-70B",
-      "name": "Hermes 3 Llama 3.1 70B",
-      "entwickler": "nousresearch",
-      "context": 131072,
-      "in": 0.7,
-      "out": 0.7,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/NousResearch/Hermes-3-Llama-3.1-70B"
-    },
-    "qwen2-5-vl-32b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen2.5-VL-32B-Instruct",
-      "name": "Qwen2.5 VL 32B Instruct",
-      "entwickler": "Qwen",
-      "context": 128000,
-      "in": 0.2,
-      "out": 0.6,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen2.5-VL-32B-Instruct"
-    },
-    "hermes-3-llama-3-1-405b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "NousResearch/Hermes-3-Llama-3.1-405B",
-      "name": "Hermes 3 Llama 3.1 405B",
-      "entwickler": "nousresearch",
-      "context": 131072,
-      "in": 1.0,
-      "out": 1.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/NousResearch/Hermes-3-Llama-3.1-405B"
-    },
-    "kimi-k2-7-code": {
-      "anbieter": "DeepInfra",
-      "roh_id": "moonshotai/Kimi-K2.7-Code",
-      "name": "Kimi K2.7 Code",
-      "entwickler": "Moonshot AI",
-      "context": 262144,
-      "in": 0.68,
-      "out": 3.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/moonshotai/Kimi-K2.7-Code"
-    },
-    "qwen3-8-max": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3.8-Max",
-      "name": "Qwen3.8 Max",
-      "entwickler": "Qwen",
-      "context": 256000,
-      "in": 1.65,
-      "out": 4.951,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3.8-Max"
-    },
-    "qwq-32b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/QwQ-32B",
-      "name": "QwQ 32B",
-      "entwickler": "Qwen",
-      "context": 131072,
-      "in": 0.15,
-      "out": 0.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/QwQ-32B"
-    },
-    "inkling": {
-      "anbieter": "DeepInfra",
-      "roh_id": "thinkingmachines/Inkling",
-      "name": "Inkling",
-      "entwickler": "thinkingmachines",
-      "context": 524288,
-      "in": 0.95,
-      "out": 4.05,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/thinkingmachines/Inkling"
-    },
-    "kimi-k2-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "moonshotai/Kimi-K2-Instruct",
-      "name": "Kimi K2 Instruct",
+      "roh_id": "moonshotai/Kimi-K2-Instruct-0905",
+      "name": "Kimi K2 Instruct 0905",
       "entwickler": "Moonshot AI",
       "context": 131072,
-      "in": 0.5,
+      "in": 0.4,
       "out": 2.0,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/moonshotai/Kimi-K2-Instruct"
-    },
-    "gemini-3-1-pro": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/gemini-3.1-pro",
-      "name": "gemini 3.1 pro",
-      "entwickler": "Google",
-      "context": 1000000,
-      "in": 2.0,
-      "out": 12.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/google/gemini-3.1-pro"
-    },
-    "qwen2-5-coder-7b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen2.5-Coder-7B",
-      "name": "Qwen2.5 Coder 7B",
-      "entwickler": "Qwen",
-      "context": 32768,
-      "in": 0.025,
-      "out": 0.05,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen2.5-Coder-7B"
-    },
-    "l3-70b-euryale-v2-1": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Sao10K/L3-70B-Euryale-v2.1",
-      "name": "L3 70B Euryale v2.1",
-      "entwickler": "sao10k",
-      "context": 8192,
-      "in": 0.7,
-      "out": 0.8,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Sao10K/L3-70B-Euryale-v2.1"
-    },
-    "deepseek-v4-1-flash-1017": {
-      "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
-      "name": "DeepSeek V4.1 Flash 1017",
-      "entwickler": "DeepSeek",
-      "context": 1048576,
-      "in": 0.2,
-      "out": 0.6,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V4.1-Flash-1017"
-    },
-    "qwen3-6-27b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3.6-27B",
-      "name": "Qwen3.6 27B",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.32,
-      "out": 3.2,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3.6-27B"
-    },
-    "step-3-7-flash": {
-      "anbieter": "DeepInfra",
-      "roh_id": "stepfun-ai/Step-3.7-Flash",
-      "name": "Step 3.7 Flash",
-      "entwickler": "stepfun-ai",
-      "context": 262144,
-      "in": 0.2,
-      "out": 1.15,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/stepfun-ai/Step-3.7-Flash"
-    },
-    "mistral-7b-instruct-v0-2": {
-      "anbieter": "DeepInfra",
-      "roh_id": "mistralai/Mistral-7B-Instruct-v0.2",
-      "name": "Mistral 7B Instruct v0.2",
-      "entwickler": "Mistral",
-      "context": 32768,
-      "in": 0.055,
-      "out": 0.055,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/mistralai/Mistral-7B-Instruct-v0.2"
-    },
-    "kimi-k2-5-turbo": {
-      "anbieter": "DeepInfra",
-      "roh_id": "moonshotai/Kimi-K2.5-Turbo",
-      "name": "Kimi K2.5 Turbo",
-      "entwickler": "Moonshot AI",
-      "context": 262144,
-      "in": 0.6,
-      "out": 3.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/moonshotai/Kimi-K2.5-Turbo"
-    },
-    "l3-8b-lunaris-v1-turbo": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Sao10K/L3-8B-Lunaris-v1-Turbo",
-      "name": "L3 8B Lunaris v1 Turbo",
-      "entwickler": "sao10k",
-      "context": 8192,
-      "in": 0.04,
-      "out": 0.05,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Sao10K/L3-8B-Lunaris-v1-Turbo"
-    },
-    "starcoder2-15b-instruct-v0-1": {
-      "anbieter": "DeepInfra",
-      "roh_id": "bigcode/starcoder2-15b-instruct-v0.1",
-      "name": "starcoder2 15b instruct v0.1",
-      "entwickler": "bigcode",
-      "context": 0,
-      "in": 0.15,
-      "out": 0.15,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/bigcode/starcoder2-15b-instruct-v0.1"
-    },
-    "qwen2-7b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen2-7B-Instruct",
-      "name": "Qwen2 7B Instruct",
-      "entwickler": "Qwen",
-      "context": 32768,
-      "in": 0.055,
-      "out": 0.055,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen2-7B-Instruct"
+      "url": "https://deepinfra.com/moonshotai/Kimi-K2-Instruct-0905"
     },
     "deepseek-v3": {
       "anbieter": "DeepInfra",
@@ -26163,6 +23602,58 @@ window.API_DATEN = {
       ],
       "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V3"
     },
+    "ling-3-0-flash-fin": {
+      "anbieter": "DeepInfra",
+      "roh_id": "inclusionAI/Ling-3.0-flash-Fin",
+      "name": "Ling 3.0 flash Fin",
+      "entwickler": "inclusionAI",
+      "context": 262144,
+      "in": 0.06,
+      "out": 0.18,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/inclusionAI/Ling-3.0-flash-Fin"
+    },
+    "qwq-32b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/QwQ-32B",
+      "name": "QwQ 32B",
+      "entwickler": "Qwen",
+      "context": 131072,
+      "in": 0.15,
+      "out": 0.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/QwQ-32B"
+    },
+    "nvidia-nemotron-3-ultra-550b-a55b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B",
+      "name": "NVIDIA Nemotron 3 Ultra 550B A55B",
+      "entwickler": "NVIDIA",
+      "context": 262144,
+      "in": 0.5,
+      "out": 2.2,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B"
+    },
+    "deepseek-v3-0324": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-V3-0324",
+      "name": "DeepSeek V3 0324",
+      "entwickler": "DeepSeek",
+      "context": 163840,
+      "in": 0.24,
+      "out": 0.9,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V3-0324"
+    },
     "paddleocr-vl-0-9b": {
       "anbieter": "DeepInfra",
       "roh_id": "PaddlePaddle/PaddleOCR-VL-0.9B",
@@ -26176,109 +23667,252 @@ window.API_DATEN = {
       ],
       "url": "https://deepinfra.com/PaddlePaddle/PaddleOCR-VL-0.9B"
     },
-    "deepseek-r1-0528-turbo": {
+    "mimo-v2-5-pro": {
       "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-R1-0528-Turbo",
-      "name": "DeepSeek R1 0528 Turbo",
-      "entwickler": "DeepSeek",
-      "context": 32768,
+      "roh_id": "XiaomiMiMo/MiMo-V2.5-Pro",
+      "name": "MiMo V2.5 Pro",
+      "entwickler": "xiaomimimo",
+      "context": 1048576,
       "in": 1.0,
       "out": 3.0,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-R1-0528-Turbo"
+      "url": "https://deepinfra.com/XiaomiMiMo/MiMo-V2.5-Pro"
     },
-    "qwen3-max": {
+    "granite-4-2-8b": {
       "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-Max",
-      "name": "Qwen3 Max",
-      "entwickler": "Qwen",
-      "context": 256000,
-      "in": 1.2,
-      "out": 6.0,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-Max"
-    },
-    "gemini-3-1-flash-lite": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/gemini-3.1-flash-lite",
-      "name": "gemini 3.1 flash lite",
-      "entwickler": "Google",
-      "context": 1000000,
-      "in": 0.25,
-      "out": 1.5,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/google/gemini-3.1-flash-lite"
-    },
-    "mixtral-8x22b-instruct-v0-1": {
-      "anbieter": "DeepInfra",
-      "roh_id": "mistralai/Mixtral-8x22B-Instruct-v0.1",
-      "name": "Mixtral 8x22B Instruct v0.1",
-      "entwickler": "Mistral",
-      "context": 65536,
-      "in": 0.65,
-      "out": 0.65,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/mistralai/Mixtral-8x22B-Instruct-v0.1"
-    },
-    "qwen3-32b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-32B",
-      "name": "Qwen3 32B",
-      "entwickler": "Qwen",
-      "context": 40960,
-      "in": 0.08,
-      "out": 0.28,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-32B"
-    },
-    "llama-3-3-70b-instruct-turbo": {
-      "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
-      "name": "Llama 3.3 70B Instruct Turbo",
-      "entwickler": "Meta",
-      "context": 131072,
-      "in": 0.1,
-      "out": 0.32,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/meta-llama/Llama-3.3-70B-Instruct-Turbo"
-    },
-    "ling-3-0-flash-vl": {
-      "anbieter": "DeepInfra",
-      "roh_id": "inclusionAI/Ling-3.0-flash-VL",
-      "name": "Ling 3.0 flash VL",
-      "entwickler": "inclusionAI",
+      "roh_id": "ibm-granite/granite-4.2-8b",
+      "name": "granite 4.2 8b",
+      "entwickler": "ibm-granite",
       "context": 131072,
       "in": 0.06,
-      "out": 0.18,
+      "out": 0.25,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/inclusionAI/Ling-3.0-flash-VL"
+      "url": "https://deepinfra.com/ibm-granite/granite-4.2-8b"
     },
-    "claude-opus-5-5": {
+    "step-3-7-flash": {
       "anbieter": "DeepInfra",
-      "roh_id": "anthropic/claude-opus-5-5",
-      "name": "claude opus 5 5",
-      "entwickler": "Anthropic",
-      "context": 1000000,
-      "in": 4.0,
-      "out": 20.0,
+      "roh_id": "stepfun-ai/Step-3.7-Flash",
+      "name": "Step 3.7 Flash",
+      "entwickler": "stepfun-ai",
+      "context": 262144,
+      "in": 0.2,
+      "out": 1.15,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/anthropic/claude-opus-5-5"
+      "url": "https://deepinfra.com/stepfun-ai/Step-3.7-Flash"
+    },
+    "llama-3-2-11b-vision-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "meta-llama/Llama-3.2-11B-Vision-Instruct",
+      "name": "Llama 3.2 11B Vision Instruct",
+      "entwickler": "Meta",
+      "context": 131072,
+      "in": 0.345,
+      "out": 0.345,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/meta-llama/Llama-3.2-11B-Vision-Instruct"
+    },
+    "starcoder2-15b-instruct-v0-1": {
+      "anbieter": "DeepInfra",
+      "roh_id": "bigcode/starcoder2-15b-instruct-v0.1",
+      "name": "starcoder2 15b instruct v0.1",
+      "entwickler": "bigcode",
+      "context": 0,
+      "in": 0.15,
+      "out": 0.15,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/bigcode/starcoder2-15b-instruct-v0.1"
+    },
+    "qwen3-coder-480b-a35b-instruct-turbo": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-Coder-480B-A35B-Instruct-Turbo",
+      "name": "Qwen3 Coder 480B A35B Instruct Turbo",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.3,
+      "out": 1.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-Coder-480B-A35B-Instruct-Turbo"
+    },
+    "seed-2-0-pro": {
+      "anbieter": "DeepInfra",
+      "roh_id": "ByteDance/Seed-2.0-pro",
+      "name": "Seed 2.0 pro",
+      "entwickler": "bytedance",
+      "context": 256000,
+      "in": 0.5,
+      "out": 3.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/ByteDance/Seed-2.0-pro"
+    },
+    "llama-3-2-3b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "meta-llama/Llama-3.2-3B-Instruct",
+      "name": "Llama 3.2 3B Instruct",
+      "entwickler": "Meta",
+      "context": 131072,
+      "in": 0.02,
+      "out": 0.02,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/meta-llama/Llama-3.2-3B-Instruct"
+    },
+    "llama-3-3-70b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "meta-llama/Llama-3.3-70B-Instruct",
+      "name": "Llama 3.3 70B Instruct",
+      "entwickler": "Meta",
+      "context": 131072,
+      "in": 0.23,
+      "out": 0.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/meta-llama/Llama-3.3-70B-Instruct"
+    },
+    "olmocr-2-7b-1025": {
+      "anbieter": "DeepInfra",
+      "roh_id": "allenai/olmOCR-2-7B-1025",
+      "name": "olmOCR 2 7B 1025",
+      "entwickler": "allenai",
+      "context": 16384,
+      "in": 0.09,
+      "out": 0.19,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/allenai/olmOCR-2-7B-1025"
+    },
+    "glm-4-6": {
+      "anbieter": "DeepInfra",
+      "roh_id": "zai-org/GLM-4.6",
+      "name": "GLM 4.6",
+      "entwickler": "Z.ai",
+      "context": 202752,
+      "in": 0.5,
+      "out": 2.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/zai-org/GLM-4.6"
+    },
+    "llama-4-scout-17b-16e-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+      "name": "Llama 4 Scout 17B 16E Instruct",
+      "entwickler": "Meta",
+      "context": 327680,
+      "in": 0.1,
+      "out": 0.3,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/meta-llama/Llama-4-Scout-17B-16E-Instruct"
+    },
+    "l3-8b-lunaris-v1-turbo": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Sao10K/L3-8B-Lunaris-v1-Turbo",
+      "name": "L3 8B Lunaris v1 Turbo",
+      "entwickler": "sao10k",
+      "context": 8192,
+      "in": 0.04,
+      "out": 0.05,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Sao10K/L3-8B-Lunaris-v1-Turbo"
+    },
+    "gemini-2-0-flash-001": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemini-2.0-flash-001",
+      "name": "gemini 2.0 flash 001",
+      "entwickler": "Google",
+      "context": 1000000,
+      "in": 0.1,
+      "out": 0.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/google/gemini-2.0-flash-001"
+    },
+    "claude-haiku-4-5": {
+      "anbieter": "DeepInfra",
+      "roh_id": "anthropic/claude-haiku-4-5",
+      "name": "claude haiku 4 5",
+      "entwickler": "Anthropic",
+      "context": 200000,
+      "in": 1.0,
+      "out": 5.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/anthropic/claude-haiku-4-5"
+    },
+    "gemma-3-4b-it": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemma-3-4b-it",
+      "name": "gemma 3 4b it",
+      "entwickler": "Google",
+      "context": 131072,
+      "in": 0.05,
+      "out": 0.1,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/google/gemma-3-4b-it"
+    },
+    "qwen3-235b-a22b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-235B-A22B",
+      "name": "Qwen3 235B A22B",
+      "entwickler": "Qwen",
+      "context": 40960,
+      "in": 0.18,
+      "out": 0.54,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-235B-A22B"
+    },
+    "l3-70b-euryale-v2-1": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Sao10K/L3-70B-Euryale-v2.1",
+      "name": "L3 70B Euryale v2.1",
+      "entwickler": "sao10k",
+      "context": 8192,
+      "in": 0.7,
+      "out": 0.8,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Sao10K/L3-70B-Euryale-v2.1"
+    },
+    "l3-8b-lunaris-v1": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Sao10K/L3-8B-Lunaris-v1",
+      "name": "L3 8B Lunaris v1",
+      "entwickler": "sao10k",
+      "context": 8192,
+      "in": 0.03,
+      "out": 0.06,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Sao10K/L3-8B-Lunaris-v1"
     },
     "llama-3-2-90b-vision-instruct": {
       "anbieter": "DeepInfra",
@@ -26293,36 +23927,179 @@ window.API_DATEN = {
       ],
       "url": "https://deepinfra.com/meta-llama/Llama-3.2-90B-Vision-Instruct"
     },
-    "claude-opus-4-8": {
+    "phind-codellama-34b-v2": {
       "anbieter": "DeepInfra",
-      "roh_id": "anthropic/claude-opus-4-8",
-      "name": "claude opus 4 8",
-      "entwickler": "Anthropic",
-      "context": 1000000,
-      "in": 5.0,
-      "out": 25.0,
+      "roh_id": "Phind/Phind-CodeLlama-34B-v2",
+      "name": "Phind CodeLlama 34B v2",
+      "entwickler": "phind",
+      "context": 4096,
+      "in": 0.6,
+      "out": 0.6,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/anthropic/claude-opus-4-8"
+      "url": "https://deepinfra.com/Phind/Phind-CodeLlama-34B-v2"
     },
-    "mistral-small-3-1-24b-instruct-2503": {
+    "qwen3-5-9b": {
       "anbieter": "DeepInfra",
-      "roh_id": "mistralai/Mistral-Small-3.1-24B-Instruct-2503",
-      "name": "Mistral Small 3.1 24B Instruct 2503",
+      "roh_id": "Qwen/Qwen3.5-9B",
+      "name": "Qwen3.5 9B",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.1,
+      "out": 0.15,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3.5-9B"
+    },
+    "deepseek-r1-0528": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-R1-0528",
+      "name": "DeepSeek R1 0528",
+      "entwickler": "DeepSeek",
+      "context": 163840,
+      "in": 0.5,
+      "out": 2.15,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-R1-0528"
+    },
+    "dolphin-2-6-mixtral-8x7b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "cognitivecomputations/dolphin-2.6-mixtral-8x7b",
+      "name": "dolphin 2.6 mixtral 8x7b",
+      "entwickler": "cognitivecomputations",
+      "context": 32768,
+      "in": 0.24,
+      "out": 0.24,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/cognitivecomputations/dolphin-2.6-mixtral-8x7b"
+    },
+    "minimax-m3": {
+      "anbieter": "DeepInfra",
+      "roh_id": "MiniMaxAI/MiniMax-M3",
+      "name": "MiniMax M3",
+      "entwickler": "minimaxai",
+      "context": 524288,
+      "in": 0.28,
+      "out": 1.1,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/MiniMaxAI/MiniMax-M3"
+    },
+    "qwen3-next-80b-a3b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+      "name": "Qwen3 Next 80B A3B Instruct",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.09,
+      "out": 1.1,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-Next-80B-A3B-Instruct"
+    },
+    "hy4-preview": {
+      "anbieter": "DeepInfra",
+      "roh_id": "tencent/Hy4-preview",
+      "name": "Hy4 preview",
+      "entwickler": "Tencent",
+      "context": 1048576,
+      "in": 0.834,
+      "out": 2.501,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/tencent/Hy4-preview"
+    },
+    "qwen3-8-27b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3.8-27B",
+      "name": "Qwen3.8 27B",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.2,
+      "out": 2.5,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3.8-27B"
+    },
+    "kimi-k3": {
+      "anbieter": "DeepInfra",
+      "roh_id": "moonshotai/Kimi-K3",
+      "name": "Kimi K3",
+      "entwickler": "Moonshot AI",
+      "context": 1048576,
+      "in": 2.85,
+      "out": 14.25,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/moonshotai/Kimi-K3"
+    },
+    "wizardlm-2-7b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "microsoft/WizardLM-2-7B",
+      "name": "WizardLM 2 7B",
+      "entwickler": "Microsoft",
+      "context": 32768,
+      "in": 0.055,
+      "out": 0.055,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/microsoft/WizardLM-2-7B"
+    },
+    "mistral-7b-instruct-v0-2": {
+      "anbieter": "DeepInfra",
+      "roh_id": "mistralai/Mistral-7B-Instruct-v0.2",
+      "name": "Mistral 7B Instruct v0.2",
       "entwickler": "Mistral",
-      "context": 128000,
-      "in": 0.05,
+      "context": 32768,
+      "in": 0.055,
+      "out": 0.055,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/mistralai/Mistral-7B-Instruct-v0.2"
+    },
+    "deepseek-ocr": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-OCR",
+      "name": "DeepSeek OCR",
+      "entwickler": "DeepSeek",
+      "context": 8192,
+      "in": 0.03,
       "out": 0.1,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/mistralai/Mistral-Small-3.1-24B-Instruct-2503"
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-OCR"
     },
-    "claude-opus-4-7": {
+    "seed-2-0-code": {
       "anbieter": "DeepInfra",
-      "roh_id": "anthropic/claude-opus-4-7",
-      "name": "claude opus 4 7",
+      "roh_id": "ByteDance/Seed-2.0-code",
+      "name": "Seed 2.0 code",
+      "entwickler": "bytedance",
+      "context": 256000,
+      "in": 0.5,
+      "out": 3.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/ByteDance/Seed-2.0-code"
+    },
+    "claude-opus-5": {
+      "anbieter": "DeepInfra",
+      "roh_id": "anthropic/claude-opus-5",
+      "name": "claude opus 5",
       "entwickler": "Anthropic",
       "context": 1000000,
       "in": 5.0,
@@ -26330,20 +24107,254 @@ window.API_DATEN = {
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/anthropic/claude-opus-4-7"
+      "url": "https://deepinfra.com/anthropic/claude-opus-5"
     },
-    "llama-3-1-nemotron-70b-instruct": {
+    "llama-4-maverick-17b-128e-instruct-turbo": {
       "anbieter": "DeepInfra",
-      "roh_id": "nvidia/Llama-3.1-Nemotron-70B-Instruct",
-      "name": "Llama 3.1 Nemotron 70B Instruct",
-      "entwickler": "NVIDIA",
-      "context": 131072,
-      "in": 1.2,
-      "out": 1.2,
+      "roh_id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-Turbo",
+      "name": "Llama 4 Maverick 17B 128E Instruct Turbo",
+      "entwickler": "Meta",
+      "context": 8192,
+      "in": 0.5,
+      "out": 0.5,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/nvidia/Llama-3.1-Nemotron-70B-Instruct"
+      "url": "https://deepinfra.com/meta-llama/Llama-4-Maverick-17B-128E-Instruct-Turbo"
+    },
+    "nvidia-nemotron-nano-9b-v2": {
+      "anbieter": "DeepInfra",
+      "roh_id": "nvidia/NVIDIA-Nemotron-Nano-9B-v2",
+      "name": "NVIDIA Nemotron Nano 9B v2",
+      "entwickler": "NVIDIA",
+      "context": 131072,
+      "in": 0.04,
+      "out": 0.16,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/nvidia/NVIDIA-Nemotron-Nano-9B-v2"
+    },
+    "kimi-k2-thinking": {
+      "anbieter": "DeepInfra",
+      "roh_id": "moonshotai/Kimi-K2-Thinking",
+      "name": "Kimi K2 Thinking",
+      "entwickler": "Moonshot AI",
+      "context": 131072,
+      "in": 0.47,
+      "out": 2.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/moonshotai/Kimi-K2-Thinking"
+    },
+    "claude-fable-5": {
+      "anbieter": "DeepInfra",
+      "roh_id": "anthropic/claude-fable-5",
+      "name": "claude fable 5",
+      "entwickler": "Anthropic",
+      "context": 1000000,
+      "in": 10.0,
+      "out": 50.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/anthropic/claude-fable-5"
+    },
+    "glm-4-5-air": {
+      "anbieter": "DeepInfra",
+      "roh_id": "zai-org/GLM-4.5-Air",
+      "name": "GLM 4.5 Air",
+      "entwickler": "Z.ai",
+      "context": 131072,
+      "in": 0.2,
+      "out": 1.1,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/zai-org/GLM-4.5-Air"
+    },
+    "qvq-72b-preview": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/QVQ-72B-Preview",
+      "name": "QVQ 72B Preview",
+      "entwickler": "Qwen",
+      "context": 32000,
+      "in": 0.25,
+      "out": 0.5,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/QVQ-72B-Preview"
+    },
+    "gemini-3-1-pro": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemini-3.1-pro",
+      "name": "gemini 3.1 pro",
+      "entwickler": "Google",
+      "context": 1000000,
+      "in": 2.0,
+      "out": 12.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/google/gemini-3.1-pro"
+    },
+    "mistral-7b-instruct-v0-1": {
+      "anbieter": "DeepInfra",
+      "roh_id": "mistralai/Mistral-7B-Instruct-v0.1",
+      "name": "Mistral 7B Instruct v0.1",
+      "entwickler": "Mistral",
+      "context": 32768,
+      "in": 0.055,
+      "out": 0.055,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/mistralai/Mistral-7B-Instruct-v0.1"
+    },
+    "gemma-4-26b-a4b-it": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemma-4-26B-A4B-it",
+      "name": "gemma 4 26B A4B it",
+      "entwickler": "Google",
+      "context": 262144,
+      "in": 0.07,
+      "out": 0.34,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/google/gemma-4-26B-A4B-it"
+    },
+    "glm-5-3": {
+      "anbieter": "DeepInfra",
+      "roh_id": "zai-org/GLM-5.3",
+      "name": "GLM 5.3",
+      "entwickler": "Z.ai",
+      "context": 1048576,
+      "in": 0.9,
+      "out": 4.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/zai-org/GLM-5.3"
+    },
+    "gpt-oss-120b-ultra": {
+      "anbieter": "DeepInfra",
+      "roh_id": "openai/gpt-oss-120b-Ultra",
+      "name": "gpt oss 120b Ultra",
+      "entwickler": "OpenAI",
+      "context": 131072,
+      "in": 0.2,
+      "out": 0.95,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/openai/gpt-oss-120b-Ultra"
+    },
+    "qwen3-vl-30b-a3b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-VL-30B-A3B-Instruct",
+      "name": "Qwen3 VL 30B A3B Instruct",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.15,
+      "out": 0.6,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-VL-30B-A3B-Instruct"
+    },
+    "hy3": {
+      "anbieter": "DeepInfra",
+      "roh_id": "tencent/Hy3",
+      "name": "Hy3",
+      "entwickler": "Tencent",
+      "context": 262144,
+      "in": 0.13,
+      "out": 0.53,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/tencent/Hy3"
+    },
+    "deepseek-r1-turbo": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-R1-Turbo",
+      "name": "DeepSeek R1 Turbo",
+      "entwickler": "DeepSeek",
+      "context": 40960,
+      "in": 1.0,
+      "out": 3.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-R1-Turbo"
+    },
+    "gemma-2-27b-it": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemma-2-27b-it",
+      "name": "gemma 2 27b it",
+      "entwickler": "Google",
+      "context": 8192,
+      "in": 0.27,
+      "out": 0.27,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/google/gemma-2-27b-it"
+    },
+    "inkling": {
+      "anbieter": "DeepInfra",
+      "roh_id": "thinkingmachines/Inkling",
+      "name": "Inkling",
+      "entwickler": "thinkingmachines",
+      "context": 524288,
+      "in": 0.95,
+      "out": 4.05,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/thinkingmachines/Inkling"
+    },
+    "deepseek-v3-0324-turbo": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-V3-0324-Turbo",
+      "name": "DeepSeek V3 0324 Turbo",
+      "entwickler": "DeepSeek",
+      "context": 32768,
+      "in": 1.0,
+      "out": 3.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V3-0324-Turbo"
+    },
+    "qwen2-5-7b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen2.5-7B-Instruct",
+      "name": "Qwen2.5 7B Instruct",
+      "entwickler": "Qwen",
+      "context": 32768,
+      "in": 0.04,
+      "out": 0.1,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen2.5-7B-Instruct"
+    },
+    "minimax-m2-7": {
+      "anbieter": "DeepInfra",
+      "roh_id": "MiniMaxAI/MiniMax-M2.7",
+      "name": "MiniMax M2.7",
+      "entwickler": "minimaxai",
+      "context": 196608,
+      "in": 0.25,
+      "out": 1.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/MiniMaxAI/MiniMax-M2.7"
     },
     "devstral-small-2507": {
       "anbieter": "DeepInfra",
@@ -26358,18 +24369,122 @@ window.API_DATEN = {
       ],
       "url": "https://deepinfra.com/mistralai/Devstral-Small-2507"
     },
-    "olmocr-7b-0725-fp8": {
+    "hermes-3-llama-3-1-405b": {
       "anbieter": "DeepInfra",
-      "roh_id": "allenai/olmOCR-7B-0725-FP8",
-      "name": "olmOCR 7B 0725 FP8",
-      "entwickler": "allenai",
-      "context": 16384,
-      "in": 0.27,
-      "out": 1.5,
+      "roh_id": "NousResearch/Hermes-3-Llama-3.1-405B",
+      "name": "Hermes 3 Llama 3.1 405B",
+      "entwickler": "nousresearch",
+      "context": 131072,
+      "in": 1.0,
+      "out": 1.0,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/allenai/olmOCR-7B-0725-FP8"
+      "url": "https://deepinfra.com/NousResearch/Hermes-3-Llama-3.1-405B"
+    },
+    "deepseek-r1-distill-llama-70b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+      "name": "DeepSeek R1 Distill Llama 70B",
+      "entwickler": "DeepSeek",
+      "context": 131072,
+      "in": 0.7,
+      "out": 0.8,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-R1-Distill-Llama-70B"
+    },
+    "llama2-13b-tiefighter": {
+      "anbieter": "DeepInfra",
+      "roh_id": "KoboldAI/LLaMA2-13B-Tiefighter",
+      "name": "LLaMA2 13B Tiefighter",
+      "entwickler": "koboldai",
+      "context": 4096,
+      "in": 0.1,
+      "out": 0.1,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/KoboldAI/LLaMA2-13B-Tiefighter"
+    },
+    "glm-4-5": {
+      "anbieter": "DeepInfra",
+      "roh_id": "zai-org/GLM-4.5",
+      "name": "GLM 4.5",
+      "entwickler": "Z.ai",
+      "context": 131072,
+      "in": 0.38,
+      "out": 1.6,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/zai-org/GLM-4.5"
+    },
+    "qwen3-8-flash": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3.8-Flash",
+      "name": "Qwen3.8 Flash",
+      "entwickler": "Qwen",
+      "context": 1000000,
+      "in": 0.113,
+      "out": 0.382,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3.8-Flash"
+    },
+    "gemma-1-1-7b-it": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemma-1.1-7b-it",
+      "name": "gemma 1.1 7b it",
+      "entwickler": "Google",
+      "context": 8192,
+      "in": 0.07,
+      "out": 0.07,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/google/gemma-1.1-7b-it"
+    },
+    "mimo-v2-6-flash": {
+      "anbieter": "DeepInfra",
+      "roh_id": "XiaomiMiMo/MiMo-V2.6-Flash",
+      "name": "MiMo V2.6 Flash",
+      "entwickler": "xiaomimimo",
+      "context": 1048576,
+      "in": 0.14,
+      "out": 0.28,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/XiaomiMiMo/MiMo-V2.6-Flash"
+    },
+    "nvidia-nemotron-3-super-120b-a12b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B",
+      "name": "NVIDIA Nemotron 3 Super 120B A12B",
+      "entwickler": "NVIDIA",
+      "context": 262144,
+      "in": 0.075,
+      "out": 0.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B"
+    },
+    "reflection-llama-3-1-70b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "mattshumer/Reflection-Llama-3.1-70B",
+      "name": "Reflection Llama 3.1 70B",
+      "entwickler": "mattshumer",
+      "context": 8192,
+      "in": 0.35,
+      "out": 0.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/mattshumer/Reflection-Llama-3.1-70B"
     },
     "gpt-oss-20b": {
       "anbieter": "DeepInfra",
@@ -26384,70 +24499,57 @@ window.API_DATEN = {
       ],
       "url": "https://deepinfra.com/openai/gpt-oss-20b"
     },
-    "qwen3-30b-a3b": {
+    "qwen3-8-max": {
       "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-30B-A3B",
-      "name": "Qwen3 30B A3B",
+      "roh_id": "Qwen/Qwen3.8-Max",
+      "name": "Qwen3.8 Max",
       "entwickler": "Qwen",
-      "context": 40960,
-      "in": 0.12,
-      "out": 0.5,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-30B-A3B"
-    },
-    "nemotron-4-340b-instruct": {
-      "anbieter": "DeepInfra",
-      "roh_id": "nvidia/Nemotron-4-340B-Instruct",
-      "name": "Nemotron 4 340B Instruct",
-      "entwickler": "NVIDIA",
-      "context": 4096,
-      "in": 4.2,
-      "out": 4.2,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/nvidia/Nemotron-4-340B-Instruct"
-    },
-    "dolphin-2-9-1-llama-3-70b": {
-      "anbieter": "DeepInfra",
-      "roh_id": "cognitivecomputations/dolphin-2.9.1-llama-3-70b",
-      "name": "dolphin 2.9.1 llama 3 70b",
-      "entwickler": "cognitivecomputations",
-      "context": 8192,
-      "in": 0.35,
-      "out": 0.4,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/cognitivecomputations/dolphin-2.9.1-llama-3-70b"
-    },
-    "seed-2-0-mini": {
-      "anbieter": "DeepInfra",
-      "roh_id": "ByteDance/Seed-2.0-mini",
-      "name": "Seed 2.0 mini",
-      "entwickler": "bytedance",
       "context": 256000,
-      "in": 0.1,
-      "out": 0.4,
+      "in": 1.65,
+      "out": 4.951,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/ByteDance/Seed-2.0-mini"
+      "url": "https://deepinfra.com/Qwen/Qwen3.8-Max"
     },
-    "qwen3-14b": {
+    "codegemma-7b-it": {
       "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-14B",
-      "name": "Qwen3 14B",
-      "entwickler": "Qwen",
-      "context": 40960,
-      "in": 0.12,
-      "out": 0.24,
+      "roh_id": "google/codegemma-7b-it",
+      "name": "codegemma 7b it",
+      "entwickler": "Google",
+      "context": 8192,
+      "in": 0.07,
+      "out": 0.07,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-14B"
+      "url": "https://deepinfra.com/google/codegemma-7b-it"
+    },
+    "qwq-32b-preview": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/QwQ-32B-Preview",
+      "name": "QwQ 32B Preview",
+      "entwickler": "Qwen",
+      "context": 32768,
+      "in": 0.12,
+      "out": 0.18,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/QwQ-32B-Preview"
+    },
+    "phi-4": {
+      "anbieter": "DeepInfra",
+      "roh_id": "microsoft/phi-4",
+      "name": "phi 4",
+      "entwickler": "Microsoft",
+      "context": 16384,
+      "in": 0.07,
+      "out": 0.14,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/microsoft/phi-4"
     },
     "gemini-2-5-flash": {
       "anbieter": "DeepInfra",
@@ -26475,83 +24577,434 @@ window.API_DATEN = {
       ],
       "url": "https://deepinfra.com/openchat/openchat-3.6-8b"
     },
-    "gemma-3-4b-it": {
+    "claude-sonnet-5": {
       "anbieter": "DeepInfra",
-      "roh_id": "google/gemma-3-4b-it",
-      "name": "gemma 3 4b it",
+      "roh_id": "anthropic/claude-sonnet-5",
+      "name": "claude sonnet 5",
+      "entwickler": "Anthropic",
+      "context": 1000000,
+      "in": 3.0,
+      "out": 15.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/anthropic/claude-sonnet-5"
+    },
+    "ling-3-0-flash-vl": {
+      "anbieter": "DeepInfra",
+      "roh_id": "inclusionAI/Ling-3.0-flash-VL",
+      "name": "Ling 3.0 flash VL",
+      "entwickler": "inclusionAI",
+      "context": 131072,
+      "in": 0.06,
+      "out": 0.18,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/inclusionAI/Ling-3.0-flash-VL"
+    },
+    "gemma-4-e4b-it": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemma-4-E4B-it",
+      "name": "gemma 4 E4B it",
       "entwickler": "Google",
       "context": 131072,
-      "in": 0.05,
+      "in": 0.02,
       "out": 0.1,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/google/gemma-3-4b-it"
+      "url": "https://deepinfra.com/google/gemma-4-E4B-it"
     },
-    "qwen3-vl-4b-instruct": {
+    "meta-llama-3-1-8b-instruct-turbo": {
       "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-VL-4B-Instruct",
-      "name": "Qwen3 VL 4B Instruct",
-      "entwickler": "Qwen",
-      "context": 262144,
-      "in": 0.1,
-      "out": 0.6,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-VL-4B-Instruct"
-    },
-    "gemma-3-12b-it": {
-      "anbieter": "DeepInfra",
-      "roh_id": "google/gemma-3-12b-it",
-      "name": "gemma 3 12b it",
-      "entwickler": "Google",
+      "roh_id": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+      "name": "Meta Llama 3.1 8B Instruct Turbo",
+      "entwickler": "Meta",
       "context": 131072,
-      "in": 0.05,
-      "out": 0.15,
+      "in": 0.02,
+      "out": 0.04,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/google/gemma-3-12b-it"
+      "url": "https://deepinfra.com/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
     },
-    "deepseek-v3-1-terminus": {
+    "meta-llama-3-1-8b-instruct": {
       "anbieter": "DeepInfra",
-      "roh_id": "deepseek-ai/DeepSeek-V3.1-Terminus",
-      "name": "DeepSeek V3.1 Terminus",
+      "roh_id": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+      "name": "Meta Llama 3.1 8B Instruct",
+      "entwickler": "Meta",
+      "context": 131072,
+      "in": 0.02,
+      "out": 0.05,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/meta-llama/Meta-Llama-3.1-8B-Instruct"
+    },
+    "llama-3-1-nemotron-70b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "nvidia/Llama-3.1-Nemotron-70B-Instruct",
+      "name": "Llama 3.1 Nemotron 70B Instruct",
+      "entwickler": "NVIDIA",
+      "context": 131072,
+      "in": 1.2,
+      "out": 1.2,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/nvidia/Llama-3.1-Nemotron-70B-Instruct"
+    },
+    "glm-5-2": {
+      "anbieter": "DeepInfra",
+      "roh_id": "zai-org/GLM-5.2",
+      "name": "GLM 5.2",
+      "entwickler": "Z.ai",
+      "context": 1048576,
+      "in": 0.75,
+      "out": 2.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/zai-org/GLM-5.2"
+    },
+    "sky-t1-32b-preview": {
+      "anbieter": "DeepInfra",
+      "roh_id": "NovaSky-AI/Sky-T1-32B-Preview",
+      "name": "Sky T1 32B Preview",
+      "entwickler": "novasky-ai",
+      "context": 32768,
+      "in": 0.12,
+      "out": 0.18,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/NovaSky-AI/Sky-T1-32B-Preview"
+    },
+    "deepseek-v3-1": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-V3.1",
+      "name": "DeepSeek V3.1",
       "entwickler": "DeepSeek",
       "context": 163840,
-      "in": 0.27,
+      "in": 0.25,
       "out": 0.95,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V3.1-Terminus"
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V3.1"
     },
-    "ornith-1-0-35b": {
+    "qwen3-235b-a22b-thinking-2507": {
       "anbieter": "DeepInfra",
-      "roh_id": "deepreinforce-ai/Ornith-1.0-35B",
-      "name": "Ornith 1.0 35B",
-      "entwickler": "deepreinforce-ai",
-      "context": 262144,
-      "in": 0.1,
-      "out": 0.75,
-      "typ": [
-        "text"
-      ],
-      "url": "https://deepinfra.com/deepreinforce-ai/Ornith-1.0-35B"
-    },
-    "qwen3-235b-a22b-instruct-2507": {
-      "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen3-235B-A22B-Instruct-2507",
-      "name": "Qwen3 235B A22B Instruct 2507",
+      "roh_id": "Qwen/Qwen3-235B-A22B-Thinking-2507",
+      "name": "Qwen3 235B A22B Thinking 2507",
       "entwickler": "Qwen",
       "context": 262144,
-      "in": 0.09,
-      "out": 0.55,
+      "in": 0.23,
+      "out": 2.3,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/Qwen/Qwen3-235B-A22B-Instruct-2507"
+      "url": "https://deepinfra.com/Qwen/Qwen3-235B-A22B-Thinking-2507"
+    },
+    "daisyrose-27b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "RadixArk/DaisyRose-27B",
+      "name": "DaisyRose 27B",
+      "entwickler": "radixark",
+      "context": 262144,
+      "in": 0.2,
+      "out": 2.5,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/RadixArk/DaisyRose-27B"
+    },
+    "nvidia-nemotron-3-ultra-550b-a55b-bf16": {
+      "anbieter": "DeepInfra",
+      "roh_id": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+      "name": "NVIDIA Nemotron 3 Ultra 550B A55B BF16",
+      "entwickler": "NVIDIA",
+      "context": 262144,
+      "in": 1.0,
+      "out": 5.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16"
+    },
+    "deepseek-v4-1-flash-1017": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+      "name": "DeepSeek V4.1 Flash 1017",
+      "entwickler": "DeepSeek",
+      "context": 1048576,
+      "in": 0.2,
+      "out": 0.6,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+    },
+    "llama-3-3-nemotron-super-49b-v1-5": {
+      "anbieter": "DeepInfra",
+      "roh_id": "nvidia/Llama-3.3-Nemotron-Super-49B-v1.5",
+      "name": "Llama 3.3 Nemotron Super 49B v1.5",
+      "entwickler": "NVIDIA",
+      "context": 131072,
+      "in": 0.4,
+      "out": 0.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/nvidia/Llama-3.3-Nemotron-Super-49B-v1.5"
+    },
+    "minimax-m2": {
+      "anbieter": "DeepInfra",
+      "roh_id": "MiniMaxAI/MiniMax-M2",
+      "name": "MiniMax M2",
+      "entwickler": "minimaxai",
+      "context": 262144,
+      "in": 0.254,
+      "out": 1.02,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/MiniMaxAI/MiniMax-M2"
+    },
+    "qwen2-5-72b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen2.5-72B-Instruct",
+      "name": "Qwen2.5 72B Instruct",
+      "entwickler": "Qwen",
+      "context": 32768,
+      "in": 0.36,
+      "out": 0.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen2.5-72B-Instruct"
+    },
+    "claude-4-sonnet": {
+      "anbieter": "DeepInfra",
+      "roh_id": "anthropic/claude-4-sonnet",
+      "name": "claude 4 sonnet",
+      "entwickler": "Anthropic",
+      "context": 200000,
+      "in": 3.3,
+      "out": 16.5,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/anthropic/claude-4-sonnet"
+    },
+    "qwen3-32b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-32B",
+      "name": "Qwen3 32B",
+      "entwickler": "Qwen",
+      "context": 40960,
+      "in": 0.08,
+      "out": 0.28,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-32B"
+    },
+    "qwen3-max-thinking": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-Max-Thinking",
+      "name": "Qwen3 Max Thinking",
+      "entwickler": "Qwen",
+      "context": 256000,
+      "in": 1.2,
+      "out": 6.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-Max-Thinking"
+    },
+    "meta-llama-3-1-70b-instruct-turbo": {
+      "anbieter": "DeepInfra",
+      "roh_id": "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+      "name": "Meta Llama 3.1 70B Instruct Turbo",
+      "entwickler": "Meta",
+      "context": 131072,
+      "in": 0.4,
+      "out": 0.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
+    },
+    "glm-5-1": {
+      "anbieter": "DeepInfra",
+      "roh_id": "zai-org/GLM-5.1",
+      "name": "GLM 5.1",
+      "entwickler": "Z.ai",
+      "context": 202752,
+      "in": 1.05,
+      "out": 3.5,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/zai-org/GLM-5.1"
+    },
+    "deepseek-v4-1-flash": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-V4.1-Flash",
+      "name": "DeepSeek V4.1 Flash",
+      "entwickler": "DeepSeek",
+      "context": 1048576,
+      "in": 0.2,
+      "out": 0.6,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    "nvidia-nemotron-3-5-super-vl": {
+      "anbieter": "DeepInfra",
+      "roh_id": "nvidia/NVIDIA-Nemotron-3.5-Super-VL",
+      "name": "NVIDIA Nemotron 3.5 Super VL",
+      "entwickler": "NVIDIA",
+      "context": 262144,
+      "in": 0.15,
+      "out": 0.5,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/nvidia/NVIDIA-Nemotron-3.5-Super-VL"
+    },
+    "qwen2-5-coder-7b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen2.5-Coder-7B",
+      "name": "Qwen2.5 Coder 7B",
+      "entwickler": "Qwen",
+      "context": 32768,
+      "in": 0.025,
+      "out": 0.05,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen2.5-Coder-7B"
+    },
+    "qwen3-vl-8b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-VL-8B-Instruct",
+      "name": "Qwen3 VL 8B Instruct",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.18,
+      "out": 0.69,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-VL-8B-Instruct"
+    },
+    "ling-3-0-flash": {
+      "anbieter": "DeepInfra",
+      "roh_id": "inclusionAI/Ling-3.0-flash",
+      "name": "Ling 3.0 flash",
+      "entwickler": "inclusionAI",
+      "context": 131072,
+      "in": 0.06,
+      "out": 0.18,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/inclusionAI/Ling-3.0-flash"
+    },
+    "qwen3-8-2-4t-a95b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3.8-2.4T-A95B",
+      "name": "Qwen3.8 2.4T A95B",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 2.0,
+      "out": 6.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3.8-2.4T-A95B"
+    },
+    "nemotron-3-nano-omni-30b-a3b-reasoning": {
+      "anbieter": "DeepInfra",
+      "roh_id": "nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning",
+      "name": "Nemotron 3 Nano Omni 30B A3B Reasoning",
+      "entwickler": "NVIDIA",
+      "context": 262144,
+      "in": 0.2,
+      "out": 0.8,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning"
+    },
+    "claude-opus-5-5": {
+      "anbieter": "DeepInfra",
+      "roh_id": "anthropic/claude-opus-5-5",
+      "name": "claude opus 5 5",
+      "entwickler": "Anthropic",
+      "context": 1000000,
+      "in": 4.0,
+      "out": 20.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/anthropic/claude-opus-5-5"
+    },
+    "qwen2-72b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen2-72B-Instruct",
+      "name": "Qwen2 72B Instruct",
+      "entwickler": "Qwen",
+      "context": 32768,
+      "in": 0.35,
+      "out": 0.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen2-72B-Instruct"
+    },
+    "llama-3-2-1b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "meta-llama/Llama-3.2-1B-Instruct",
+      "name": "Llama 3.2 1B Instruct",
+      "entwickler": "Meta",
+      "context": 131072,
+      "in": 0.005,
+      "out": 0.01,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/meta-llama/Llama-3.2-1B-Instruct"
+    },
+    "kimi-k2-5": {
+      "anbieter": "DeepInfra",
+      "roh_id": "moonshotai/Kimi-K2.5",
+      "name": "Kimi K2.5",
+      "entwickler": "Moonshot AI",
+      "context": 262144,
+      "in": 0.45,
+      "out": 2.25,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/moonshotai/Kimi-K2.5"
+    },
+    "inkling-2-small": {
+      "anbieter": "DeepInfra",
+      "roh_id": "thinkingmachines/Inkling-2-Small",
+      "name": "Inkling 2 Small",
+      "entwickler": "thinkingmachines",
+      "context": 1048576,
+      "in": 0.3,
+      "out": 1.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/thinkingmachines/Inkling-2-Small"
     },
     "mythomax-l2-13b": {
       "anbieter": "DeepInfra",
@@ -26566,31 +25019,70 @@ window.API_DATEN = {
       ],
       "url": "https://deepinfra.com/Gryphe/MythoMax-L2-13b"
     },
-    "qwen2-5-7b-instruct": {
+    "qwen3-vl-4b-instruct": {
       "anbieter": "DeepInfra",
-      "roh_id": "Qwen/Qwen2.5-7B-Instruct",
-      "name": "Qwen2.5 7B Instruct",
+      "roh_id": "Qwen/Qwen3-VL-4B-Instruct",
+      "name": "Qwen3 VL 4B Instruct",
       "entwickler": "Qwen",
-      "context": 32768,
-      "in": 0.04,
+      "context": 262144,
+      "in": 0.1,
+      "out": 0.6,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-VL-4B-Instruct"
+    },
+    "glm-4-7": {
+      "anbieter": "DeepInfra",
+      "roh_id": "zai-org/GLM-4.7",
+      "name": "GLM 4.7",
+      "entwickler": "Z.ai",
+      "context": 202752,
+      "in": 0.4,
+      "out": 1.75,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/zai-org/GLM-4.7"
+    },
+    "qwen3-5-2b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3.5-2B",
+      "name": "Qwen3.5 2B",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.02,
       "out": 0.1,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/Qwen/Qwen2.5-7B-Instruct"
+      "url": "https://deepinfra.com/Qwen/Qwen3.5-2B"
     },
-    "llama-4-scout-17b-16e-instruct": {
+    "qwen3-vl-30b-a3b-thinking": {
       "anbieter": "DeepInfra",
-      "roh_id": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
-      "name": "Llama 4 Scout 17B 16E Instruct",
-      "entwickler": "Meta",
-      "context": 327680,
-      "in": 0.1,
-      "out": 0.3,
+      "roh_id": "Qwen/Qwen3-VL-30B-A3B-Thinking",
+      "name": "Qwen3 VL 30B A3B Thinking",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.29,
+      "out": 0.99,
       "typ": [
         "text"
       ],
-      "url": "https://deepinfra.com/meta-llama/Llama-4-Scout-17B-16E-Instruct"
+      "url": "https://deepinfra.com/Qwen/Qwen3-VL-30B-A3B-Thinking"
+    },
+    "chronos-hermes-13b-v2": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Austism/chronos-hermes-13b-v2",
+      "name": "chronos hermes 13b v2",
+      "entwickler": "austism",
+      "context": 4096,
+      "in": 0.13,
+      "out": 0.13,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Austism/chronos-hermes-13b-v2"
     },
     "llama-2-70b-chat-hf": {
       "anbieter": "DeepInfra",
@@ -26604,6 +25096,1501 @@ window.API_DATEN = {
         "text"
       ],
       "url": "https://deepinfra.com/meta-llama/Llama-2-70b-chat-hf"
+    },
+    "claude-opus-4-7": {
+      "anbieter": "DeepInfra",
+      "roh_id": "anthropic/claude-opus-4-7",
+      "name": "claude opus 4 7",
+      "entwickler": "Anthropic",
+      "context": 1000000,
+      "in": 5.0,
+      "out": 25.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/anthropic/claude-opus-4-7"
+    },
+    "l3-3-70b-euryale-v2-3": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Sao10K/L3.3-70B-Euryale-v2.3",
+      "name": "L3.3 70B Euryale v2.3",
+      "entwickler": "sao10k",
+      "context": 131072,
+      "in": 0.85,
+      "out": 0.85,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Sao10K/L3.3-70B-Euryale-v2.3"
+    },
+    "qwen3-30b-a3b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-30B-A3B",
+      "name": "Qwen3 30B A3B",
+      "entwickler": "Qwen",
+      "context": 40960,
+      "in": 0.12,
+      "out": 0.5,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-30B-A3B"
+    },
+    "mimo-v2-6-pro": {
+      "anbieter": "DeepInfra",
+      "roh_id": "XiaomiMiMo/MiMo-V2.6-Pro",
+      "name": "MiMo V2.6 Pro",
+      "entwickler": "xiaomimimo",
+      "context": 1048576,
+      "in": 0.43,
+      "out": 0.87,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/XiaomiMiMo/MiMo-V2.6-Pro"
+    },
+    "seed-1-8": {
+      "anbieter": "DeepInfra",
+      "roh_id": "ByteDance/Seed-1.8",
+      "name": "Seed 1.8",
+      "entwickler": "bytedance",
+      "context": 256000,
+      "in": 0.25,
+      "out": 2.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/ByteDance/Seed-1.8"
+    },
+    "llama-2-13b-chat-hf": {
+      "anbieter": "DeepInfra",
+      "roh_id": "meta-llama/Llama-2-13b-chat-hf",
+      "name": "Llama 2 13b chat hf",
+      "entwickler": "Meta",
+      "context": 4096,
+      "in": 0.13,
+      "out": 0.13,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/meta-llama/Llama-2-13b-chat-hf"
+    },
+    "kimi-k2-7-code": {
+      "anbieter": "DeepInfra",
+      "roh_id": "moonshotai/Kimi-K2.7-Code",
+      "name": "Kimi K2.7 Code",
+      "entwickler": "Moonshot AI",
+      "context": 262144,
+      "in": 0.68,
+      "out": 3.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/moonshotai/Kimi-K2.7-Code"
+    },
+    "gemma-3-27b-it": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemma-3-27b-it",
+      "name": "gemma 3 27b it",
+      "entwickler": "Google",
+      "context": 131072,
+      "in": 0.08,
+      "out": 0.16,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/google/gemma-3-27b-it"
+    },
+    "olmocr-7b-0725-fp8": {
+      "anbieter": "DeepInfra",
+      "roh_id": "allenai/olmOCR-7B-0725-FP8",
+      "name": "olmOCR 7B 0725 FP8",
+      "entwickler": "allenai",
+      "context": 16384,
+      "in": 0.27,
+      "out": 1.5,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/allenai/olmOCR-7B-0725-FP8"
+    },
+    "claude-opus-4-8": {
+      "anbieter": "DeepInfra",
+      "roh_id": "anthropic/claude-opus-4-8",
+      "name": "claude opus 4 8",
+      "entwickler": "Anthropic",
+      "context": 1000000,
+      "in": 5.0,
+      "out": 25.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/anthropic/claude-opus-4-8"
+    },
+    "devstral-small-2505": {
+      "anbieter": "DeepInfra",
+      "roh_id": "mistralai/Devstral-Small-2505",
+      "name": "Devstral Small 2505",
+      "entwickler": "Mistral",
+      "context": 128000,
+      "in": 0.06,
+      "out": 0.12,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/mistralai/Devstral-Small-2505"
+    },
+    "glm-5": {
+      "anbieter": "DeepInfra",
+      "roh_id": "zai-org/GLM-5",
+      "name": "GLM 5",
+      "entwickler": "Z.ai",
+      "context": 202752,
+      "in": 0.6,
+      "out": 2.08,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/zai-org/GLM-5"
+    },
+    "openchat-3-5": {
+      "anbieter": "DeepInfra",
+      "roh_id": "openchat/openchat_3.5",
+      "name": "openchat_3.5",
+      "entwickler": "openchat",
+      "context": 8192,
+      "in": 0.055,
+      "out": 0.055,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/openchat/openchat_3.5"
+    },
+    "phi-4-multimodal-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "microsoft/Phi-4-multimodal-instruct",
+      "name": "Phi 4 multimodal instruct",
+      "entwickler": "Microsoft",
+      "context": 131072,
+      "in": 0.05,
+      "out": 0.1,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/microsoft/Phi-4-multimodal-instruct"
+    },
+    "qwen3-vl-4b-thinking": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-VL-4B-Thinking",
+      "name": "Qwen3 VL 4B Thinking",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.1,
+      "out": 1.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-VL-4B-Thinking"
+    },
+    "deepseek-prover-v2-671b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-Prover-V2-671B",
+      "name": "DeepSeek Prover V2 671B",
+      "entwickler": "DeepSeek",
+      "context": 163840,
+      "in": 0.5,
+      "out": 2.18,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-Prover-V2-671B"
+    },
+    "deepseek-v4-flash": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-V4-Flash",
+      "name": "DeepSeek V4 Flash",
+      "entwickler": "DeepSeek",
+      "context": 1048576,
+      "in": 0.09,
+      "out": 0.18,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V4-Flash"
+    },
+    "qwen3-5-4b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3.5-4B",
+      "name": "Qwen3.5 4B",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.03,
+      "out": 0.15,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3.5-4B"
+    },
+    "inkling-small": {
+      "anbieter": "DeepInfra",
+      "roh_id": "thinkingmachines/Inkling-Small",
+      "name": "Inkling Small",
+      "entwickler": "thinkingmachines",
+      "context": 524288,
+      "in": 0.45,
+      "out": 1.2,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/thinkingmachines/Inkling-Small"
+    },
+    "claude-3-7-sonnet-latest": {
+      "anbieter": "DeepInfra",
+      "roh_id": "anthropic/claude-3-7-sonnet-latest",
+      "name": "claude 3 7 sonnet latest",
+      "entwickler": "Anthropic",
+      "context": 200000,
+      "in": 3.3,
+      "out": 16.5,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/anthropic/claude-3-7-sonnet-latest"
+    },
+    "qwen3-coder-480b-a35b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-Coder-480B-A35B-Instruct",
+      "name": "Qwen3 Coder 480B A35B Instruct",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.4,
+      "out": 1.6,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-Coder-480B-A35B-Instruct"
+    },
+    "kimi-k2-6": {
+      "anbieter": "DeepInfra",
+      "roh_id": "moonshotai/Kimi-K2.6",
+      "name": "Kimi K2.6",
+      "entwickler": "Moonshot AI",
+      "context": 262144,
+      "in": 0.75,
+      "out": 3.5,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/moonshotai/Kimi-K2.6"
+    },
+    "deepseek-v4-pro-0813": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-V4-Pro-0813",
+      "name": "DeepSeek V4 Pro 0813",
+      "entwickler": "DeepSeek",
+      "context": 1048576,
+      "in": 1.3,
+      "out": 2.6,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V4-Pro-0813"
+    },
+    "glm-5-3-flash": {
+      "anbieter": "DeepInfra",
+      "roh_id": "zai-org/GLM-5.3-Flash",
+      "name": "GLM 5.3 Flash",
+      "entwickler": "Z.ai",
+      "context": 1048576,
+      "in": 0.15,
+      "out": 0.5,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/zai-org/GLM-5.3-Flash"
+    },
+    "minimax-m2-1": {
+      "anbieter": "DeepInfra",
+      "roh_id": "MiniMaxAI/MiniMax-M2.1",
+      "name": "MiniMax M2.1",
+      "entwickler": "minimaxai",
+      "context": 196608,
+      "in": 0.27,
+      "out": 0.95,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/MiniMaxAI/MiniMax-M2.1"
+    },
+    "olmocr-7b-0825": {
+      "anbieter": "DeepInfra",
+      "roh_id": "allenai/olmOCR-7B-0825",
+      "name": "olmOCR 7B 0825",
+      "entwickler": "allenai",
+      "context": 16384,
+      "in": 0.14,
+      "out": 0.8,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/allenai/olmOCR-7B-0825"
+    },
+    "nvidia-nemotron-3-5-lightning": {
+      "anbieter": "DeepInfra",
+      "roh_id": "nvidia/NVIDIA-Nemotron-3.5-Lightning",
+      "name": "NVIDIA Nemotron 3.5 Lightning",
+      "entwickler": "NVIDIA",
+      "context": 262144,
+      "in": 0.06,
+      "out": 0.16,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/nvidia/NVIDIA-Nemotron-3.5-Lightning"
+    },
+    "deepseek-v3-2-exp": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-V3.2-Exp",
+      "name": "DeepSeek V3.2 Exp",
+      "entwickler": "DeepSeek",
+      "context": 163840,
+      "in": 0.21,
+      "out": 0.32,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V3.2-Exp"
+    },
+    "nemotron-content-safety-3-5": {
+      "anbieter": "DeepInfra",
+      "roh_id": "nvidia/Nemotron-Content-Safety-3.5",
+      "name": "Nemotron Content Safety 3.5",
+      "entwickler": "NVIDIA",
+      "context": 131072,
+      "in": 0.2,
+      "out": 0.2,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/nvidia/Nemotron-Content-Safety-3.5"
+    },
+    "qwen3-vl-235b-a22b-thinking": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-VL-235B-A22B-Thinking",
+      "name": "Qwen3 VL 235B A22B Thinking",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.45,
+      "out": 3.49,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-VL-235B-A22B-Thinking"
+    },
+    "gemini-2-5-pro": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemini-2.5-pro",
+      "name": "gemini 2.5 pro",
+      "entwickler": "Google",
+      "context": 1000000,
+      "in": 1.25,
+      "out": 10.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/google/gemini-2.5-pro"
+    },
+    "qwen4-max": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen4-Max",
+      "name": "Qwen4 Max",
+      "entwickler": "Qwen",
+      "context": 1000000,
+      "in": 1.413,
+      "out": 4.24,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen4-Max"
+    },
+    "deepseek-r1-distill-qwen-32b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+      "name": "DeepSeek R1 Distill Qwen 32B",
+      "entwickler": "DeepSeek",
+      "context": 131072,
+      "in": 0.27,
+      "out": 0.27,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-R1-Distill-Qwen-32B"
+    },
+    "mistral-small-24b-instruct-2501": {
+      "anbieter": "DeepInfra",
+      "roh_id": "mistralai/Mistral-Small-24B-Instruct-2501",
+      "name": "Mistral Small 24B Instruct 2501",
+      "entwickler": "Mistral",
+      "context": 32768,
+      "in": 0.05,
+      "out": 0.08,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/mistralai/Mistral-Small-24B-Instruct-2501"
+    },
+    "qwen3-5-27b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3.5-27B",
+      "name": "Qwen3.5 27B",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.26,
+      "out": 2.6,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3.5-27B"
+    },
+    "deepseek-v4-pro": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-V4-Pro",
+      "name": "DeepSeek V4 Pro",
+      "entwickler": "DeepSeek",
+      "context": 1048576,
+      "in": 1.3,
+      "out": 2.6,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V4-Pro"
+    },
+    "qwen2-5-coder-32b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "name": "Qwen2.5 Coder 32B Instruct",
+      "entwickler": "Qwen",
+      "context": 32768,
+      "in": 0.06,
+      "out": 0.15,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen2.5-Coder-32B-Instruct"
+    },
+    "qwen3-5-0-8b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3.5-0.8B",
+      "name": "Qwen3.5 0.8B",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.01,
+      "out": 0.05,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3.5-0.8B"
+    },
+    "minimax-m2-5": {
+      "anbieter": "DeepInfra",
+      "roh_id": "MiniMaxAI/MiniMax-M2.5",
+      "name": "MiniMax M2.5",
+      "entwickler": "minimaxai",
+      "context": 196608,
+      "in": 0.15,
+      "out": 1.15,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/MiniMaxAI/MiniMax-M2.5"
+    },
+    "deepseek-r1": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-R1",
+      "name": "DeepSeek R1",
+      "entwickler": "DeepSeek",
+      "context": 163840,
+      "in": 0.7,
+      "out": 2.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-R1"
+    },
+    "gemma-3-12b-it": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemma-3-12b-it",
+      "name": "gemma 3 12b it",
+      "entwickler": "Google",
+      "context": 131072,
+      "in": 0.05,
+      "out": 0.15,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/google/gemma-3-12b-it"
+    },
+    "qwen3-5-35b-a3b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3.5-35B-A3B",
+      "name": "Qwen3.5 35B A3B",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.14,
+      "out": 1.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3.5-35B-A3B"
+    },
+    "qwen3-14b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-14B",
+      "name": "Qwen3 14B",
+      "entwickler": "Qwen",
+      "context": 40960,
+      "in": 0.12,
+      "out": 0.24,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-14B"
+    },
+    "qwen3-6-35b-a3b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3.6-35B-A3B",
+      "name": "Qwen3.6 35B A3B",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.1,
+      "out": 0.95,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3.6-35B-A3B"
+    },
+    "llama-guard-3-8b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "meta-llama/Llama-Guard-3-8B",
+      "name": "Llama Guard 3 8B",
+      "entwickler": "Meta",
+      "context": 131072,
+      "in": 0.055,
+      "out": 0.055,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/meta-llama/Llama-Guard-3-8B"
+    },
+    "qwen3-6-27b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3.6-27B",
+      "name": "Qwen3.6 27B",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.32,
+      "out": 3.2,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3.6-27B"
+    },
+    "phi-3-medium-4k-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "microsoft/Phi-3-medium-4k-instruct",
+      "name": "Phi 3 medium 4k instruct",
+      "entwickler": "Microsoft",
+      "context": 4096,
+      "in": 0.14,
+      "out": 0.14,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/microsoft/Phi-3-medium-4k-instruct"
+    },
+    "claude-sonnet-4-6": {
+      "anbieter": "DeepInfra",
+      "roh_id": "anthropic/claude-sonnet-4-6",
+      "name": "claude sonnet 4 6",
+      "entwickler": "Anthropic",
+      "context": 1000000,
+      "in": 3.0,
+      "out": 15.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/anthropic/claude-sonnet-4-6"
+    },
+    "minimax-m2-7-turbo": {
+      "anbieter": "DeepInfra",
+      "roh_id": "MiniMaxAI/MiniMax-M2.7-Turbo",
+      "name": "MiniMax M2.7 Turbo",
+      "entwickler": "minimaxai",
+      "context": 196608,
+      "in": 0.38,
+      "out": 1.7,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/MiniMaxAI/MiniMax-M2.7-Turbo"
+    },
+    "gemma-4-31b-it-ultra": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemma-4-31B-it-Ultra",
+      "name": "gemma 4 31B it Ultra",
+      "entwickler": "Google",
+      "context": 131072,
+      "in": 0.27,
+      "out": 0.76,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/google/gemma-4-31B-it-Ultra"
+    },
+    "kimi-k2-5-turbo": {
+      "anbieter": "DeepInfra",
+      "roh_id": "moonshotai/Kimi-K2.5-Turbo",
+      "name": "Kimi K2.5 Turbo",
+      "entwickler": "Moonshot AI",
+      "context": 262144,
+      "in": 0.6,
+      "out": 3.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/moonshotai/Kimi-K2.5-Turbo"
+    },
+    "l3-1-70b-euryale-v2-2": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Sao10K/L3.1-70B-Euryale-v2.2",
+      "name": "L3.1 70B Euryale v2.2",
+      "entwickler": "sao10k",
+      "context": 131072,
+      "in": 0.85,
+      "out": 0.85,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Sao10K/L3.1-70B-Euryale-v2.2"
+    },
+    "llama-guard-4-12b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "meta-llama/Llama-Guard-4-12B",
+      "name": "Llama Guard 4 12B",
+      "entwickler": "Meta",
+      "context": 163840,
+      "in": 0.18,
+      "out": 0.18,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/meta-llama/Llama-Guard-4-12B"
+    },
+    "deepseek-v3-1-terminus": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-V3.1-Terminus",
+      "name": "DeepSeek V3.1 Terminus",
+      "entwickler": "DeepSeek",
+      "context": 163840,
+      "in": 0.27,
+      "out": 0.95,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V3.1-Terminus"
+    },
+    "gemma-4-31b-it-turbo": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemma-4-31B-it-turbo",
+      "name": "gemma 4 31B it turbo",
+      "entwickler": "Google",
+      "context": 262144,
+      "in": 0.09,
+      "out": 0.34,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/google/gemma-4-31B-it-turbo"
+    },
+    "gpt-oss-120b-turbo": {
+      "anbieter": "DeepInfra",
+      "roh_id": "openai/gpt-oss-120b-Turbo",
+      "name": "gpt oss 120b Turbo",
+      "entwickler": "OpenAI",
+      "context": 131072,
+      "in": 0.15,
+      "out": 0.6,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/openai/gpt-oss-120b-Turbo"
+    },
+    "olmocr-7b-1025": {
+      "anbieter": "DeepInfra",
+      "roh_id": "allenai/olmOCR-7B-1025",
+      "name": "olmOCR 7B 1025",
+      "entwickler": "allenai",
+      "context": 16384,
+      "in": 0.14,
+      "out": 0.8,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/allenai/olmOCR-7B-1025"
+    },
+    "gpt-oss-120b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "openai/gpt-oss-120b",
+      "name": "gpt oss 120b",
+      "entwickler": "OpenAI",
+      "context": 131072,
+      "in": 0.037,
+      "out": 0.17,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/openai/gpt-oss-120b"
+    },
+    "granite-4-2-3b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "ibm-granite/granite-4.2-3b",
+      "name": "granite 4.2 3b",
+      "entwickler": "ibm-granite",
+      "context": 131072,
+      "in": 0.03,
+      "out": 0.12,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/ibm-granite/granite-4.2-3b"
+    },
+    "airoboros-70b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepinfra/airoboros-70b",
+      "name": "airoboros 70b",
+      "entwickler": "deepinfra",
+      "context": 4096,
+      "in": 0.7,
+      "out": 0.9,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepinfra/airoboros-70b"
+    },
+    "claude-sonnet-5-5": {
+      "anbieter": "DeepInfra",
+      "roh_id": "anthropic/claude-sonnet-5-5",
+      "name": "claude sonnet 5 5",
+      "entwickler": "Anthropic",
+      "context": 1000000,
+      "in": 2.0,
+      "out": 10.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/anthropic/claude-sonnet-5-5"
+    },
+    "qwen3-vl-8b-thinking": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-VL-8B-Thinking",
+      "name": "Qwen3 VL 8B Thinking",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.18,
+      "out": 2.09,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-VL-8B-Thinking"
+    },
+    "hy4": {
+      "anbieter": "DeepInfra",
+      "roh_id": "tencent/Hy4",
+      "name": "Hy4",
+      "entwickler": "Tencent",
+      "context": 1048576,
+      "in": 0.834,
+      "out": 2.501,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/tencent/Hy4"
+    },
+    "meta-llama-3-8b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "meta-llama/Meta-Llama-3-8B-Instruct",
+      "name": "Meta Llama 3 8B Instruct",
+      "entwickler": "Meta",
+      "context": 8192,
+      "in": 0.03,
+      "out": 0.04,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/meta-llama/Meta-Llama-3-8B-Instruct"
+    },
+    "qwen3-vl-235b-a22b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-VL-235B-A22B-Instruct",
+      "name": "Qwen3 VL 235B A22B Instruct",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.2,
+      "out": 0.88,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-VL-235B-A22B-Instruct"
+    },
+    "meta-llama-3-1-405b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "meta-llama/Meta-Llama-3.1-405B-Instruct",
+      "name": "Meta Llama 3.1 405B Instruct",
+      "entwickler": "Meta",
+      "context": 32768,
+      "in": 0.8,
+      "out": 0.8,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/meta-llama/Meta-Llama-3.1-405B-Instruct"
+    },
+    "llama-3-3-70b-instruct-turbo": {
+      "anbieter": "DeepInfra",
+      "roh_id": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+      "name": "Llama 3.3 70B Instruct Turbo",
+      "entwickler": "Meta",
+      "context": 131072,
+      "in": 0.1,
+      "out": 0.32,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/meta-llama/Llama-3.3-70B-Instruct-Turbo"
+    },
+    "gemini-3-1-flash-lite": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemini-3.1-flash-lite",
+      "name": "gemini 3.1 flash lite",
+      "entwickler": "Google",
+      "context": 1000000,
+      "in": 0.25,
+      "out": 1.5,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/google/gemini-3.1-flash-lite"
+    },
+    "qwen3-coder-30b-a3b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+      "name": "Qwen3 Coder 30B A3B Instruct",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.07,
+      "out": 0.26,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-Coder-30B-A3B-Instruct"
+    },
+    "deepseek-r1-0528-turbo": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-R1-0528-Turbo",
+      "name": "DeepSeek R1 0528 Turbo",
+      "entwickler": "DeepSeek",
+      "context": 32768,
+      "in": 1.0,
+      "out": 3.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-R1-0528-Turbo"
+    },
+    "ling-3-1-flash": {
+      "anbieter": "DeepInfra",
+      "roh_id": "inclusionAI/Ling-3.1-flash",
+      "name": "Ling 3.1 flash",
+      "entwickler": "inclusionAI",
+      "context": 262144,
+      "in": 0.3,
+      "out": 0.9,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/inclusionAI/Ling-3.1-flash"
+    },
+    "mistral-small-3-1-24b-instruct-2503": {
+      "anbieter": "DeepInfra",
+      "roh_id": "mistralai/Mistral-Small-3.1-24B-Instruct-2503",
+      "name": "Mistral Small 3.1 24B Instruct 2503",
+      "entwickler": "Mistral",
+      "context": 128000,
+      "in": 0.05,
+      "out": 0.1,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/mistralai/Mistral-Small-3.1-24B-Instruct-2503"
+    },
+    "mistral-nemo-instruct-2407": {
+      "anbieter": "DeepInfra",
+      "roh_id": "mistralai/Mistral-Nemo-Instruct-2407",
+      "name": "Mistral Nemo Instruct 2407",
+      "entwickler": "Mistral",
+      "context": 131072,
+      "in": 0.029,
+      "out": 0.03,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/mistralai/Mistral-Nemo-Instruct-2407"
+    },
+    "olmocr-2": {
+      "anbieter": "DeepInfra",
+      "roh_id": "allenai/olmOCR-2",
+      "name": "olmOCR 2",
+      "entwickler": "allenai",
+      "context": 16384,
+      "in": 0.14,
+      "out": 0.8,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/allenai/olmOCR-2"
+    },
+    "qwen3-5-122b-a10b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3.5-122B-A10B",
+      "name": "Qwen3.5 122B A10B",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.29,
+      "out": 2.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3.5-122B-A10B"
+    },
+    "minicpm-llama3-v-2-5": {
+      "anbieter": "DeepInfra",
+      "roh_id": "openbmb/MiniCPM-Llama3-V-2_5",
+      "name": "MiniCPM Llama3 V 2_5",
+      "entwickler": "openbmb",
+      "context": 8192,
+      "in": 0.34,
+      "out": 0.34,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/openbmb/MiniCPM-Llama3-V-2_5"
+    },
+    "claude-4-opus": {
+      "anbieter": "DeepInfra",
+      "roh_id": "anthropic/claude-4-opus",
+      "name": "claude 4 opus",
+      "entwickler": "Anthropic",
+      "context": 200000,
+      "in": 16.5,
+      "out": 82.5,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/anthropic/claude-4-opus"
+    },
+    "mistral-small-3-2-24b-instruct-2506": {
+      "anbieter": "DeepInfra",
+      "roh_id": "mistralai/Mistral-Small-3.2-24B-Instruct-2506",
+      "name": "Mistral Small 3.2 24B Instruct 2506",
+      "entwickler": "Mistral",
+      "context": 128000,
+      "in": 0.075,
+      "out": 0.2,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/mistralai/Mistral-Small-3.2-24B-Instruct-2506"
+    },
+    "deepseek-v4-flash-vision-exp": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-V4-Flash-Vision-Exp",
+      "name": "DeepSeek V4 Flash Vision Exp",
+      "entwickler": "DeepSeek",
+      "context": 1048576,
+      "in": 0.44,
+      "out": 1.32,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
+    },
+    "gemini-3-7-flash": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemini-3.7-flash",
+      "name": "gemini 3.7 flash",
+      "entwickler": "Google",
+      "context": 1000000,
+      "in": 0.75,
+      "out": 3.75,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/google/gemini-3.7-flash"
+    },
+    "qwen3-7-max": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3.7-Max",
+      "name": "Qwen3.7 Max",
+      "entwickler": "Qwen",
+      "context": 256000,
+      "in": 2.5,
+      "out": 7.5,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3.7-Max"
+    },
+    "nvidia-nemotron-nano-12b-v2-vl": {
+      "anbieter": "DeepInfra",
+      "roh_id": "nvidia/NVIDIA-Nemotron-Nano-12B-v2-VL",
+      "name": "NVIDIA Nemotron Nano 12B v2 VL",
+      "entwickler": "NVIDIA",
+      "context": 131072,
+      "in": 0.2,
+      "out": 0.6,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/nvidia/NVIDIA-Nemotron-Nano-12B-v2-VL"
+    },
+    "mythomax-l2-13b-turbo": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Gryphe/MythoMax-L2-13b-turbo",
+      "name": "MythoMax L2 13b turbo",
+      "entwickler": "gryphe",
+      "context": 4096,
+      "in": 0.13,
+      "out": 0.13,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Gryphe/MythoMax-L2-13b-turbo"
+    },
+    "mixtral-8x22b-instruct-v0-1": {
+      "anbieter": "DeepInfra",
+      "roh_id": "mistralai/Mixtral-8x22B-Instruct-v0.1",
+      "name": "Mixtral 8x22B Instruct v0.1",
+      "entwickler": "Mistral",
+      "context": 65536,
+      "in": 0.65,
+      "out": 0.65,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/mistralai/Mixtral-8x22B-Instruct-v0.1"
+    },
+    "deepseek-v4-flash-0731": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "name": "DeepSeek V4 Flash 0731",
+      "entwickler": "DeepSeek",
+      "context": 1048576,
+      "in": 0.06,
+      "out": 0.18,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V4-Flash-0731"
+    },
+    "qwen3-max": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-Max",
+      "name": "Qwen3 Max",
+      "entwickler": "Qwen",
+      "context": 256000,
+      "in": 1.2,
+      "out": 6.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-Max"
+    },
+    "wizardlm-2-8x22b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "microsoft/WizardLM-2-8x22B",
+      "name": "WizardLM 2 8x22B",
+      "entwickler": "Microsoft",
+      "context": 65536,
+      "in": 0.48,
+      "out": 0.48,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/microsoft/WizardLM-2-8x22B"
+    },
+    "lzlv-70b-fp16-hf": {
+      "anbieter": "DeepInfra",
+      "roh_id": "lizpreciatior/lzlv_70b_fp16_hf",
+      "name": "lzlv_70b_fp16_hf",
+      "entwickler": "lizpreciatior",
+      "context": 4096,
+      "in": 0.35,
+      "out": 0.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/lizpreciatior/lzlv_70b_fp16_hf"
+    },
+    "muse-glimmer-30b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "meta-models/Muse-Glimmer-30B",
+      "name": "Muse Glimmer 30B",
+      "entwickler": "meta-models",
+      "context": 131072,
+      "in": 0.3,
+      "out": 1.2,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/meta-models/Muse-Glimmer-30B"
+    },
+    "gemma-4-31b-it": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemma-4-31B-it",
+      "name": "gemma 4 31B it",
+      "entwickler": "Google",
+      "context": 262144,
+      "in": 0.2,
+      "out": 0.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/google/gemma-4-31B-it"
+    },
+    "step-3-5-flash": {
+      "anbieter": "DeepInfra",
+      "roh_id": "stepfun-ai/Step-3.5-Flash",
+      "name": "Step 3.5 Flash",
+      "entwickler": "stepfun-ai",
+      "context": 262144,
+      "in": 0.09,
+      "out": 0.3,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/stepfun-ai/Step-3.5-Flash"
+    },
+    "glm-4-7-flash": {
+      "anbieter": "DeepInfra",
+      "roh_id": "zai-org/GLM-4.7-Flash",
+      "name": "GLM 4.7 Flash",
+      "entwickler": "Z.ai",
+      "context": 202752,
+      "in": 0.06,
+      "out": 0.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/zai-org/GLM-4.7-Flash"
+    },
+    "dolphin-2-9-1-llama-3-70b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "cognitivecomputations/dolphin-2.9.1-llama-3-70b",
+      "name": "dolphin 2.9.1 llama 3 70b",
+      "entwickler": "cognitivecomputations",
+      "context": 8192,
+      "in": 0.35,
+      "out": 0.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/cognitivecomputations/dolphin-2.9.1-llama-3-70b"
+    },
+    "deepseek-v3-2": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepseek-ai/DeepSeek-V3.2",
+      "name": "DeepSeek V3.2",
+      "entwickler": "DeepSeek",
+      "context": 163840,
+      "in": 0.26,
+      "out": 0.38,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepseek-ai/DeepSeek-V3.2"
+    },
+    "qwen2-5-vl-32b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen2.5-VL-32B-Instruct",
+      "name": "Qwen2.5 VL 32B Instruct",
+      "entwickler": "Qwen",
+      "context": 128000,
+      "in": 0.2,
+      "out": 0.6,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen2.5-VL-32B-Instruct"
+    },
+    "qwen2-7b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen2-7B-Instruct",
+      "name": "Qwen2 7B Instruct",
+      "entwickler": "Qwen",
+      "context": 32768,
+      "in": 0.055,
+      "out": 0.055,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen2-7B-Instruct"
+    },
+    "nemotron-4-340b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "nvidia/Nemotron-4-340B-Instruct",
+      "name": "Nemotron 4 340B Instruct",
+      "entwickler": "NVIDIA",
+      "context": 4096,
+      "in": 4.2,
+      "out": 4.2,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/nvidia/Nemotron-4-340B-Instruct"
+    },
+    "kimi-k3-1-pro": {
+      "anbieter": "DeepInfra",
+      "roh_id": "moonshotai/Kimi-K3.1-Pro",
+      "name": "Kimi K3.1 Pro",
+      "entwickler": "Moonshot AI",
+      "context": 1048576,
+      "in": 2.0,
+      "out": 10.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/moonshotai/Kimi-K3.1-Pro"
+    },
+    "meta-llama-3-70b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "meta-llama/Meta-Llama-3-70B-Instruct",
+      "name": "Meta Llama 3 70B Instruct",
+      "entwickler": "Meta",
+      "context": 8192,
+      "in": 0.3,
+      "out": 0.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/meta-llama/Meta-Llama-3-70B-Instruct"
+    },
+    "mistral-7b-instruct-v0-3": {
+      "anbieter": "DeepInfra",
+      "roh_id": "mistralai/Mistral-7B-Instruct-v0.3",
+      "name": "Mistral 7B Instruct v0.3",
+      "entwickler": "Mistral",
+      "context": 32768,
+      "in": 0.028,
+      "out": 0.054,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/mistralai/Mistral-7B-Instruct-v0.3"
+    },
+    "gemma-2-9b-it": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemma-2-9b-it",
+      "name": "gemma 2 9b it",
+      "entwickler": "Google",
+      "context": 8192,
+      "in": 0.03,
+      "out": 0.06,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/google/gemma-2-9b-it"
+    },
+    "ornith-1-0-35b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "deepreinforce-ai/Ornith-1.0-35B",
+      "name": "Ornith 1.0 35B",
+      "entwickler": "deepreinforce-ai",
+      "context": 262144,
+      "in": 0.1,
+      "out": 0.75,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/deepreinforce-ai/Ornith-1.0-35B"
+    },
+    "hermes-3-llama-3-1-70b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "NousResearch/Hermes-3-Llama-3.1-70B",
+      "name": "Hermes 3 Llama 3.1 70B",
+      "entwickler": "nousresearch",
+      "context": 131072,
+      "in": 0.7,
+      "out": 0.7,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/NousResearch/Hermes-3-Llama-3.1-70B"
+    },
+    "phi-4-reasoning-plus": {
+      "anbieter": "DeepInfra",
+      "roh_id": "microsoft/phi-4-reasoning-plus",
+      "name": "phi 4 reasoning plus",
+      "entwickler": "Microsoft",
+      "context": 32768,
+      "in": 0.07,
+      "out": 0.35,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/microsoft/phi-4-reasoning-plus"
+    },
+    "gemini-3-5-flash": {
+      "anbieter": "DeepInfra",
+      "roh_id": "google/gemini-3.5-flash",
+      "name": "gemini 3.5 flash",
+      "entwickler": "Google",
+      "context": 1000000,
+      "in": 1.5,
+      "out": 9.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/google/gemini-3.5-flash"
+    },
+    "step-5-preview": {
+      "anbieter": "DeepInfra",
+      "roh_id": "stepfun-ai/Step-5-Preview",
+      "name": "Step 5 Preview",
+      "entwickler": "stepfun-ai",
+      "context": 1048576,
+      "in": 1.0,
+      "out": 2.7,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/stepfun-ai/Step-5-Preview"
+    },
+    "qwen3-5-397b-a17b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3.5-397B-A17B",
+      "name": "Qwen3.5 397B A17B",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.45,
+      "out": 3.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3.5-397B-A17B"
+    },
+    "mixtral-8x7b-instruct-v0-1": {
+      "anbieter": "DeepInfra",
+      "roh_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+      "name": "Mixtral 8x7B Instruct v0.1",
+      "entwickler": "Mistral",
+      "context": 32768,
+      "in": 0.54,
+      "out": 0.54,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/mistralai/Mixtral-8x7B-Instruct-v0.1"
+    },
+    "mimo-v2-5": {
+      "anbieter": "DeepInfra",
+      "roh_id": "XiaomiMiMo/MiMo-V2.5",
+      "name": "MiMo V2.5",
+      "entwickler": "xiaomimimo",
+      "context": 262144,
+      "in": 0.14,
+      "out": 0.28,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/XiaomiMiMo/MiMo-V2.5"
+    },
+    "meta-llama-3-1-70b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+      "name": "Meta Llama 3.1 70B Instruct",
+      "entwickler": "Meta",
+      "context": 131072,
+      "in": 0.4,
+      "out": 0.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/meta-llama/Meta-Llama-3.1-70B-Instruct"
+    },
+    "olmo-3-1-32b-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "allenai/Olmo-3.1-32B-Instruct",
+      "name": "Olmo 3.1 32B Instruct",
+      "entwickler": "allenai",
+      "context": 65536,
+      "in": 0.2,
+      "out": 0.6,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/allenai/Olmo-3.1-32B-Instruct"
+    },
+    "kimi-k2-instruct": {
+      "anbieter": "DeepInfra",
+      "roh_id": "moonshotai/Kimi-K2-Instruct",
+      "name": "Kimi K2 Instruct",
+      "entwickler": "Moonshot AI",
+      "context": 131072,
+      "in": 0.5,
+      "out": 2.0,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/moonshotai/Kimi-K2-Instruct"
+    },
+    "seed-2-0-mini": {
+      "anbieter": "DeepInfra",
+      "roh_id": "ByteDance/Seed-2.0-mini",
+      "name": "Seed 2.0 mini",
+      "entwickler": "bytedance",
+      "context": 256000,
+      "in": 0.1,
+      "out": 0.4,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/ByteDance/Seed-2.0-mini"
+    },
+    "granite-4-2-30b": {
+      "anbieter": "DeepInfra",
+      "roh_id": "ibm-granite/granite-4.2-30b",
+      "name": "granite 4.2 30b",
+      "entwickler": "ibm-granite",
+      "context": 131072,
+      "in": 0.16,
+      "out": 0.65,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/ibm-granite/granite-4.2-30b"
+    },
+    "qwen3-235b-a22b-instruct-2507": {
+      "anbieter": "DeepInfra",
+      "roh_id": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+      "name": "Qwen3 235B A22B Instruct 2507",
+      "entwickler": "Qwen",
+      "context": 262144,
+      "in": 0.09,
+      "out": 0.55,
+      "typ": [
+        "text"
+      ],
+      "url": "https://deepinfra.com/Qwen/Qwen3-235B-A22B-Instruct-2507"
     }
   },
   "novita": {
