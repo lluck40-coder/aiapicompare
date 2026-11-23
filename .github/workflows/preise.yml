@@ -13,6 +13,7 @@ permissions:
   contents: write              # Preisdaten zurück ins Repository schreiben (Preisverlauf)
   pages: write
   id-token: write
+  issues: write                # automatische Kontrolle meldet Probleme als Issue
 
 concurrency:
   group: pages
@@ -38,7 +39,7 @@ jobs:
         run: |
           git config user.name "preis-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add out/data.js out/verlauf.json out/staerken.js out/news.js 2>/dev/null || git add out/data.js out/verlauf.json
+          git add out/data.js out/verlauf.json out/staerken.js out/news.js out/preisindex.js 2>/dev/null || git add out/data.js out/verlauf.json
           if ! git diff --cached --quiet; then
             git commit -m "Preise $(date -u +'%Y-%m-%d %H:%M') UTC"
             git push || echo "Push übersprungen (Repository hat sich parallel geändert)"
@@ -51,6 +52,13 @@ jobs:
         uses: actions/upload-pages-artifact@v5
         with:
           path: _site
+
+      - name: Automatische Kontrolle (fehlgeschlagene Abrufe, veraltete Daten, tote Links → GitHub-Issue)
+        if: always()
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 pruefen.py _site
 
       - name: Neue Seiten an Suchmaschinen melden (IndexNow, erst wenn die Domain live ist)
         run: python3 indexnow.py _site || echo "IndexNow übersprungen"
