@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anbindung & Einrichtung – aiapicompare</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0b0c0e">
+<meta name="description" content="Connect OpenRouter, NanoGPT, DeepInfra, Novita, Chutes, CometAPI, UplinkSwitch, Kyma and AnyModel to Hermes Agent, VS Code (Copilot, Cline, Continue), Cursor, Open WebUI, Aider and your own code.">
+<link rel="stylesheet" href="style.css">
+<script src="theme.js"></script>
+<style>
+  .grid{display:grid;grid-template-columns:300px 1fr;gap:1.2rem;align-items:start}
+  .grid>*{min-width:0}
+  .side{position:sticky;top:70px;display:flex;flex-direction:column;gap:1rem}
+  .side h3{margin:0 0 .5rem;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .provs{display:flex;flex-direction:column;gap:.3rem}
+  .prov{display:flex;align-items:center;gap:.5rem;padding:.5rem .65rem;border:1px solid var(--border);border-radius:.5rem;background:var(--input);cursor:pointer;text-align:left;width:100%}
+  .prov:hover{border-color:var(--border2)}
+  .prov.active{border-color:var(--accent);background:var(--accent-bg)}
+  .prov small{margin-left:auto;color:var(--dim);font-size:.7rem}
+  .side input{width:100%;padding:.5rem .6rem;border:1px solid var(--border2);border-radius:.45rem;background:var(--input);font-family:var(--mono);font-size:.8rem}
+  .side input:focus{outline:none;border-color:var(--blue)}
+  .hint{font-size:.74rem;color:var(--dim);margin-top:.3rem}
+  .tabs{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:1rem}
+  .tabs button{padding:.4rem .75rem;border:1px solid var(--border2);border-radius:2rem;background:var(--input);cursor:pointer;font-size:.84rem;color:var(--muted)}
+  .tabs button.active{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;margin-bottom:1rem}
+  .fact{border:1px solid var(--border);border-radius:.5rem;padding:.55rem .7rem;background:var(--panel)}
+  .fact span{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  .fact b{font-family:var(--mono);font-size:.82rem;font-weight:500;word-break:break-all}
+  .steps{counter-reset:s;list-style:none;padding:0;margin:.4rem 0}
+  .steps li{counter-increment:s;position:relative;padding:.2rem 0 .55rem 2rem}
+  .steps li:before{content:counter(s);position:absolute;left:0;top:.2rem;width:1.4rem;height:1.4rem;border-radius:50%;background:var(--panel2);border:1px solid var(--border2);font-size:.72rem;display:flex;align-items:center;justify-content:center;color:var(--accent)}
+  .code{position:relative;margin:.5rem 0 1rem}
+  .code .lbl{font-size:.7rem;color:var(--muted);font-family:var(--mono);padding:.3rem .7rem;border:1px solid var(--border);border-bottom:0;border-radius:.45rem .45rem 0 0;background:var(--panel2);display:inline-block}
+  .code pre{margin:0;padding:.85rem 1rem;background:var(--codebg);border:1px solid var(--border);border-radius:0 .45rem .45rem .45rem;overflow-x:auto;line-height:1.5}
+  .code .copy{position:absolute;right:.5rem;top:2rem;font-size:.72rem;padding:.2rem .5rem}
+  .copy.ok{color:var(--accent);border-color:var(--accent)}
+  .ovtable td:nth-child(2){font-family:var(--mono);font-size:.78rem;word-break:break-all}
+  .ovtable tr.sel td{background:rgba(74,222,128,.05)}
+  @media (max-width:860px){ .grid{grid-template-columns:1fr} .side{position:static} }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="brand" href="index.html" aria-label="aiapicompare"><img class="logo-d" src="logo/logo.svg" alt="aiapicompare" width="166" height="30"><img class="logo-l" src="logo/logo-hell.svg" alt="aiapicompare" width="166" height="30"></a>
+  <nav class="nav">
+    <a href="index.html" data-t="nav_vergleich"></a>
+    <a href="kosten.html" data-t="nav_kosten"></a>
+    <a href="anbindung.html" class="active" data-t="nav_anbindung"></a>
+  </nav>
+  <button class="themebtn" title="Light / dark"><span class="ti-l">☀</span><span class="ti-d">☾</span></button>
+  <div class="langbtns">
+    <button data-lang="de">DE</button>
+    <button data-lang="en">EN</button>
+    <button data-lang="zh">中文</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="disclosure" id="disclosure" hidden></div>
+  <h1 data-t="titel"></h1>
+  <p class="lead" data-h="lead"></p>
+
+  <div class="grid">
+    <aside class="side">
+      <div class="card">
+        <h3 data-t="schritt1"></h3>
+        <div class="provs" id="provs"></div>
+      </div>
+      <div class="card">
+        <h3 data-t="schritt2"></h3>
+        <input id="modell" list="modelle" autocomplete="off" spellcheck="false">
+        <datalist id="modelle"></datalist>
+        <div class="hint" id="modellhint"></div>
+      </div>
+      <div class="card" id="kontocard"></div>
+    </aside>
+
+    <main>
+      <div class="tabs" id="tabs"></div>
+      <div class="facts" id="facts"></div>
+      <div id="anleitung"></div>
+    </main>
+  </div>
+
+  <h2 data-t="uebersicht"></h2>
+  <div class="tablewrap">
+    <table class="ovtable">
+      <thead><tr><th data-t="th_anbieter"></th><th>Base URL</th><th data-t="th_key"></th><th data-t="th_info"></th><th></th></tr></thead>
+      <tbody id="uebersicht"></tbody>
+    </table>
+  </div>
+
+  <h2 data-t="fehler_titel"></h2>
+  <div class="card"><ul style="margin:0;padding-left:1.2rem" data-h="fehler"></ul></div>
+
+  <div class="legal">
+    <a href="impressum.html" data-t="impressum"></a><a href="datenschutz.html" data-t="datenschutz"></a><a href="index.html" data-t="nav_vergleich"></a>
+    <div style="margin-top:.4rem" data-t="disclaimer"></div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="out/data.js"></script>
+<script>
+"use strict";
+const D = window.API_DATEN || {};
+const C = window.SITE_CONFIG || {kennzeichnung:"Anzeige", hatAffiliate:function(){return false;}, link:function(k,u){return {url:u,affiliate:false};},
+  linkHtml:function(k,u,t,c){ return u ? '<a class="'+(c||"")+'" href="'+u+'" target="_blank" rel="noopener">'+t+'</a>' : ""; }};
+
+/* ================= Texte ================= */
+const L10N = {
+de:{
+  titel:"Anbieter anbinden", nav_kosten:"Kostenrechner", nav_vergleich:"Preisvergleich", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
+  lead:"Alle Anbieter sprechen die <b>OpenAI-kompatible API</b>. Jedes Tool braucht deshalb nur drei Angaben: <b>Base-URL</b>, <b>API-Key</b> und <b>Modell-ID</b>. Wähle links Anbieter und Modell, dann das Tool – die Konfiguration unten wird automatisch ausgefüllt.",
+  schritt1:"1 · Anbieter", schritt2:"2 · Modell", schritt3:"3 · Konto & Key", modelle:"Modelle",
+  uebersicht:"Übersicht aller Anbieter", th_anbieter:"Anbieter", th_key:"Key-Format", th_info:"Besonderheiten",
+  fehler_titel:"Häufige Fehler",
+  fehler:'<li><b>404 / „Not found“:</b> Base-URL ohne <code>/chat/completions</code> eintragen – das hängt das Tool selbst an. Bei NanoGPT und Open WebUI keinen Schrägstrich am Ende.</li><li><b>„Model not found“:</b> Die Modell-ID muss exakt so geschrieben sein wie im Katalog des Anbieters (Groß-/Kleinschreibung, Präfix wie <code>z-ai/</code> oder <code>deepseek-ai/</code>).</li><li><b>Agent ruft keine Werkzeuge auf:</b> Nicht jedes Modell unterstützt Function-Calling. Für Hermes, Cline &amp; Co. ein Modell mit Tool-Unterstützung wählen.</li><li><b>Abbruch bei langen Dateien:</b> Kontextfenster im Tool passend zum Modell setzen (steht im Preisvergleich in der Spalte „Kontext“).</li><li><b>API-Key nie in Git einchecken:</b> Keys gehören in eine <code>.env</code>-Datei oder den Passwortspeicher des Tools.</li>',
+  disclaimer:"Angaben ohne Gewähr. Menüs und Optionen der Tools ändern sich mit neuen Versionen – im Zweifel gilt die Dokumentation des jeweiligen Tools bzw. Anbieters. Stand: November 2026.",
+  fact_url:"Base-URL", fact_key:"API-Key (Format)", fact_modell:"Modell-ID", fact_env:"Umgebungsvariable",
+  kopieren:"Kopieren", kopiert:"Kopiert ✓", konto:"Konto erstellen ↗", keylink:"API-Key erzeugen ↗", doku:"Doku ↗", zum:"Zum Anbieter ↗",
+  preise_link:'Preise dieses Anbieters: <a href="index.html#anb={k}">im Preisvergleich ansehen</a>',
+  hint_eigen:"Eigene Modell-ID – bitte im Katalog des Anbieters prüfen.",
+  hint_leer:"Für diesen Anbieter liegen noch keine Preisdaten vor (erscheinen nach dem nächsten Datenabruf). Modell-ID bitte aus dem Katalog des Anbieters eintragen.",
+  kontext:"Kontext", input:"Input",
+  disclosure:function(k){ return "<b>Transparenz:</b> Links mit dem Hinweis „"+k+"“ sind Affiliate-Links (Werbung). Bei einer Registrierung oder Aufladung darüber erhalten wir eine Provision; für dich ändert sich der Preis nicht."; },
+  anymodel_hint:'Modell-IDs bei AnyModel: die ID aus dem Katalog (<code>/v1/models</code>) verwenden; die Anleitungen von AnyModel zeigen teils Kurzformen ohne Präfix.',
+  key_platzhalter:"DEIN_API_KEY", hallo:"Hallo!", antwort:"antwort",
+  h:{
+    hermes_intro:'<h3>Hermes Agent (Nous Research)</h3><p>Hermes liest Einstellungen aus <code>config.yaml</code> und Schlüssel aus <code>.env</code>. Unter Linux/macOS liegen beide in <code>~/.hermes/</code>, unter Windows je nach Installation z. B. in <code>%LOCALAPPDATA%\\hermes\\</code> – bei mehreren Profilen im Unterordner <code>profiles\\&lt;profilname&gt;\\</code>.</p>',
+    hermes_a:function(n,id){ return '<h3>Variante A – eingebauter Anbieter (empfohlen)</h3><div class="note">'+n+' ist in Hermes als Anbieter <code>'+id+'</code> eingebaut. Es genügt der Key in der <code>.env</code>.</div>'; },
+    hermes_b:'<h3>Variante B – als eigener Endpunkt</h3>',
+    hermes_wizard:function(u,m){ return '<h3>Schnellweg: Assistent</h3><ol class="steps"><li>Im Terminal <code>hermes model</code> ausführen (außerhalb einer laufenden Sitzung).</li><li>„Custom endpoint“ wählen.</li><li>Base-URL <code>'+u+'</code>, deinen API-Key und die Modell-ID <code>'+m+'</code> eingeben.</li></ol><h3>Oder von Hand</h3>'; },
+    hermes_cmt1:"Pflicht für eigene OpenAI-kompatible Endpunkte", hermes_cmt2:"Name der Variable aus der .env", hermes_cmt3:"Kontrolle",
+    hermes_cli:"Dasselbe per Kommandozeile:",
+    hermes_wichtig:'<b>Wichtig:</b> Eine gesetzte <code>base_url</code> hat Vorrang vor <code>provider</code>. <code>OPENAI_BASE_URL</code> in der <code>.env</code> gilt nur für den Anbieter <code>openai-api</code> – nicht für <code>custom</code>.',
+    hermes_chutes:'Für Chutes gibt es außerdem ein eigenes Hermes-Plugin (Variablen <code>CHUTES_API_KEY</code>, optional <code>CHUTES_BASE_URL</code>).',
+    hermes_model:'<p>Innerhalb einer Sitzung wechselst du zwischen bereits eingerichteten Modellen mit <code>/model</code>.</p>',
+    cop_titel:'<h3>VS Code – GitHub Copilot Chat mit eigenem Key (BYOK)</h3>',
+    cop_nativ:function(n,c,m){ return '<div class="note">'+n+' ist in VS Code direkt als Anbieter auswählbar – Base-URL nicht nötig.</div><ol class="steps"><li><kbd>Strg</kbd>+<kbd>Umschalt</kbd>+<kbd>P</kbd> → <b>Chat: Manage Language Models</b>.</li><li><b>Add Models</b> → <b>'+c+'</b> wählen.</li><li>API-Key einfügen und Modelle (z. B. <code>'+m+'</code>) aktivieren.</li><li>Im Chat-Fenster unten das Modell im Modell-Auswähler wählen.</li></ol>'; },
+    cop_custom:function(n,u,m){ return '<ol class="steps"><li><kbd>Strg</kbd>+<kbd>Umschalt</kbd>+<kbd>P</kbd> → <b>Chat: Manage Language Models</b>.</li><li><b>Add Models</b> → <b>Custom Endpoint</b> wählen (ab VS Code 1.122; in älteren Versionen heißt der Eintrag „OpenAI Compatible“).</li><li>Gruppenname z. B. <code>'+n+'</code>, Base-URL <code>'+u+'</code>, API-Key und Modell-ID <code>'+m+'</code> eingeben.</li><li>Im Chat-Fenster das neue Modell im Modell-Auswähler wählen.</li></ol>'; },
+    cop_utility:'Einstellung <b>Chat: Byok Utility Model Default</b> (Suche „utility“) auf ein eigenes Modell setzen – sonst funktionieren Hilfsfunktionen im Chat ggf. nicht.',
+    cop_grenzen:'<p><b>Grenzen:</b> BYOK gilt für Chat und Agent-Modus, <b>nicht</b> für die Inline-Code-Vervollständigung. In Copilot Business/Enterprise kann der Administrator BYOK per Richtlinie abschalten.</p><p>Alternative: die Erweiterung <i>OAI Compatible Provider for Copilot</i> (Einstellungen <code>oaicopilot.baseUrl</code> und <code>oaicopilot.models</code>).</p>',
+    cline_titel:'<h3>Cline, Roo Code, Kilo Code (VS-Code-Erweiterungen)</h3>',
+    cline_nativ:function(n){ return 'In Cline gibt es '+n+' als eigenen „API Provider“ – dort nur Key eintragen und Modell wählen. Der Weg unten funktioniert aber genauso.'; },
+    cline_steps:function(u,k,m,ctx){ return '<ol class="steps"><li>Erweiterung öffnen → Zahnrad (Einstellungen).</li><li><b>API Provider</b>: <b>OpenAI Compatible</b>.</li><li><b>Base URL</b>: <code>'+u+'</code></li><li><b>API Key</b>: dein Key ('+k+')</li><li><b>Model ID</b>: <code>'+m+'</code></li><li>Unter „Model Configuration“ das Kontextfenster'+(ctx?' auf <code>'+ctx+'</code>':'')+' setzen und angeben, ob das Modell Bilder versteht.</li></ol>'; },
+    cont_titel:'<h3>Continue (VS Code &amp; JetBrains)</h3><p>Datei <code>~/.continue/config.yaml</code> öffnen (in der Erweiterung: Zahnrad → „Open config“) und ergänzen:</p>',
+    cont_note:'<code>provider: openai</code> ist richtig – damit ist das OpenAI-<i>Format</i> gemeint, die Anfragen gehen an <code>apiBase</code>.',
+    cont_name:"Meine Modelle",
+    cursor:function(n,u,m){ return '<h3>Cursor</h3><ol class="steps"><li><b>Settings</b> → <b>Models</b>.</li><li>Bei <b>OpenAI API Key</b> deinen '+n+'-Key eintragen.</li><li><b>Override OpenAI Base URL</b> aktivieren und <code>'+u+'</code> eintragen.</li><li>Über <b>Add model</b> die Modell-ID <code>'+m+'</code> hinzufügen und aktivieren.</li></ol>'; },
+    cursor_note:'Die Überschreibung gilt für alle „OpenAI“-Modelle in Cursor. Einige Cursor-Funktionen (z. B. Tab-Vervollständigung) laufen weiterhin über Cursors eigene Server.',
+    owui:function(u,m){ return '<h3>Open WebUI</h3><ol class="steps"><li><b>Admin Panel</b> → <b>Settings</b> → <b>Connections</b>.</li><li>Bei „OpenAI API“ auf <b>+</b> klicken.</li><li>URL <code>'+u+'</code> (ohne Schrägstrich am Ende) und API-Key eintragen, speichern.</li><li>Die Modelle erscheinen in der Modellauswahl, z. B. <code>'+m+'</code>.</li></ol>'; },
+    aider_titel:'<h3>Aider (Terminal)</h3>', aider_env:'<p>Oder dauerhaft über Umgebungsvariablen:</p>',
+    aider_note:'Das Präfix <code>openai/</code> sagt Aider nur, dass ein OpenAI-kompatibler Endpunkt genutzt wird.',
+    code_py:'<h3>Python (offizielles openai-Paket)</h3>', code_js:'<h3>JavaScript / TypeScript</h3>', code_curl:'<h3>curl (Test)</h3>',
+    code_weitere:'<p>Weitere Werkzeuge mit „OpenAI-kompatiblem“ Anbieter (LibreChat, n8n, LiteLLM, LangChain, OpenHands …) werden genauso eingerichtet: Base-URL, Key, Modell-ID.</p>'
+  },
+  tools:{hermes:"Hermes Agent", copilot:"VS Code · Copilot Chat", cline:"VS Code · Cline / Roo / Kilo", continue:"Continue", cursor:"Cursor", openwebui:"Open WebUI", aider:"Aider", code:"Eigener Code"}
+},
+en:{
+  titel:"Connect a provider", nav_kosten:"Cost calculator", nav_vergleich:"Price comparison", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
+  lead:"All providers speak the <b>OpenAI-compatible API</b>. Every tool therefore needs only three values: <b>base URL</b>, <b>API key</b> and <b>model ID</b>. Pick a provider and model on the left, then the tool – the configuration below fills in automatically.",
+  schritt1:"1 · Provider", schritt2:"2 · Model", schritt3:"3 · Account & key", modelle:"models",
+  uebersicht:"All providers at a glance", th_anbieter:"Provider", th_key:"Key format", th_info:"Notes",
+  fehler_titel:"Common errors",
+  fehler:'<li><b>404 / “Not found”:</b> Enter the base URL without <code>/chat/completions</code> – the tool appends it. For NanoGPT and Open WebUI, no trailing slash.</li><li><b>“Model not found”:</b> The model ID must match the provider’s catalogue exactly (case, prefixes such as <code>z-ai/</code> or <code>deepseek-ai/</code>).</li><li><b>Agent doesn’t call tools:</b> Not every model supports function calling. For Hermes, Cline &amp; co. pick a model with tool support.</li><li><b>Fails on long files:</b> Set the context window in the tool to match the model (see the “Context” column in the price comparison).</li><li><b>Never commit API keys to Git:</b> Keep keys in a <code>.env</code> file or the tool’s secret store.</li>',
+  disclaimer:"No guarantee. Tool menus and options change with new versions – when in doubt, the documentation of the tool or provider prevails. As of November 2026.",
+  fact_url:"Base URL", fact_key:"API key (format)", fact_modell:"Model ID", fact_env:"Environment variable",
+  kopieren:"Copy", kopiert:"Copied ✓", konto:"Create account ↗", keylink:"Create API key ↗", doku:"Docs ↗", zum:"Go to provider ↗",
+  preise_link:'This provider’s prices: <a href="index.html#anb={k}">view in the price comparison</a>',
+  hint_eigen:"Custom model ID – please check the provider’s catalogue.",
+  hint_leer:"No price data for this provider yet (will appear after the next data refresh). Please enter a model ID from the provider’s catalogue.",
+  kontext:"Context", input:"input",
+  disclosure:function(k){ return "<b>Transparency:</b> Links marked “"+k+"” are affiliate links (advertising). If you sign up or top up through them, we receive a commission; the price stays the same for you."; },
+  anymodel_hint:'AnyModel model IDs: use the ID from the catalogue (<code>/v1/models</code>); AnyModel’s own guides sometimes show short forms without the prefix.',
+  key_platzhalter:"YOUR_API_KEY", hallo:"Hello!", antwort:"response",
+  h:{
+    hermes_intro:'<h3>Hermes Agent (Nous Research)</h3><p>Hermes reads settings from <code>config.yaml</code> and secrets from <code>.env</code>. On Linux/macOS both live in <code>~/.hermes/</code>; on Windows, depending on the installation, e.g. in <code>%LOCALAPPDATA%\\hermes\\</code> – with several profiles in the subfolder <code>profiles\\&lt;profile&gt;\\</code>.</p>',
+    hermes_a:function(n,id){ return '<h3>Option A – built-in provider (recommended)</h3><div class="note">'+n+' is built into Hermes as provider <code>'+id+'</code>. The key in <code>.env</code> is all you need.</div>'; },
+    hermes_b:'<h3>Option B – as a custom endpoint</h3>',
+    hermes_wizard:function(u,m){ return '<h3>Quick way: wizard</h3><ol class="steps"><li>Run <code>hermes model</code> in a terminal (outside a running session).</li><li>Choose “Custom endpoint”.</li><li>Enter base URL <code>'+u+'</code>, your API key and model ID <code>'+m+'</code>.</li></ol><h3>Or manually</h3>'; },
+    hermes_cmt1:"required for custom OpenAI-compatible endpoints", hermes_cmt2:"name of the variable in .env", hermes_cmt3:"check",
+    hermes_cli:"The same via the command line:",
+    hermes_wichtig:'<b>Important:</b> A <code>base_url</code> takes precedence over <code>provider</code>. <code>OPENAI_BASE_URL</code> in <code>.env</code> only applies to the <code>openai-api</code> provider – not to <code>custom</code>.',
+    hermes_chutes:'There is also a dedicated Hermes plugin for Chutes (variables <code>CHUTES_API_KEY</code>, optional <code>CHUTES_BASE_URL</code>).',
+    hermes_model:'<p>Inside a session, switch between configured models with <code>/model</code>.</p>',
+    cop_titel:'<h3>VS Code – GitHub Copilot Chat with your own key (BYOK)</h3>',
+    cop_nativ:function(n,c,m){ return '<div class="note">'+n+' can be selected directly as a provider in VS Code – no base URL needed.</div><ol class="steps"><li><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → <b>Chat: Manage Language Models</b>.</li><li><b>Add Models</b> → choose <b>'+c+'</b>.</li><li>Paste your API key and enable models (e.g. <code>'+m+'</code>).</li><li>Pick the model in the chat window’s model picker.</li></ol>'; },
+    cop_custom:function(n,u,m){ return '<ol class="steps"><li><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → <b>Chat: Manage Language Models</b>.</li><li><b>Add Models</b> → choose <b>Custom Endpoint</b> (VS Code 1.122+; older versions call it “OpenAI Compatible”).</li><li>Enter a group name such as <code>'+n+'</code>, base URL <code>'+u+'</code>, API key and model ID <code>'+m+'</code>.</li><li>Pick the new model in the chat window’s model picker.</li></ol>'; },
+    cop_utility:'Set <b>Chat: Byok Utility Model Default</b> (search “utility”) to one of your own models – otherwise helper features in chat may not work.',
+    cop_grenzen:'<p><b>Limits:</b> BYOK covers chat and agent mode, <b>not</b> inline code completions. In Copilot Business/Enterprise, admins can disable BYOK by policy.</p><p>Alternative: the extension <i>OAI Compatible Provider for Copilot</i> (settings <code>oaicopilot.baseUrl</code> and <code>oaicopilot.models</code>).</p>',
+    cline_titel:'<h3>Cline, Roo Code, Kilo Code (VS Code extensions)</h3>',
+    cline_nativ:function(n){ return 'Cline offers '+n+' as its own “API Provider” – just enter the key and pick a model. The route below works just as well.'; },
+    cline_steps:function(u,k,m,ctx){ return '<ol class="steps"><li>Open the extension → gear icon (settings).</li><li><b>API Provider</b>: <b>OpenAI Compatible</b>.</li><li><b>Base URL</b>: <code>'+u+'</code></li><li><b>API Key</b>: your key ('+k+')</li><li><b>Model ID</b>: <code>'+m+'</code></li><li>Under “Model Configuration”, set the context window'+(ctx?' to <code>'+ctx+'</code>':'')+' and whether the model supports images.</li></ol>'; },
+    cont_titel:'<h3>Continue (VS Code &amp; JetBrains)</h3><p>Open <code>~/.continue/config.yaml</code> (in the extension: gear → “Open config”) and add:</p>',
+    cont_note:'<code>provider: openai</code> is correct – it refers to the OpenAI <i>format</i>; requests go to <code>apiBase</code>.',
+    cont_name:"My models",
+    cursor:function(n,u,m){ return '<h3>Cursor</h3><ol class="steps"><li><b>Settings</b> → <b>Models</b>.</li><li>Enter your '+n+' key under <b>OpenAI API Key</b>.</li><li>Enable <b>Override OpenAI Base URL</b> and enter <code>'+u+'</code>.</li><li>Use <b>Add model</b> to add and enable model ID <code>'+m+'</code>.</li></ol>'; },
+    cursor_note:'The override applies to all “OpenAI” models in Cursor. Some Cursor features (e.g. Tab completion) still run on Cursor’s own servers.',
+    owui:function(u,m){ return '<h3>Open WebUI</h3><ol class="steps"><li><b>Admin Panel</b> → <b>Settings</b> → <b>Connections</b>.</li><li>Click <b>+</b> next to “OpenAI API”.</li><li>Enter URL <code>'+u+'</code> (no trailing slash) and your API key, then save.</li><li>The models appear in the model selector, e.g. <code>'+m+'</code>.</li></ol>'; },
+    aider_titel:'<h3>Aider (terminal)</h3>', aider_env:'<p>Or permanently via environment variables:</p>',
+    aider_note:'The <code>openai/</code> prefix only tells Aider that an OpenAI-compatible endpoint is used.',
+    code_py:'<h3>Python (official openai package)</h3>', code_js:'<h3>JavaScript / TypeScript</h3>', code_curl:'<h3>curl (test)</h3>',
+    code_weitere:'<p>Other tools with an “OpenAI-compatible” provider option (LibreChat, n8n, LiteLLM, LangChain, OpenHands …) are set up the same way: base URL, key, model ID.</p>'
+  },
+  tools:{hermes:"Hermes Agent", copilot:"VS Code · Copilot Chat", cline:"VS Code · Cline / Roo / Kilo", continue:"Continue", cursor:"Cursor", openwebui:"Open WebUI", aider:"Aider", code:"Your own code"}
+},
+zh:{
+  titel:"接入提供商", nav_kosten:"成本计算器", nav_vergleich:"价格对比", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
+  lead:"所有提供商都支持 <b>OpenAI 兼容 API</b>，因此每个工具只需三项信息：<b>Base URL</b>、<b>API Key</b> 和 <b>模型 ID</b>。在左侧选择提供商和模型，再选择工具，下方配置会自动填好。",
+  schritt1:"1 · 提供商", schritt2:"2 · 模型", schritt3:"3 · 账号与密钥", modelle:"个模型",
+  uebersicht:"所有提供商一览", th_anbieter:"提供商", th_key:"密钥格式", th_info:"说明",
+  fehler_titel:"常见错误",
+  fehler:'<li><b>404 / “Not found”：</b>Base URL 不要包含 <code>/chat/completions</code>，工具会自动添加。NanoGPT 和 Open WebUI 末尾不要加斜杠。</li><li><b>“Model not found”：</b>模型 ID 必须与提供商目录完全一致（大小写、前缀如 <code>z-ai/</code> 或 <code>deepseek-ai/</code>）。</li><li><b>Agent 不调用工具：</b>并非所有模型都支持函数调用。Hermes、Cline 等请选择支持工具调用的模型。</li><li><b>处理长文件时中断：</b>在工具中按模型设置上下文窗口（见价格对比中的“上下文”列）。</li><li><b>切勿将 API Key 提交到 Git：</b>密钥应放在 <code>.env</code> 文件或工具的密码存储中。</li>',
+  disclaimer:"信息仅供参考。工具的菜单和选项会随版本变化——如有疑问，以各工具或提供商的官方文档为准。更新于 2026 年 11 月。",
+  fact_url:"Base URL", fact_key:"API Key（格式）", fact_modell:"模型 ID", fact_env:"环境变量",
+  kopieren:"复制", kopiert:"已复制 ✓", konto:"注册账号 ↗", keylink:"创建 API Key ↗", doku:"文档 ↗", zum:"前往提供商 ↗",
+  preise_link:'该提供商的价格：<a href="index.html#anb={k}">在价格对比中查看</a>',
+  hint_eigen:"自定义模型 ID——请在提供商目录中核对。",
+  hint_leer:"该提供商暂无价格数据（下次数据更新后显示）。请从提供商目录中填写模型 ID。",
+  kontext:"上下文", input:"输入",
+  disclosure:function(k){ return "<b>透明声明：</b>标有“"+k+"”的链接为推广（联盟）链接，属于广告。若您通过这些链接注册或充值，我们将获得佣金，您的价格不变。"; },
+  anymodel_hint:'AnyModel 的模型 ID：请使用目录（<code>/v1/models</code>）中的 ID；AnyModel 自己的教程有时使用不带前缀的简写。',
+  key_platzhalter:"YOUR_API_KEY", hallo:"你好！", antwort:"response",
+  h:{
+    hermes_intro:'<h3>Hermes Agent（Nous Research）</h3><p>Hermes 从 <code>config.yaml</code> 读取设置，从 <code>.env</code> 读取密钥。Linux/macOS 上两者位于 <code>~/.hermes/</code>；Windows 上视安装方式而定，例如 <code>%LOCALAPPDATA%\\hermes\\</code>——多配置文件时位于子目录 <code>profiles\\&lt;配置名&gt;\\</code>。</p>',
+    hermes_a:function(n,id){ return '<h3>方式 A——内置提供商（推荐）</h3><div class="note">'+n+' 已作为提供商 <code>'+id+'</code> 内置于 Hermes，只需在 <code>.env</code> 中填写密钥。</div>'; },
+    hermes_b:'<h3>方式 B——自定义端点</h3>',
+    hermes_wizard:function(u,m){ return '<h3>快捷方式：向导</h3><ol class="steps"><li>在终端运行 <code>hermes model</code>（不要在会话中运行）。</li><li>选择 “Custom endpoint”。</li><li>输入 Base URL <code>'+u+'</code>、您的 API Key 和模型 ID <code>'+m+'</code>。</li></ol><h3>或手动配置</h3>'; },
+    hermes_cmt1:"自定义 OpenAI 兼容端点必填", hermes_cmt2:".env 中的变量名", hermes_cmt3:"检查",
+    hermes_cli:"也可以通过命令行设置：",
+    hermes_wichtig:'<b>注意：</b>设置了 <code>base_url</code> 时，它优先于 <code>provider</code>。<code>.env</code> 中的 <code>OPENAI_BASE_URL</code> 只对 <code>openai-api</code> 提供商生效，对 <code>custom</code> 无效。',
+    hermes_chutes:'Chutes 另有专用 Hermes 插件（变量 <code>CHUTES_API_KEY</code>，可选 <code>CHUTES_BASE_URL</code>）。',
+    hermes_model:'<p>在会话中可用 <code>/model</code> 切换已配置的模型。</p>',
+    cop_titel:'<h3>VS Code——GitHub Copilot Chat 使用自有密钥（BYOK）</h3>',
+    cop_nativ:function(n,c,m){ return '<div class="note">'+n+' 可在 VS Code 中直接选择为提供商，无需 Base URL。</div><ol class="steps"><li><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → <b>Chat: Manage Language Models</b>。</li><li><b>Add Models</b> → 选择 <b>'+c+'</b>。</li><li>粘贴 API Key 并启用模型（例如 <code>'+m+'</code>）。</li><li>在聊天窗口的模型选择器中选择该模型。</li></ol>'; },
+    cop_custom:function(n,u,m){ return '<ol class="steps"><li><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → <b>Chat: Manage Language Models</b>。</li><li><b>Add Models</b> → 选择 <b>Custom Endpoint</b>（VS Code 1.122 及以上；旧版本名为 “OpenAI Compatible”）。</li><li>输入分组名称（如 <code>'+n+'</code>）、Base URL <code>'+u+'</code>、API Key 和模型 ID <code>'+m+'</code>。</li><li>在聊天窗口的模型选择器中选择新模型。</li></ol>'; },
+    cop_utility:'请将设置 <b>Chat: Byok Utility Model Default</b>（搜索 “utility”）设为您自己的模型，否则聊天中的辅助功能可能无法使用。',
+    cop_grenzen:'<p><b>限制：</b>BYOK 适用于聊天和 Agent 模式，<b>不</b>适用于行内代码补全。在 Copilot Business/Enterprise 中，管理员可通过策略禁用 BYOK。</p><p>替代方案：扩展 <i>OAI Compatible Provider for Copilot</i>（设置 <code>oaicopilot.baseUrl</code> 和 <code>oaicopilot.models</code>）。</p>',
+    cline_titel:'<h3>Cline、Roo Code、Kilo Code（VS Code 扩展）</h3>',
+    cline_nativ:function(n){ return 'Cline 中 '+n+' 是独立的 “API Provider”，只需填写密钥并选择模型。下面的方法同样可用。'; },
+    cline_steps:function(u,k,m,ctx){ return '<ol class="steps"><li>打开扩展 → 齿轮图标（设置）。</li><li><b>API Provider</b>：<b>OpenAI Compatible</b>。</li><li><b>Base URL</b>：<code>'+u+'</code></li><li><b>API Key</b>：您的密钥（'+k+'）</li><li><b>Model ID</b>：<code>'+m+'</code></li><li>在 “Model Configuration” 中设置上下文窗口'+(ctx?'为 <code>'+ctx+'</code>':'')+'，并注明模型是否支持图像。</li></ol>'; },
+    cont_titel:'<h3>Continue（VS Code 和 JetBrains）</h3><p>打开 <code>~/.continue/config.yaml</code>（扩展中：齿轮 → “Open config”）并添加：</p>',
+    cont_note:'<code>provider: openai</code> 是正确的——它指的是 OpenAI <i>格式</i>，请求会发送到 <code>apiBase</code>。',
+    cont_name:"我的模型",
+    cursor:function(n,u,m){ return '<h3>Cursor</h3><ol class="steps"><li><b>Settings</b> → <b>Models</b>。</li><li>在 <b>OpenAI API Key</b> 处填写您的 '+n+' 密钥。</li><li>启用 <b>Override OpenAI Base URL</b> 并填写 <code>'+u+'</code>。</li><li>通过 <b>Add model</b> 添加并启用模型 ID <code>'+m+'</code>。</li></ol>'; },
+    cursor_note:'该覆盖设置会作用于 Cursor 中所有 “OpenAI” 模型。部分 Cursor 功能（如 Tab 补全）仍通过 Cursor 自己的服务器运行。',
+    owui:function(u,m){ return '<h3>Open WebUI</h3><ol class="steps"><li><b>Admin Panel</b> → <b>Settings</b> → <b>Connections</b>。</li><li>点击 “OpenAI API” 旁的 <b>+</b>。</li><li>填写 URL <code>'+u+'</code>（末尾不加斜杠）和 API Key，然后保存。</li><li>模型会出现在模型选择中，例如 <code>'+m+'</code>。</li></ol>'; },
+    aider_titel:'<h3>Aider（终端）</h3>', aider_env:'<p>或通过环境变量长期设置：</p>',
+    aider_note:'前缀 <code>openai/</code> 仅告诉 Aider 使用的是 OpenAI 兼容端点。',
+    code_py:'<h3>Python（官方 openai 包）</h3>', code_js:'<h3>JavaScript / TypeScript</h3>', code_curl:'<h3>curl（测试）</h3>',
+    code_weitere:'<p>其他支持 “OpenAI 兼容” 提供商的工具（LibreChat、n8n、LiteLLM、LangChain、OpenHands …）配置方式相同：Base URL、密钥、模型 ID。</p>'
+  },
+  tools:{hermes:"Hermes Agent", copilot:"VS Code · Copilot Chat", cline:"VS Code · Cline / Roo / Kilo", continue:"Continue", cursor:"Cursor", openwebui:"Open WebUI", aider:"Aider", code:"自有代码"}
+}
+};
+
+/* ================= Anbieter-Steckbriefe ================= */
+const ANBIETER = {
+  openrouter: {name:"OpenRouter", farbe:"#a78bfa", url:"https://openrouter.ai/api/v1", env:"OPENROUTER_API_KEY", key:"sk-or-…",
+    keys:"https://openrouter.ai/settings/keys", docs:"https://openrouter.ai/docs", hermes:"openrouter", copilot:"OpenRouter", cline:"OpenRouter",
+    info:{de:"Aggregator für sehr viele Modelle; in Hermes, VS Code Copilot und Cline als eigener Anbieter eingebaut.",
+          en:"Aggregator for a very large number of models; built into Hermes, VS Code Copilot and Cline as a dedicated provider.",
+          zh:"聚合了大量模型；已作为独立提供商内置于 Hermes、VS Code Copilot 和 Cline。"}},
+  uplinkswitch: {name:"UplinkSwitch", farbe:"#f472b6", url:"https://api.uplinkswitch.com/v1", env:"UPLINKSWITCH_API_KEY", key:"sk-uplink-live-…",
+    keys:null, docs:"https://uplinkswitch.ai",
+    info:{de:"Gleiche Base-URL funktioniert auch mit dem Anthropic- und Gemini-SDK. Viele Bild- und Video-Modelle.",
+          en:"The same base URL also works with the Anthropic and Gemini SDKs. Many image and video models.",
+          zh:"同一 Base URL 也适用于 Anthropic 和 Gemini SDK。提供大量图像和视频模型。"}},
+  anymodel: {name:"AnyModel", farbe:"#fbbf24", url:"https://anymodel.org/v1", env:"ANYMODEL_API_KEY", key:"Dashboard",
+    keys:null, docs:"https://anymodel.org/en/use",
+    info:{de:"Bilder/Audio über /v1/images/generations bzw. /v1/audio/…; eigene Anleitungen für Cline, Continue, Cursor, Aider u. a.",
+          en:"Images/audio via /v1/images/generations and /v1/audio/…; own guides for Cline, Continue, Cursor, Aider and others.",
+          zh:"图像/音频通过 /v1/images/generations 和 /v1/audio/…；官方提供 Cline、Continue、Cursor、Aider 等教程。"}},
+  nanogpt: {name:"NanoGPT", farbe:"#34d399", url:"https://nano-gpt.com/api/v1", env:"NANOGPT_API_KEY", key:"sk-nano-…",
+    keys:"https://nano-gpt.com/api", docs:"https://docs.nano-gpt.com",
+    info:{de:"Kein Schrägstrich am Ende der Base-URL. Für große Anhänge/lange Anfragen alternativ https://api.nano-gpt.com/api/v1. Anthropic-Format unter /api/v1/messages.",
+          en:"No trailing slash on the base URL. For large attachments/long requests use https://api.nano-gpt.com/api/v1. Anthropic format at /api/v1/messages.",
+          zh:"Base URL 末尾不要加斜杠。大附件/长请求可改用 https://api.nano-gpt.com/api/v1。Anthropic 格式位于 /api/v1/messages。"}},
+  chutes: {name:"Chutes", farbe:"#f87171", url:"https://llm.chutes.ai/v1", env:"CHUTES_API_KEY", key:"cpk_…",
+    keys:"https://chutes.ai/settings/api-keys", docs:"https://chutes.ai/agents",
+    info:{de:"Öffentlicher Modell-Katalog unter /v1/models. Für Hermes gibt es zusätzlich ein Chutes-Plugin.",
+          en:"Public model catalogue at /v1/models. There is also a Chutes plugin for Hermes.",
+          zh:"公开模型目录位于 /v1/models。Hermes 另有 Chutes 插件。"}},
+  deepinfra: {name:"DeepInfra", farbe:"#60a5fa", url:"https://api.deepinfra.com/v1/openai", env:"DEEPINFRA_API_KEY", key:"Dashboard",
+    keys:"https://deepinfra.com/dash/api_keys", docs:"https://docs.deepinfra.com", hermes:"deepinfra",
+    info:{de:"Base-URL endet auf /v1/openai. In neueren Hermes-Versionen als eingebauter Anbieter „deepinfra“ verfügbar.",
+          en:"Base URL ends in /v1/openai. Available as built-in provider “deepinfra” in newer Hermes versions.",
+          zh:"Base URL 以 /v1/openai 结尾。较新版本的 Hermes 内置提供商 “deepinfra”。"}},
+  novita: {name:"Novita AI", farbe:"#2dd4bf", url:"https://api.novita.ai/openai/v1", env:"NOVITA_API_KEY", key:"Dashboard",
+    keys:null, docs:"https://novita.ai/docs", hermes:"novita",
+    info:{de:"Über 200 Open-Source-Modelle plus Bild/Video/Audio. In Hermes als eingebauter Anbieter „novita“ verfügbar.",
+          en:"200+ open-source models plus image/video/audio. Available as built-in provider “novita” in Hermes.",
+          zh:"200 多个开源模型及图像/视频/音频模型。Hermes 内置提供商 “novita”。"}},
+  cometapi: {name:"CometAPI", farbe:"#fb923c", url:"https://api.cometapi.com/v1", env:"COMETAPI_KEY", key:"sk-…",
+    keys:null, docs:"https://apidoc.cometapi.com",
+    info:{de:"Aggregator für Text-, Bild-, Video- und Audiomodelle. Zusätzlich Anthropic-Format (/v1/messages) und Gemini-Format (/v1beta).",
+          en:"Aggregator for text, image, video and audio models. Also Anthropic format (/v1/messages) and Gemini format (/v1beta).",
+          zh:"聚合文本、图像、视频和音频模型。另支持 Anthropic 格式（/v1/messages）和 Gemini 格式（/v1beta）。"}},
+  kyma: {name:"Kyma API", farbe:"#c084fc", url:"https://kymaapi.com/v1", env:"KYMA_API_KEY", key:"ky-…",
+    keys:null, docs:"https://kymaapi.com",
+    info:{de:"Gateway mit automatischem Failover und Prompt-Caching; zusätzlich ein Anthropic-kompatibler Endpunkt und ein MCP-Server.",
+          en:"Gateway with automatic failover and prompt caching; also an Anthropic-compatible endpoint and an MCP server.",
+          zh:"具备自动故障转移和提示缓存的网关；另提供 Anthropic 兼容端点和 MCP 服务器。"}}
+};
+const REIHENFOLGE = ["openrouter","nanogpt","deepinfra","novita","chutes","cometapi","uplinkswitch","kyma","anymodel"];
+
+/* ================= Zustand ================= */
+function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+function startSprache(){
+  const g = lsGet("lang") || (navigator.language || "").slice(0,2);
+  return L10N[g] ? g : (g === "de" ? "de" : "en");   // z. B. Russisch -> Englisch
+}
+let lang = startSprache();
+let S = {anb:"openrouter", tool:"hermes", modell:""};
+function ladeHash(){
+  const p = new URLSearchParams(location.hash.replace(/^#/, ""));
+  if (p.get("anbieter") && ANBIETER[p.get("anbieter")]) S.anb = p.get("anbieter");
+  if (p.get("tool")) S.tool = p.get("tool");
+  if (p.get("modell")) S.modell = p.get("modell");
+}
+function speichereHash(){
+  const p = new URLSearchParams({anbieter:S.anb, tool:S.tool});
+  if (S.modell) p.set("modell", S.modell);
+  try { history.replaceState(null, "", "#" + p.toString()); } catch(e){}
+}
+
+/* ================= Modelle aus den Preisdaten ================= */
+const BEVORZUGT = /(deepseek|glm|qwen|kimi|claude|gpt|gemini|minimax)/i;
+function modelleFuer(k){
+  const src = D[k] || {};
+  return Object.keys(src).map(function(kk){ return src[kk]; })
+    .filter(function(v){ return !v.media && (v.typ || ["text"]).indexOf("text") >= 0 && v.roh_id; })
+    .sort(function(a,b){
+      const pa = BEVORZUGT.test(a.roh_id) ? 0 : 1, pb = BEVORZUGT.test(b.roh_id) ? 0 : 1;
+      return (pa - pb) || ((a.in || a.price || 99) - (b.in || b.price || 99));
+    });
+}
+function standardModell(k){
+  const l = modelleFuer(k);
+  const gut = l.filter(function(v){ return /(glm|deepseek)/i.test(v.roh_id) && !/(:|thinking|free)/i.test(v.roh_id) && (v.context || 0) >= 128000; });
+  return (gut[0] || l[0] || {roh_id:"MODEL-ID"}).roh_id;
+}
+function modellInfo(k, id){
+  const src = D[k] || {};
+  for (const kk in src) if (src[kk].roh_id === id) return src[kk];
+  return null;
+}
+
+/* ================= Hilfen ================= */
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+let codeNr = 0;
+function code(lbl, txt){
+  codeNr++;
+  return '<div class="code"><span class="lbl">'+esc(lbl)+'</span><button class="btn copy" data-copy="c'+codeNr+'">'+L10N[lang].kopieren+'</button><pre id="c'+codeNr+'">'+esc(txt)+'</pre></div>';
+}
+function note(t, warn){ return '<div class="note'+(warn?" warn":"")+'">'+t+'</div>'; }
+
+/* ================= Anleitungen je Tool ================= */
+const TOOLS = [
+  {id:"hermes", fn:function(a, m, ctx, T){
+    const H = T.h, key = T.key_platzhalter;
+    let h = H.hermes_intro;
+    if (a.hermes){
+      h += H.hermes_a(esc(a.name), a.hermes);
+      h += code(".env", a.env+"="+key);
+      h += code("config.yaml", "model:\n  provider: "+a.hermes+"\n  default: "+m);
+      h += H.hermes_b;
+    } else {
+      h += H.hermes_wizard(esc(a.url), esc(m));
+    }
+    h += code(".env", a.env+"="+key);
+    h += code("config.yaml", "model:\n  provider: custom          # "+H.hermes_cmt1+"\n  base_url: "+a.url+"\n  key_env: "+a.env+"   # "+H.hermes_cmt2+"\n  default: "+m+(ctx ? "\n  context_length: "+ctx : ""));
+    h += '<p>'+H.hermes_cli+'</p>' + code("Terminal", "hermes config set model.provider custom\nhermes config set model.base_url "+a.url+"\nhermes config set model.default "+m+"\nhermes config show    # "+H.hermes_cmt3);
+    h += note(H.hermes_wichtig);
+    if (S.anb === "chutes") h += note(H.hermes_chutes);
+    h += H.hermes_model;
+    return h;
+  }},
+  {id:"copilot", fn:function(a, m, ctx, T){
+    const H = T.h;
+    let h = H.cop_titel;
+    h += a.copilot ? H.cop_nativ(esc(a.name), a.copilot, esc(m)) : H.cop_custom(esc(a.name), esc(a.url), esc(m));
+    h += note(H.cop_utility, true) + H.cop_grenzen;
+    return h;
+  }},
+  {id:"cline", fn:function(a, m, ctx, T){
+    const H = T.h;
+    return H.cline_titel + (a.cline ? note(H.cline_nativ(esc(a.name))) : "") + H.cline_steps(esc(a.url), esc(a.key), esc(m), ctx);
+  }},
+  {id:"continue", fn:function(a, m, ctx, T){
+    const H = T.h;
+    return H.cont_titel + code("config.yaml", "name: "+H.cont_name+"\nversion: 1.0.0\nschema: v1\nmodels:\n  - name: "+a.name+" · "+m+"\n    provider: openai\n    model: "+m+"\n    apiBase: "+a.url+"\n    apiKey: "+T.key_platzhalter+"\n    roles: [chat, edit, apply]"+(ctx?"\n    defaultCompletionOptions:\n      contextLength: "+ctx:"")) + note(H.cont_note);
+  }},
+  {id:"cursor", fn:function(a, m, ctx, T){
+    return T.h.cursor(esc(a.name), esc(a.url), esc(m)) + note(T.h.cursor_note, true);
+  }},
+  {id:"openwebui", fn:function(a, m, ctx, T){ return T.h.owui(esc(a.url), esc(m)); }},
+  {id:"aider", fn:function(a, m, ctx, T){
+    const key = T.key_platzhalter;
+    return T.h.aider_titel + code("Terminal", "aider --model openai/"+m+" \\\n      --openai-api-base "+a.url+" \\\n      --openai-api-key "+key) +
+      T.h.aider_env + code("PowerShell", '$env:OPENAI_API_BASE = "'+a.url+'"\n$env:OPENAI_API_KEY  = "'+key+'"\naider --model openai/'+m) + note(T.h.aider_note);
+  }},
+  {id:"code", fn:function(a, m, ctx, T){
+    const r = T.antwort, hi = T.hallo;
+    return T.h.code_py + code("Python", 'import os\nfrom openai import OpenAI\n\nclient = OpenAI(\n    base_url="'+a.url+'",\n    api_key=os.environ["'+a.env+'"],\n)\n'+r+' = client.chat.completions.create(\n    model="'+m+'",\n    messages=[{"role": "user", "content": "'+hi+'"}],\n)\nprint('+r+'.choices[0].message.content)') +
+      T.h.code_js + code("JavaScript", 'import OpenAI from "openai";\n\nconst client = new OpenAI({\n  baseURL: "'+a.url+'",\n  apiKey: process.env.'+a.env+',\n});\nconst '+r+' = await client.chat.completions.create({\n  model: "'+m+'",\n  messages: [{ role: "user", content: "'+hi+'" }],\n});\nconsole.log('+r+'.choices[0].message.content);') +
+      T.h.code_curl + code("Terminal", 'curl '+a.url+'/chat/completions \\\n  -H "Authorization: Bearer $'+a.env+'" \\\n  -H "Content-Type: application/json" \\\n  -d \'{"model": "'+m+'", "messages": [{"role": "user", "content": "'+hi+'"}]}\'') +
+      T.h.code_weitere;
+  }}
+];
+
+/* ================= Darstellung ================= */
+function render(){
+  const T = L10N[lang];
+  const a = ANBIETER[S.anb];
+  if (!TOOLS.some(function(t){ return t.id === S.tool; })) S.tool = "hermes";
+  const m = (S.modell || "").trim() || standardModell(S.anb);
+  const info = modellInfo(S.anb, m);
+  const ctx = info && info.context ? info.context : 0;
+  const loc = lang === "zh" ? "zh-CN" : lang === "en" ? "en-US" : "de-DE";
+
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+  document.title = T.nav_anbindung + " – aiapicompare";
+  document.querySelectorAll("[data-t]").forEach(function(el){ el.textContent = T[el.dataset.t]; });
+  document.querySelectorAll("[data-h]").forEach(function(el){ el.innerHTML = T[el.dataset.h]; });
+  document.querySelectorAll(".langbtns button").forEach(function(b){ b.classList.toggle("active", b.dataset.lang === lang); });
+
+  const dis = document.getElementById("disclosure");
+  dis.hidden = !C.hatAffiliate();
+  if (C.hatAffiliate()) dis.innerHTML = '<span class="adlabel">'+esc(C.kennzeichnung)+'</span><span>'+T.disclosure(C.kennzeichnung)+'</span>';
+
+  document.getElementById("provs").innerHTML = REIHENFOLGE.map(function(k){
+    const n = modelleFuer(k).length;
+    return '<button class="prov'+(k===S.anb?" active":"")+'" data-anb="'+k+'"><span class="dot" style="background:'+ANBIETER[k].farbe+'"></span>'+ANBIETER[k].name+'<small>'+n+' '+T.modelle+'</small></button>';
+  }).join("");
+
+  const liste = modelleFuer(S.anb);
+  document.getElementById("modelle").innerHTML = liste.slice(0, 800).map(function(v){
+    return '<option value="'+esc(v.roh_id)+'">'+esc(v.name || "")+'</option>';
+  }).join("");
+  const inp = document.getElementById("modell");
+  if (document.activeElement !== inp) inp.value = m;
+  document.getElementById("modellhint").innerHTML = info
+    ? esc(info.name || "") + (ctx ? " · " + T.kontext + " " + ctx.toLocaleString(loc) : "") + (typeof info.in === "number" ? " · $" + info.in + " / 1M " + T.input : "")
+    : (liste.length ? T.hint_eigen : T.hint_leer);
+
+  document.getElementById("kontocard").innerHTML = '<h3>'+T.schritt3+'</h3><div style="display:flex;flex-wrap:wrap;gap:.4rem">' +
+    C.linkHtml(S.anb, null, T.konto, "btn", a.name) +
+    (a.keys ? '<a class="btn" href="'+a.keys+'" target="_blank" rel="noopener">'+T.keylink+'</a>' : "") +
+    '<a class="btn" href="'+a.docs+'" target="_blank" rel="noopener">'+T.doku+'</a></div>' +
+    '<div class="hint">'+T.preise_link.replace("{k}", S.anb)+'</div>';
+
+  document.getElementById("tabs").innerHTML = TOOLS.map(function(t){
+    return '<button data-tool="'+t.id+'" class="'+(t.id===S.tool?"active":"")+'">'+T.tools[t.id]+'</button>';
+  }).join("");
+  document.getElementById("facts").innerHTML =
+    '<div class="fact"><span>'+T.fact_url+'</span><b>'+esc(a.url)+'</b></div>' +
+    '<div class="fact"><span>'+T.fact_key+'</span><b>'+esc(a.key)+'</b></div>' +
+    '<div class="fact"><span>'+T.fact_modell+'</span><b>'+esc(m)+'</b></div>' +
+    '<div class="fact"><span>'+T.fact_env+'</span><b>'+esc(a.env)+'</b></div>';
+  codeNr = 0;
+  const tool = TOOLS.find(function(t){ return t.id === S.tool; });
+  document.getElementById("anleitung").innerHTML = '<div class="card">' + tool.fn(a, m, ctx, T) +
+    note('<b>'+esc(a.name)+':</b> '+esc(a.info[lang] || a.info.en)) +
+    (S.anb === "anymodel" ? note(T.anymodel_hint, true) : "") + '</div>';
+
+  document.getElementById("uebersicht").innerHTML = REIHENFOLGE.map(function(k){
+    const x = ANBIETER[k];
+    return '<tr class="'+(k===S.anb?"sel":"")+'"><td><span class="dot" style="background:'+x.farbe+'"></span><a href="#anbieter='+k+'&tool='+S.tool+'" data-anb="'+k+'">'+x.name+'</a></td><td>'+esc(x.url)+'</td><td>'+esc(x.key)+'</td><td>'+esc(x.info[lang] || x.info.en)+'</td><td>'+C.linkHtml(k, null, T.zum, "btn", x.name)+'</td></tr>';
+  }).join("");
+  speichereHash();
+}
+
+/* ================= Ereignisse ================= */
+document.addEventListener("click", function(e){
+  const l = e.target.closest("button[data-lang]");
+  if (l){ lang = l.dataset.lang; lsSet("lang", lang); render(); return; }
+  const p = e.target.closest("[data-anb]");
+  if (p){ e.preventDefault(); S.anb = p.dataset.anb; S.modell = ""; render(); window.scrollTo({top:0, behavior:"smooth"}); return; }
+  const t = e.target.closest("[data-tool]");
+  if (t){ S.tool = t.dataset.tool; render(); return; }
+  const c = e.target.closest("[data-copy]");
+  if (c){
+    const T = L10N[lang];
+    const txt = document.getElementById(c.dataset.copy).textContent;
+    const fertig = function(){ c.textContent = T.kopiert; c.classList.add("ok"); setTimeout(function(){ c.textContent = T.kopieren; c.classList.remove("ok"); }, 1500); };
+    if (navigator.clipboard) navigator.clipboard.writeText(txt).then(fertig, function(){});
+    else { const r = document.createRange(); r.selectNodeContents(document.getElementById(c.dataset.copy)); const s = getSelection(); s.removeAllRanges(); s.addRange(r); document.execCommand("copy"); fertig(); }
+  }
+});
+let timer = null;
+document.getElementById("modell").addEventListener("input", function(e){
+  clearTimeout(timer); timer = setTimeout(function(){ S.modell = e.target.value; render(); }, 250);
+});
+window.addEventListener("hashchange", function(){ ladeHash(); render(); });
+ladeHash();
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+# Nur lokal – nicht ins öffentliche Repository
+PARTNERPROGRAMME.md
+api-token-vergleich_mobil.html
+build_data_alt.py
+index_alt.html
+screenshot_webseite.png
+_site/
+vorschau/
+out/prices.json
+__pycache__/
+*.pyc
+.env

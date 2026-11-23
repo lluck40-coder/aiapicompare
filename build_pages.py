@@ -1,0 +1,572 @@
+#!/usr/bin/env python3
+"""
+build_pages.py — stellt die komplette Website in einem Ordner zusammen und erzeugt
+die statischen SEO-Seiten aus out/data.js:
+
+  /models/<modell>.html          eine Seite pro Modell (Englisch)
+  /de|zh|ru/models/<modell>.html dieselbe Seite auf Deutsch, Chinesisch, Russisch
+  /[de|zh|ru/]models/index.html  Verzeichnis aller Modelle A–Z
+  /[de|zh|ru/]free.html          kostenlose Modelle
+  /api/prices.json               öffentliche Daten-Schnittstelle
+  /sitemap.xml                   für Google (mit Sprachvarianten)
+
+Aufruf:  python build_pages.py _site        (GitHub-Workflow)
+         python build_pages.py vorschau     (lokale Vorschau, dann vorschau/index.html öffnen)
+"""
+import json, re, sys, shutil, html
+from pathlib import Path
+from collections import Counter, defaultdict
+
+BASIS = Path(__file__).resolve().parent
+ZIEL = Path(sys.argv[1] if len(sys.argv) > 1 else "vorschau").resolve()
+DOMAIN = "https://aiapicompare.com/"
+SPRACHEN = ["en", "de", "zh", "ru"]          # en liegt im Stammverzeichnis
+
+STATISCH = ["index.html", "anbindung.html", "kosten.html","free.html", "impressum.html", "datenschutz.html",
+            "style.css", "sprache.js", "theme.js", "config.js", "favicon.svg", "favicon-32.png",
+            "apple-touch-icon.png", "og-image.png", "robots.txt", "CNAME"]
+
+# ------------------------------------------------------------------ Daten laden
+def lade_js(pfad):
+    roh = pfad.read_text(encoding="utf-8")
+    return json.loads(roh[roh.index("=") + 1:].rstrip().rstrip(";"))
+
+D = lade_js(BASIS / "out" / "data.js")
+VERLAUF = {}
+if (BASIS / "out" / "verlauf.json").exists():
+    VERLAUF = json.loads((BASIS / "out" / "verlauf.json").read_text(encoding="utf-8"))
+STAND = (D.get("meta") or {}).get("erstellt", "")
+
+ANBIETER = {   # Name, Farbe, OpenAI-kompatible Base-URL, Umgebungsvariable
+    "openrouter":   ("OpenRouter",   "#a78bfa", "https://openrouter.ai/api/v1", "OPENROUTER_API_KEY"),
+    "uplinkswitch": ("UplinkSwitch", "#f472b6", "https://api.uplinkswitch.com/v1", "UPLINKSWITCH_API_KEY"),
+    "anymodel":     ("AnyModel",     "#fbbf24", "https://anymodel.org/v1", "ANYMODEL_API_KEY"),
+    "nanogpt":      ("NanoGPT",      "#34d399", "https://nano-gpt.com/api/v1", "NANOGPT_API_KEY"),
+    "chutes":       ("Chutes",       "#f87171", "https://llm.chutes.ai/v1", "CHUTES_API_KEY"),
+    "deepinfra":    ("DeepInfra",    "#60a5fa", "https://api.deepinfra.com/v1/openai", "DEEPINFRA_API_KEY"),
+    "novita":       ("Novita AI",    "#2dd4bf", "https://api.novita.ai/openai/v1", "NOVITA_API_KEY"),
+    "cometapi":     ("CometAPI",     "#fb923c", "https://api.cometapi.com/v1", "COMETAPI_KEY"),
+    "kyma":         ("Kyma API",     "#c084fc", "https://kymaapi.com/v1", "KYMA_API_KEY"),
+}
+
+FAEH = {
+    "t2v": ("📝", {"de": "Text → Video", "en": "Text → video", "zh": "文生视频", "ru": "Текст → видео"}),
+    "start": ("⏮️", {"de": "Startbild (Bild → Video)", "en": "First frame (image → video)", "zh": "首帧（图生视频）", "ru": "Первый кадр"}),
+    "ende": ("⏭️", {"de": "Endbild", "en": "Last frame", "zh": "尾帧", "ru": "Последний кадр"}),
+    "ref": ("🧩", {"de": "Referenzbilder / Figuren", "en": "Reference images / characters", "zh": "参考图 / 角色", "ru": "Референсы / персонажи"}),
+    "v2v": ("🎞️", {"de": "Video bearbeiten", "en": "Video editing", "zh": "视频编辑", "ru": "Редактирование видео"}),
+    "motion": ("🕺", {"de": "Bewegung übertragen", "en": "Motion transfer", "zh": "动作迁移", "ru": "Перенос движения"}),
+    "ton": ("🔊", {"de": "Mit Ton", "en": "Native audio", "zh": "原生音频", "ru": "Со звуком"}),
+    "audio_in": ("🎤", {"de": "Audio-Eingabe / Lippensync", "en": "Audio input / lip-sync", "zh": "音频输入 / 口型同步", "ru": "Аудиовход / липсинк"}),
+    "multishot": ("🎬", {"de": "Mehrere Szenen", "en": "Multi-shot", "zh": "多镜头", "ru": "Несколько сцен"}),
+    "t2i": ("📝", {"de": "Text → Bild", "en": "Text → image", "zh": "文生图", "ru": "Текст → изображение"}),
+    "edit": ("✏️", {"de": "Bild bearbeiten", "en": "Image editing", "zh": "图像编辑", "ru": "Редактирование изображений"}),
+    "multiref": ("🗂️", {"de": "Mehrere Eingabebilder", "en": "Multiple input images", "zh": "多图输入", "ru": "Несколько входных изображений"}),
+    "maske": ("🖌️", {"de": "Maske / Inpainting", "en": "Mask / inpainting", "zh": "蒙版 / 局部重绘", "ru": "Маска / инпейнтинг"}),
+    "transparent": ("🔳", {"de": "Transparenter Hintergrund", "en": "Transparent background", "zh": "透明背景", "ru": "Прозрачный фон"}),
+    "upscale": ("🔍", {"de": "Hochskalieren", "en": "Upscaling", "zh": "超分放大", "ru": "Апскейл"}),
+    "outpaint": ("↔️", {"de": "Bild erweitern", "en": "Outpainting", "zh": "扩图", "ru": "Расширение изображения"}),
+    "4k": ("4K", {"de": "Bis 4K", "en": "Up to 4K", "zh": "最高 4K", "ru": "До 4K"}),
+    "unzensiert": ("🔓", {"de": "Ohne Inhaltsfilter", "en": "No content filter", "zh": "无内容过滤", "ru": "Без фильтра контента"}),
+}
+
+T = {
+"en": dict(htmllang="en", nav_vergleich="Price comparison", nav_kosten="Cost calculator", nav_gratis="Free models",
+  nav_anbindung="Setup & integration", impressum="Imprint", datenschutz="Privacy", alle_modelle="All models", api="Data as JSON",
+  titel1="{name} API pricing & capabilities | aiapicompare", lead_flat="{name} is available from {n} provider(s). Cheapest: <b>{prov}</b> at <b>{inp}</b> per 1M tokens (flat rate for input and output).",
+  titel="{name} API pricing: {n} providers compared | aiapicompare",
+  desc_text="{name} API price comparison: cheapest at {prov} with {inp} per 1M input tokens and {out} per 1M output tokens. Compare {n} providers, context window and setup.",
+  desc_media="{name} API price comparison: from {preis} at {prov}. Compare {n} providers and capabilities.",
+  h1="{name}: API pricing compared",
+  lead_text="{name} is available from {n} provider(s). Cheapest: <b>{prov}</b> at <b>{inp}</b> per 1M input tokens and <b>{out}</b> per 1M output tokens.",
+  lead_media="{name} is available from {n} provider(s). Cheapest: <b>{prov}</b> from <b>{preis}</b>.",
+  ctx="Context window: up to {ctx} tokens.", gratis_bei="Free to use at {prov}.", entw="Developer: {e}.",
+  th_anbieter="Provider", th_in="Input $/1M", th_out="Output $/1M", th_ctx="Context", th_preis="Price", th_faeh="Capabilities",
+  zum="Go to provider ↗", einrichten="Set up", faeh_titel="Capabilities", verlauf_titel="Price history (cheapest provider)",
+  verlauf_start="Price history is recorded daily – the chart appears after the first price change.", code_titel="Quick start with {prov}",
+  verwandt="More models from {e}", faq_titel="FAQ",
+  q1="Where is {name} cheapest?", a1="Currently at {prov} ({preis}). Prices are updated daily; the provider’s website is authoritative.",
+  q2="How do I use {name} in my tools?", a2="All listed providers offer an OpenAI-compatible API. See the <a href=\"{link}\">setup guide</a> for Hermes Agent, VS Code, Cursor and more.",
+  stand="Data as of {d}. Prices in USD, excluding taxes. No guarantee.", ranking="Sorted by price only – there are no paid placements.",
+  gratis="free", pro5s="per 5 s clip", ab="from", hallo="Hello!",
+  einheit={"image": "/image", "second": "/s", "generation": "/generation", "minute": "/min", "1k_chars": "/1k chars", "1k_bytes": "/1 kB"},
+  free_titel="Free AI models via API: {n} models | aiapicompare", free_h1="Free AI models via API",
+  free_desc="{n} AI models you can currently use via API for free – with context window and provider. Updated daily.",
+  free_lead="These models can currently be used via API at no cost. Free models usually have strict rate limits, and providers may use requests to improve their services – check the provider’s terms before sending sensitive data.",
+  free_leer="There are no free models in the current data. The list is updated daily.",
+  idx_titel="All AI models & API prices A–Z | aiapicompare", idx_h1="All AI models A–Z",
+  idx_desc="API prices for {n} AI models from {p} providers – text, image and video models, updated daily.",
+  idx_lead="{n} models from {p} providers. Click a model for the full price comparison.",
+  th_modell="Model", th_anz="Providers", th_ab="From", zurueck="← Back to the price comparison",
+  disclosure="<b>Transparency:</b> Links marked “{k}” are affiliate links (advertising). If you buy credits through them, we receive a commission – the price stays the same for you."),
+"de": dict(htmllang="de", nav_vergleich="Preisvergleich", nav_kosten="Kostenrechner", nav_gratis="Kostenlose Modelle",
+  nav_anbindung="Anbindung & Einrichtung", impressum="Impressum", datenschutz="Datenschutz", alle_modelle="Alle Modelle", api="Daten als JSON",
+  titel1="{name} API-Preis & Fähigkeiten | aiapicompare", lead_flat="{name} ist bei {n} Anbieter(n) verfügbar. Am günstigsten: <b>{prov}</b> mit <b>{inp}</b> pro 1 Mio. Token (Pauschalpreis für Input und Output).",
+  titel="{name} API-Preise: {n} Anbieter im Vergleich | aiapicompare",
+  desc_text="{name} API-Preisvergleich: am günstigsten bei {prov} mit {inp} pro 1 Mio. Input-Token und {out} pro 1 Mio. Output-Token. {n} Anbieter, Kontextfenster und Einrichtung im Vergleich.",
+  desc_media="{name} API-Preisvergleich: ab {preis} bei {prov}. {n} Anbieter und Fähigkeiten im Vergleich.",
+  h1="{name}: API-Preise im Vergleich",
+  lead_text="{name} ist bei {n} Anbieter(n) verfügbar. Am günstigsten: <b>{prov}</b> mit <b>{inp}</b> pro 1 Mio. Input-Token und <b>{out}</b> pro 1 Mio. Output-Token.",
+  lead_media="{name} ist bei {n} Anbieter(n) verfügbar. Am günstigsten: <b>{prov}</b> ab <b>{preis}</b>.",
+  ctx="Kontextfenster: bis {ctx} Token.", gratis_bei="Kostenlos nutzbar bei {prov}.", entw="Entwickler: {e}.",
+  th_anbieter="Anbieter", th_in="Input $/1M", th_out="Output $/1M", th_ctx="Kontext", th_preis="Preis", th_faeh="Fähigkeiten",
+  zum="Zum Anbieter ↗", einrichten="Einrichten", faeh_titel="Fähigkeiten", verlauf_titel="Preisverlauf (günstigster Anbieter)",
+  verlauf_start="Der Preisverlauf wird täglich aufgezeichnet – das Diagramm erscheint nach der ersten Preisänderung.", code_titel="Schnellstart mit {prov}",
+  verwandt="Weitere Modelle von {e}", faq_titel="Häufige Fragen",
+  q1="Wo ist {name} am günstigsten?", a1="Derzeit bei {prov} ({preis}). Die Preise werden täglich aktualisiert; maßgeblich ist die Seite des Anbieters.",
+  q2="Wie nutze ich {name} in meinen Tools?", a2="Alle aufgeführten Anbieter bieten eine OpenAI-kompatible API. Die <a href=\"{link}\">Einrichtungsanleitung</a> zeigt Hermes Agent, VS Code, Cursor und mehr.",
+  stand="Stand der Daten: {d}. Preise in USD, ohne Steuern. Ohne Gewähr.", ranking="Sortiert nur nach Preis – es gibt keine bezahlten Platzierungen.",
+  gratis="kostenlos", pro5s="pro 5-s-Clip", ab="ab", hallo="Hallo!",
+  einheit={"image": "/Bild", "second": "/s", "generation": "/Generierung", "minute": "/Min.", "1k_chars": "/1k Zeichen", "1k_bytes": "/1 kB"},
+  free_titel="Kostenlose KI-Modelle per API: {n} Modelle | aiapicompare", free_h1="Kostenlose KI-Modelle per API",
+  free_desc="{n} KI-Modelle, die du aktuell kostenlos per API nutzen kannst – mit Kontextfenster und Anbieter. Täglich aktualisiert.",
+  free_lead="Diese Modelle lassen sich derzeit kostenlos per API nutzen. Kostenlose Modelle haben meist strenge Ratenlimits, und Anbieter dürfen Anfragen teils zur Verbesserung ihrer Dienste verwenden – vor sensiblen Daten die Bedingungen des Anbieters prüfen.",
+  free_leer="In den aktuellen Daten gibt es keine kostenlosen Modelle. Die Liste wird täglich aktualisiert.",
+  idx_titel="Alle KI-Modelle & API-Preise von A–Z | aiapicompare", idx_h1="Alle KI-Modelle von A–Z",
+  idx_desc="API-Preise für {n} KI-Modelle von {p} Anbietern – Text-, Bild- und Videomodelle, täglich aktualisiert.",
+  idx_lead="{n} Modelle von {p} Anbietern. Ein Klick auf ein Modell zeigt den vollständigen Preisvergleich.",
+  th_modell="Modell", th_anz="Anbieter", th_ab="Ab", zurueck="← Zurück zum Preisvergleich",
+  disclosure="<b>Transparenz:</b> Links mit dem Hinweis „{k}“ sind Affiliate-Links (Werbung). Kaufst du darüber Guthaben, erhalten wir eine Provision – für dich ändert sich der Preis nicht."),
+"zh": dict(htmllang="zh-CN", nav_vergleich="价格对比", nav_kosten="成本计算器", nav_gratis="免费模型",
+  nav_anbindung="接入与配置", impressum="网站信息", datenschutz="隐私政策", alle_modelle="全部模型", api="JSON 数据",
+  titel1="{name} API 价格与功能 | aiapicompare", lead_flat="{name} 共有 {n} 家提供商。最便宜：<b>{prov}</b>，每百万 Token <b>{inp}</b>（输入输出统一价格）。",
+  titel="{name} API 价格：{n} 家提供商对比 | aiapicompare",
+  desc_text="{name} API 价格对比：{prov} 最便宜，每百万输入 Token {inp}，每百万输出 Token {out}。对比 {n} 家提供商、上下文窗口和接入方式。",
+  desc_media="{name} API 价格对比：{prov} 起价 {preis}。对比 {n} 家提供商及功能。",
+  h1="{name}：API 价格对比",
+  lead_text="{name} 共有 {n} 家提供商。最便宜：<b>{prov}</b>，每百万输入 Token <b>{inp}</b>，每百万输出 Token <b>{out}</b>。",
+  lead_media="{name} 共有 {n} 家提供商。最便宜：<b>{prov}</b>，<b>{preis}</b> 起。",
+  ctx="上下文窗口：最高 {ctx} Token。", gratis_bei="可在 {prov} 免费使用。", entw="开发商：{e}。",
+  th_anbieter="提供商", th_in="输入 $/1M", th_out="输出 $/1M", th_ctx="上下文", th_preis="价格", th_faeh="功能",
+  zum="前往提供商 ↗", einrichten="配置", faeh_titel="功能", verlauf_titel="价格走势（最便宜的提供商）",
+  verlauf_start="价格走势每日记录——首次价格变动后显示图表。", code_titel="使用 {prov} 快速开始",
+  verwandt="{e} 的更多模型", faq_titel="常见问题",
+  q1="{name} 在哪里最便宜？", a1="目前是 {prov}（{preis}）。价格每日更新，以提供商网站为准。",
+  q2="如何在我的工具中使用 {name}？", a2="所列提供商均提供 OpenAI 兼容 API。请参阅 Hermes Agent、VS Code、Cursor 等的<a href=\"{link}\">接入指南</a>。",
+  stand="数据时间：{d}。价格单位为美元，不含税。仅供参考。", ranking="仅按价格排序——不存在付费排名。",
+  gratis="免费", pro5s="每 5 秒片段", ab="起", hallo="你好！",
+  einheit={"image": "/张", "second": "/秒", "generation": "/次", "minute": "/分钟", "1k_chars": "/千字符", "1k_bytes": "/1 kB"},
+  free_titel="免费 AI 模型 API：{n} 个模型 | aiapicompare", free_h1="可免费调用的 AI 模型（API）",
+  free_desc="目前可通过 API 免费使用的 {n} 个 AI 模型，含上下文窗口和提供商。每日更新。",
+  free_lead="以下模型目前可通过 API 免费使用。免费模型通常有严格的速率限制，提供商可能会将请求用于改进服务——发送敏感数据前请查看提供商条款。",
+  free_leer="当前数据中没有免费模型。列表每日更新。",
+  idx_titel="全部 AI 模型及 API 价格（A–Z）| aiapicompare", idx_h1="全部 AI 模型（A–Z）",
+  idx_desc="{p} 家提供商的 {n} 个 AI 模型的 API 价格——文本、图像和视频模型，每日更新。",
+  idx_lead="来自 {p} 家提供商的 {n} 个模型。点击模型查看完整价格对比。",
+  th_modell="模型", th_anz="提供商", th_ab="起价", zurueck="← 返回价格对比",
+  disclosure="<b>透明声明：</b>标有“{k}”的链接为推广（联盟）链接，属于广告。若您通过这些链接充值，我们将获得佣金，您的价格不变。"),
+"ru": dict(htmllang="ru", nav_vergleich="Сравнение цен", nav_kosten="Калькулятор", nav_gratis="Бесплатные модели",
+  nav_anbindung="Подключение", impressum="Импрессум", datenschutz="Конфиденциальность", alle_modelle="Все модели", api="Данные в JSON",
+  titel1="{name}: цена API и возможности | aiapicompare", lead_flat="{name} доступна у {n} поставщиков. Дешевле всего: <b>{prov}</b> — <b>{inp}</b> за 1 млн токенов (единая цена за вход и выход).",
+  titel="{name}: цены API у {n} поставщиков | aiapicompare",
+  desc_text="Сравнение цен API {name}: дешевле всего у {prov} — {inp} за 1 млн входных и {out} за 1 млн выходных токенов. {n} поставщиков, контекст и подключение.",
+  desc_media="Сравнение цен API {name}: от {preis} у {prov}. {n} поставщиков и возможности.",
+  h1="{name}: сравнение цен API",
+  lead_text="{name} доступна у {n} поставщиков. Дешевле всего: <b>{prov}</b> — <b>{inp}</b> за 1 млн входных и <b>{out}</b> за 1 млн выходных токенов.",
+  lead_media="{name} доступна у {n} поставщиков. Дешевле всего: <b>{prov}</b> от <b>{preis}</b>.",
+  ctx="Контекстное окно: до {ctx} токенов.", gratis_bei="Бесплатно у {prov}.", entw="Разработчик: {e}.",
+  th_anbieter="Поставщик", th_in="Вход $/1M", th_out="Выход $/1M", th_ctx="Контекст", th_preis="Цена", th_faeh="Возможности",
+  zum="К поставщику ↗", einrichten="Настроить", faeh_titel="Возможности", verlauf_titel="История цен (самый дешёвый поставщик)",
+  verlauf_start="История цен записывается ежедневно – график появится после первого изменения цены.", code_titel="Быстрый старт с {prov}",
+  verwandt="Другие модели {e}", faq_titel="Вопросы и ответы",
+  q1="Где {name} дешевле всего?", a1="Сейчас у {prov} ({preis}). Цены обновляются ежедневно; действует цена на сайте поставщика.",
+  q2="Как использовать {name} в своих инструментах?", a2="Все поставщики предлагают API, совместимый с OpenAI. См. <a href=\"{link}\">руководство по подключению</a> для Hermes Agent, VS Code, Cursor и других.",
+  stand="Данные от {d}. Цены в USD без налогов. Без гарантии.", ranking="Сортировка только по цене – платных размещений нет.",
+  gratis="бесплатно", pro5s="за клип 5 с", ab="от", hallo="Привет!",
+  einheit={"image": "/изобр.", "second": "/с", "generation": "/генерация", "minute": "/мин", "1k_chars": "/1k зн.", "1k_bytes": "/1 кБ"},
+  free_titel="Бесплатные AI-модели по API: {n} моделей | aiapicompare", free_h1="Бесплатные AI-модели по API",
+  free_desc="{n} AI-моделей, которые сейчас можно бесплатно использовать по API, с контекстом и поставщиком. Обновляется ежедневно.",
+  free_lead="Эти модели сейчас можно использовать по API бесплатно. У бесплатных моделей обычно строгие лимиты, а поставщики могут использовать запросы для улучшения сервисов – проверьте условия перед отправкой конфиденциальных данных.",
+  free_leer="В текущих данных нет бесплатных моделей. Список обновляется ежедневно.",
+  idx_titel="Все AI-модели и цены API от A до Z | aiapicompare", idx_h1="Все AI-модели от A до Z",
+  idx_desc="Цены API для {n} AI-моделей от {p} поставщиков – текст, изображения и видео, ежедневное обновление.",
+  idx_lead="{n} моделей от {p} поставщиков. Нажмите на модель, чтобы увидеть полное сравнение цен.",
+  th_modell="Модель", th_anz="Поставщики", th_ab="От", zurueck="← Назад к сравнению цен",
+  disclosure="<b>Прозрачность:</b> ссылки с пометкой «{k}» – партнёрские (реклама). При покупке через них мы получаем комиссию, цена для вас не меняется."),
+}
+
+# ------------------------------------------------------------------ Hilfen
+def esc(s):
+    return html.escape(str(s), quote=True)
+
+def fmt(n):
+    if n is None:
+        return "—"
+    return "$" + (f"{n:.0f}" if n >= 100 else f"{n:.2f}" if n >= 1 else f"{n:.3f}" if n >= 0.01 else f"{n:.4f}")
+
+def fmt_ctx(n):
+    if not n:
+        return "—"
+    if n >= 1_000_000:
+        return (f"{n / 1_000_000:.2f}".rstrip("0").rstrip(".")) + "M"
+    return f"{round(n / 1000)}K" if n >= 1000 else str(n)
+
+def slug(k):
+    s = re.sub(r"^media-", "", str(k).lower())
+    s = re.sub(r"[^a-z0-9-]+", "-", s)
+    return re.sub(r"-+", "-", s).strip("-")
+
+def name_sauber(n):
+    return re.sub(r"^[^:]{1,30}:\s*", "", n or "").strip()
+
+# ------------------------------------------------------------------ Zeilen wie im Preisvergleich
+ZEILEN = []
+for q, (qname, farbe, base, env) in ANBIETER.items():
+    for k, v in (D.get(q) or {}).items():
+        inp = v.get("in") if isinstance(v.get("in"), (int, float)) else None
+        out = v.get("out") if isinstance(v.get("out"), (int, float)) else None
+        ab = v.get("price") if inp is None and isinstance(v.get("price"), (int, float)) else None
+        mp = v.get("media_preis") if isinstance(v.get("media_preis"), (int, float)) else None
+        typ = v.get("typ") or ["text"]
+        z = dict(q=q, quelle=qname, farbe=farbe, kanon=k, slug=slug(k), name=v.get("name") or v.get("roh_id") or k,
+                 roh=v.get("roh_id") or k, entw=v.get("entwickler") or "", ctx=v.get("context") or 0,
+                 inp=inp, out=out, ab=ab, mp=mp, einheit=v.get("einheit") or "", typ=typ,
+                 faeh=v.get("faeh") or [], aufl=v.get("aufl") or "", dauer=v.get("dauer") or 0,
+                 dauer_fix=v.get("dauer_fix") or 0, gratis=bool(v.get("gratis")), url=v.get("url") or "")
+        if not z["url"] and q == "openrouter":
+            z["url"] = "https://openrouter.ai/" + z["roh"]
+        z["ps"] = None
+        if "video" in typ and mp is not None and inp is None:
+            if z["einheit"] == "second":
+                z["ps"] = mp
+            elif z["einheit"] == "generation" and z["dauer_fix"]:
+                z["ps"] = mp / z["dauer_fix"]
+        z["preis"] = (z["ps"] if z["ps"] is not None else inp if inp is not None else ab if ab is not None
+                      else mp if mp is not None else float("inf"))
+        z["media"] = inp is None and ab is None and mp is not None
+        if not z["slug"]:
+            continue
+        ZEILEN.append(z)
+
+GRUPPEN = defaultdict(list)
+for z in ZEILEN:
+    GRUPPEN[z["slug"]].append(z)
+
+def gruppen_info(slug_, liste):
+    namen = Counter(name_sauber(z["name"]) for z in liste)
+    name = sorted(namen.items(), key=lambda x: (-x[1], -(" " in x[0]), -sum(c.isupper() for c in x[0]), len(x[0])))[0][0]
+    entw = Counter(z["entw"] for z in liste if z["entw"]).most_common(1)
+    liste = sorted(liste, key=lambda z: (z["preis"], z["quelle"]))
+    return dict(slug=slug_, name=name or slug_, entw=entw[0][0] if entw else "", zeilen=liste,
+                billig=liste[0], ctx=max((z["ctx"] for z in liste), default=0),
+                media=all(z["media"] for z in liste), anbieter=len({z["q"] for z in liste}),
+                gratis=[z for z in liste if z["gratis"]])
+
+INFOS = {s: gruppen_info(s, l) for s, l in GRUPPEN.items()}
+
+def preis_text(z, t):
+    if z["gratis"]:
+        return t["gratis"]
+    if z["ps"] is not None:
+        return f'{fmt(z["ps"])}{t["einheit"]["second"]} (≈ {fmt(z["ps"] * 5)} {t["pro5s"]})'
+    if z["inp"] is not None:
+        return f'{fmt(z["inp"])} / 1M'
+    if z["ab"] is not None:
+        return f'{t["ab"]} {fmt(z["ab"])} / 1M'
+    if z["mp"] is not None:
+        return f'{fmt(z["mp"])}{t["einheit"].get(z["einheit"], "")}'
+    return "—"
+
+# ------------------------------------------------------------------ Seitengerüst
+def pfad(lang, rest):
+    return ("" if lang == "en" else lang + "/") + rest
+
+def kopf(lang, rel, titel, desc, rest, alternativen=True):
+    t = T[lang]
+    alt = ""
+    if alternativen:
+        alt = "".join(f'<link rel="alternate" hreflang="{T[l]["htmllang"]}" href="{DOMAIN}{pfad(l, rest)}">\n' for l in SPRACHEN)
+        alt += f'<link rel="alternate" hreflang="x-default" href="{DOMAIN}{rest}">\n'
+    kurz = {"en": "EN", "de": "DE", "zh": "中文", "ru": "RU"}
+    sprachlinks = "".join('<a class="btn' + (" active" if l == lang else "") + '" data-setlang="' + l + '" href="' + rel + pfad(l, rest) + '">' + kurz[l] + "</a>" for l in SPRACHEN)
+    return f'''<!DOCTYPE html>
+<html lang="{t["htmllang"]}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{esc(titel)}</title>
+<meta name="description" content="{esc(desc)}">
+<link rel="canonical" href="{DOMAIN}{pfad(lang, rest)}">
+{alt}<meta property="og:type" content="website">
+<meta property="og:site_name" content="aiapicompare">
+<meta property="og:title" content="{esc(titel)}">
+<meta property="og:description" content="{esc(desc)}">
+<meta property="og:image" content="{DOMAIN}og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="{rel}favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{rel}apple-touch-icon.png">
+<link rel="stylesheet" href="{rel}style.css">
+<script src="{rel}theme.js"></script>
+<style>
+  .seite{{max-width:1000px}} .bc{{font-size:.8rem;color:var(--dim);margin-bottom:.6rem}} .bc a{{color:var(--muted)}}
+  .lead b{{color:var(--fg)}} .zahlen{{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}}
+  .zahl{{border:1px solid var(--border);border-radius:.5rem;padding:.55rem .8rem;background:var(--panel);min-width:150px}}
+  .zahl span{{display:block;font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}} .zahl b{{font-size:1.05rem}}
+  td.num,th.num{{text-align:right}} .price{{font-family:var(--mono);white-space:nowrap}} tr.best td{{background:var(--accent-bg)}}
+  .cap{{display:inline-flex;gap:.3rem;align-items:center;font-size:.82rem;padding:.15rem .5rem;border:1px solid var(--border2);border-radius:.4rem;background:var(--panel2);margin:0 .3rem .3rem 0}}
+  .caps{{display:flex;flex-wrap:wrap;margin-top:.2rem}} .mini .cap{{font-size:.72rem;padding:.05rem .3rem}}
+  .chart{{width:100%;height:auto;border:1px solid var(--border);border-radius:.6rem;background:var(--panel)}}
+  pre{{background:var(--codebg);border:1px solid var(--border);border-radius:.45rem;padding:.8rem 1rem;overflow-x:auto}}
+  .rel a{{display:inline-block;margin:0 .4rem .4rem 0}} details{{border-bottom:1px solid var(--border);padding:.55rem 0}} summary{{cursor:pointer;font-weight:600}}
+  .tag{{font-size:.68rem;padding:.05rem .35rem;border-radius:.3rem;border:1px solid var(--border2);margin-left:.3rem}}
+  .tag.g{{color:var(--accent);border-color:var(--accent)}} .idx td{{padding:.35rem .6rem}} .langlinks a{{margin-right:.5rem}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="{rel}index.html" aria-label="aiapicompare"><img class="logo-d" src="{rel}logo/logo.svg" alt="aiapicompare" width="166" height="30"><img class="logo-l" src="{rel}logo/logo-hell.svg" alt="aiapicompare" width="166" height="30"></a>
+  <nav class="nav">
+    <a href="{rel}index.html">{t["nav_vergleich"]}</a>
+    <a href="{rel}kosten.html">{t["nav_kosten"]}</a>
+    <a href="{rel}{pfad(lang, "free.html")}">{t["nav_gratis"]}</a>
+    <a href="{rel}anbindung.html">{t["nav_anbindung"]}</a>
+  </nav>
+  <button class="themebtn" title="Light / dark"><span class="ti-l">☀</span><span class="ti-d">☾</span></button>
+  <div class="langbtns langlinks">{sprachlinks}</div>
+</div>
+<div class="wrap seite">
+<div class="disclosure" id="disclosure" hidden></div>
+'''
+
+def fuss(lang, rel):
+    t = T[lang]
+    return f'''
+<div class="legal"><a href="{rel}index.html">{t["nav_vergleich"]}</a><a href="{rel}{pfad(lang, "models/index.html")}">{t["alle_modelle"]}</a><a href="{rel}api/prices.json">{t["api"]}</a><a href="{rel}impressum.html">{t["impressum"]}</a><a href="{rel}datenschutz.html">{t["datenschutz"]}</a></div>
+</div>
+<script src="{rel}config.js"></script>
+<script>
+(function(){{
+  var C = window.SITE_CONFIG; var lang = "{lang}";
+  try {{ localStorage.setItem("lang", lang); }} catch(e) {{}}
+  document.addEventListener("click", function(e){{ var a = e.target.closest("a[data-setlang]"); if (a) try {{ localStorage.setItem("lang", a.dataset.setlang); }} catch(_) {{}} }});
+  if (!C) return;
+  document.querySelectorAll("a[data-anb]").forEach(function(a){{
+    var l = C.link(a.dataset.anb, a.dataset.start ? null : a.getAttribute("href"));
+    a.setAttribute("href", l.url);
+    if (l.affiliate) {{ a.rel = "sponsored noopener"; a.insertAdjacentHTML("beforeend", ' <span class="adlabel">' + C.kennzeichnung + '</span>'); }}
+  }});
+  if (C.hatAffiliate()) {{ var d = document.getElementById("disclosure"); d.hidden = false;
+    d.innerHTML = '<span class="adlabel">' + C.kennzeichnung + '</span><span>' + {json.dumps(t["disclosure"])}.replace("{{k}}", C.kennzeichnung) + '</span>'; }}
+}})();
+</script>
+</body>
+</html>
+'''
+
+def go_link(z, t):
+    return (f'<a class="btn" data-anb="{z["q"]}" href="{esc(z["url"] or "#")}" target="_blank" rel="noopener">{t["zum"]}</a>')
+
+def caps_html(z, lang, mini=True):
+    teile = []
+    for c in z["faeh"]:
+        if c in FAEH:
+            ico, lab = FAEH[c]
+            teile.append(f'<span class="cap" title="{esc(lab[lang])}">{ico}{"" if mini else " " + esc(lab[lang])}</span>')
+    if z["dauer"]:
+        teile.append(f'<span class="cap">≤{z["dauer"]} s</span>')
+    if z["aufl"] and z["aufl"] != "4K":
+        teile.append(f'<span class="cap">{esc(z["aufl"])}</span>')
+    return f'<span class="caps{" mini" if mini else ""}">{"".join(teile)}</span>' if teile else ""
+
+# ------------------------------------------------------------------ Preisverlauf-Diagramm
+def verlauf_svg(info):
+    punkte = defaultdict(lambda: float("inf"))
+    serien = [VERLAUF.get(z["q"] + "|" + z["kanon"], {}).get("p") or [] for z in info["zeilen"]]
+    tage = sorted({d for s in serien for d, _ in s})
+    if len(tage) < 2:
+        return None
+    for tag in tage:          # günstigster Preis je Tag (letzter bekannter Preis je Anbieter)
+        for s in serien:
+            gueltig = [p for d, p in s if d <= tag]
+            if gueltig and gueltig[-1] is not None:
+                punkte[tag] = min(punkte[tag], gueltig[-1])
+    werte = [(d, punkte[d]) for d in tage if punkte[d] != float("inf")]
+    if len(werte) < 2 or len({w for _, w in werte}) < 2:
+        return None
+    W, H, P = 640, 170, 36
+    lo, hi = min(w for _, w in werte), max(w for _, w in werte)
+    spanne = (hi - lo) or 1
+    xs = lambda i: P + i * (W - 2 * P) / (len(werte) - 1)
+    ys = lambda w: H - P + 6 - (w - lo) / spanne * (H - 2 * P)
+    pts = " ".join(f"{xs(i):.1f},{ys(w):.1f}" for i, (_, w) in enumerate(werte))
+    kreise = "".join(f'<circle cx="{xs(i):.1f}" cy="{ys(w):.1f}" r="3" fill="var(--accent)"/>' for i, (_, w) in enumerate(werte))
+    return f'''<svg class="chart" viewBox="0 0 {W} {H}" role="img" aria-label="price history">
+<polyline points="{pts}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>
+{kreise}
+<text x="{P}" y="{H - 8}" font-size="11" fill="var(--muted)">{werte[0][0]}</text>
+<text x="{W - P}" y="{H - 8}" font-size="11" fill="var(--muted)" text-anchor="end">{werte[-1][0]}</text>
+<text x="6" y="{ys(hi) + 4:.1f}" font-size="11" fill="var(--muted)">{fmt(hi)}</text>
+<text x="6" y="{ys(lo) + 4:.1f}" font-size="11" fill="var(--muted)">{fmt(lo)}</text>
+</svg>'''
+
+# ------------------------------------------------------------------ Modellseite
+def modellseite(info, lang):
+    t = T[lang]
+    rel = "../" if lang == "en" else "../../"
+    rest = f'models/{info["slug"]}.html'
+    b = info["billig"]
+    name, n = info["name"], info["anbieter"]
+    if info["media"]:
+        desc = t["desc_media"].format(name=name, preis=preis_text(b, t), prov=b["quelle"], n=n)
+        lead = t["lead_media"].format(name=esc(name), n=n, prov=esc(b["quelle"]), preis=esc(preis_text(b, t)))
+    else:
+        desc = t["desc_text"].format(name=name, prov=b["quelle"], inp=fmt(b["inp"] if b["inp"] is not None else b["ab"]), out=fmt(b["out"]), n=n)
+        vorlage = t["lead_flat"] if (b["out"] is None and not b["gratis"]) else t["lead_text"]
+        lead = vorlage.format(name=esc(name), n=n, prov=esc(b["quelle"]),
+                                     inp=esc(t["gratis"] if b["gratis"] else fmt(b["inp"] if b["inp"] is not None else b["ab"])),
+                                     out=esc(t["gratis"] if b["gratis"] else fmt(b["out"])))
+    extra = []
+    if info["ctx"] and not info["media"]:
+        extra.append(t["ctx"].format(ctx=f'{info["ctx"]:,}'.replace(",", " ")))
+    if info["gratis"]:
+        extra.append(t["gratis_bei"].format(prov=", ".join(sorted({z["quelle"] for z in info["gratis"]}))))
+    if info["entw"]:
+        extra.append(t["entw"].format(e=esc(info["entw"])))
+
+    h = kopf(lang, rel, (t["titel"] if n > 1 else t["titel1"]).format(name=name, n=n), desc, rest)
+    h += f'<div class="bc"><a href="{rel}index.html">aiapicompare</a> › <a href="{rel}{pfad(lang, "models/index.html")}">{t["alle_modelle"]}</a> › {esc(name)}</div>\n'
+    h += f'<h1>{esc(t["h1"].format(name=name))}</h1>\n<p class="lead">{lead} {" ".join(extra)}</p>\n'
+
+    alle_faeh = []
+    for z in info["zeilen"]:
+        for c in z["faeh"]:
+            if c not in alle_faeh:
+                alle_faeh.append(c)
+    if alle_faeh:
+        h += f'<h2>{t["faeh_titel"]}</h2><div class="caps">' + "".join(
+            f'<span class="cap">{FAEH[c][0]} {esc(FAEH[c][1][lang])}</span>' for c in alle_faeh if c in FAEH) + "</div>\n"
+
+    # Tabelle
+    h += '<div class="tablewrap" style="margin-top:1rem"><table><thead><tr>'
+    if info["media"]:
+        h += f'<th>{t["th_anbieter"]}</th><th class="num">{t["th_preis"]}</th><th>{t["th_faeh"]}</th><th></th>'
+    else:
+        h += f'<th>{t["th_anbieter"]}</th><th class="num">{t["th_in"]}</th><th class="num">{t["th_out"]}</th><th class="num">{t["th_ctx"]}</th><th></th>'
+    h += "</tr></thead><tbody>"
+    for i, z in enumerate(info["zeilen"]):
+        anb = f'<span class="dot" style="background:{z["farbe"]}"></span>{esc(z["quelle"])}<br><small style="color:var(--dim);font-family:var(--mono)">{esc(z["roh"])}</small>'
+        einr = f' <a class="btn" href="{rel}anbindung.html#anbieter={z["q"]}&amp;modell={esc(z["roh"])}">{t["einrichten"]}</a>' if not z["media"] else ""
+        cls = ' class="best"' if i == 0 and len(info["zeilen"]) > 1 else ""
+        if info["media"]:
+            h += f'<tr{cls}><td>{anb}</td><td class="num price">{esc(preis_text(z, t))}</td><td>{caps_html(z, lang)}</td><td class="num">{go_link(z, t)}</td></tr>'
+        else:
+            pin = t["gratis"] if z["gratis"] else fmt(z["inp"] if z["inp"] is not None else z["ab"])
+            pout = t["gratis"] if z["gratis"] else fmt(z["out"])
+            h += f'<tr{cls}><td>{anb}</td><td class="num price">{esc(pin)}</td><td class="num price">{esc(pout)}</td><td class="num">{fmt_ctx(z["ctx"])}</td><td class="num" style="white-space:nowrap">{go_link(z, t)}{einr}</td></tr>'
+    h += f'</tbody></table></div>\n<p class="hint" style="font-size:.78rem;color:var(--dim)">{t["ranking"]} {t["stand"].format(d=esc(STAND))}</p>\n'
+
+    # Preisverlauf
+    svg = verlauf_svg(info)
+    h += f'<h2>{t["verlauf_titel"]}</h2>' + (svg if svg else f'<p style="color:var(--muted)">{t["verlauf_start"]}</p>') + "\n"
+
+    # Schnellstart (Text-Modelle)
+    if not info["media"]:
+        g = next((z for z in info["zeilen"] if not z["media"]), None)
+        if g:
+            _, _, base, env = ANBIETER[g["q"]]
+            h += f'<h2>{esc(t["code_titel"].format(prov=g["quelle"]))}</h2><pre>' + esc(
+                f'from openai import OpenAI\nimport os\n\nclient = OpenAI(base_url="{base}", api_key=os.environ["{env}"])\n'
+                f'r = client.chat.completions.create(\n    model="{g["roh"]}",\n    messages=[{{"role": "user", "content": "{t["hallo"]}"}}],\n)\nprint(r.choices[0].message.content)') + "</pre>\n"
+
+    # Häufige Fragen
+    link = f'{rel}anbindung.html#anbieter={b["q"]}&amp;modell={esc(b["roh"])}'
+    h += f'<h2>{t["faq_titel"]}</h2>'
+    h += f'<details open><summary>{esc(t["q1"].format(name=name))}</summary><p>{esc(t["a1"].format(prov=b["quelle"], preis=preis_text(b, t)))}</p></details>'
+    if not info["media"]:
+        h += f'<details><summary>{esc(t["q2"].format(name=name))}</summary><p>{t["a2"].format(link=link)}</p></details>'
+
+    # Verwandte Modelle
+    if info["entw"]:
+        verw = sorted((i for s, i in INFOS.items() if i["entw"] == info["entw"] and s != info["slug"]),
+                      key=lambda i: (-i["anbieter"], i["billig"]["preis"]))[:12]
+        if verw:
+            h += f'<h2>{esc(t["verwandt"].format(e=info["entw"]))}</h2><div class="rel">' + "".join(
+                f'<a class="btn" href="{esc(i["slug"])}.html">{esc(i["name"])}</a>' for i in verw) + "</div>"
+    h += fuss(lang, rel)
+    return h
+
+# ------------------------------------------------------------------ Kostenlose Modelle
+def gratisseite(lang):
+    t = T[lang]
+    rel = "" if lang == "en" else "../"
+    liste = sorted((z for z in ZEILEN if z["gratis"]), key=lambda z: (-z["ctx"], z["name"]))
+    h = kopf(lang, rel, t["free_titel"].format(n=len(liste)), t["free_desc"].format(n=len(liste)), "free.html")
+    h += f'<h1>{t["free_h1"]}</h1><p class="lead">{t["free_lead"]}</p>'
+    if not liste:
+        h += f'<p>{t["free_leer"]}</p>'
+    else:
+        h += f'<div class="tablewrap"><table><thead><tr><th>{t["th_modell"]}</th><th>{t["th_anbieter"]}</th><th class="num">{t["th_ctx"]}</th><th></th></tr></thead><tbody>'
+        for z in liste:
+            h += (f'<tr><td><a href="{rel}{pfad(lang, "models/" + z["slug"] + ".html")}">{esc(name_sauber(z["name"]))}</a>'
+                  f'<br><small style="color:var(--dim);font-family:var(--mono)">{esc(z["roh"])}</small></td>'
+                  f'<td><span class="dot" style="background:{z["farbe"]}"></span>{esc(z["quelle"])}</td>'
+                  f'<td class="num">{fmt_ctx(z["ctx"])}</td><td class="num">{go_link(z, t)}</td></tr>')
+        h += "</tbody></table></div>"
+    h += f'<p style="font-size:.78rem;color:var(--dim)">{t["stand"].format(d=esc(STAND))}</p>'
+    h += fuss(lang, rel)
+    return h
+
+# ------------------------------------------------------------------ Verzeichnis A–Z
+def verzeichnis(lang):
+    t = T[lang]
+    rel = "../" if lang == "en" else "../../"
+    infos = sorted(INFOS.values(), key=lambda i: i["name"].lower())
+    h = kopf(lang, rel, t["idx_titel"], t["idx_desc"].format(n=len(infos), p=len(ANBIETER)), "models/index.html")
+    h += f'<h1>{t["idx_h1"]}</h1><p class="lead">{t["idx_lead"].format(n=len(infos), p=len({z["q"] for z in ZEILEN}))}</p>'
+    h += f'<div class="tablewrap"><table class="idx"><thead><tr><th>{t["th_modell"]}</th><th class="num">{t["th_anz"]}</th><th class="num">{t["th_ab"]}</th></tr></thead><tbody>'
+    for i in infos:
+        g = ' <span class="tag g">' + t["gratis"] + "</span>" if i["gratis"] else ""
+        h += (f'<tr><td><a href="{esc(i["slug"])}.html">{esc(i["name"])}</a>{g}</td><td class="num">{i["anbieter"]}</td>'
+              f'<td class="num price">{esc(preis_text(i["billig"], t))}</td></tr>')
+    h += "</tbody></table></div>" + fuss(lang, rel)
+    return h
+
+# ------------------------------------------------------------------ Ausgabe
+def schreibe(rel_pfad, inhalt):
+    p = ZIEL / rel_pfad
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(inhalt, encoding="utf-8")
+
+def main():
+    ZIEL.mkdir(parents=True, exist_ok=True)
+    for f in STATISCH:
+        if (BASIS / f).exists():
+            shutil.copy2(BASIS / f, ZIEL / f)
+    if (BASIS / "logo").exists():
+        shutil.copytree(BASIS / "logo", ZIEL / "logo", dirs_exist_ok=True)
+        (ZIEL / "logo" / "logo-uebersicht.png").unlink(missing_ok=True)
+    (ZIEL / "out").mkdir(exist_ok=True)
+    shutil.copy2(BASIS / "out" / "data.js", ZIEL / "out" / "data.js")
+    with open(ZIEL / "out" / "data.js", "a", encoding="utf-8") as f:   # Kennzeichen: Modellseiten existieren
+        f.write("window.MODELLSEITEN = true;\n")
+    (ZIEL / "api").mkdir(exist_ok=True)
+    if (BASIS / "out" / "prices.json").exists():
+        shutil.copy2(BASIS / "out" / "prices.json", ZIEL / "api" / "prices.json")
+    else:
+        (ZIEL / "api" / "prices.json").write_text(json.dumps(D, ensure_ascii=False), encoding="utf-8")
+
+    urls = []   # (Pfad ohne Sprache, Sprachen, Häufigkeit, Priorität)
+    for lang in SPRACHEN:
+        for s, info in INFOS.items():
+            schreibe(pfad(lang, f"models/{s}.html"), modellseite(info, lang))
+        schreibe(pfad(lang, "free.html"), gratisseite(lang))
+        schreibe(pfad(lang, "models/index.html"), verzeichnis(lang))
+    urls += [(f"models/{s}.html", True, "daily", "0.7") for s in INFOS]
+    urls += [("free.html", True, "daily", "0.9"), ("models/index.html", True, "daily", "0.8")]
+
+    # Sitemap mit Sprachvarianten
+    x = ['<?xml version="1.0" encoding="UTF-8"?>',
+         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
+    for loc, prio in [("", "1.0"), ("kosten.html", "0.9"), ("anbindung.html", "0.8")]:
+        x.append(f"  <url><loc>{DOMAIN}{loc}</loc><changefreq>daily</changefreq><priority>{prio}</priority></url>")
+    for rest, mehrsprachig, freq, prio in urls:
+        alts = "".join(f'<xhtml:link rel="alternate" hreflang="{T[l]["htmllang"]}" href="{DOMAIN}{pfad(l, rest)}"/>' for l in SPRACHEN)
+        for l in SPRACHEN:
+            x.append(f"  <url><loc>{DOMAIN}{pfad(l, rest)}</loc>{alts}<changefreq>{freq}</changefreq><priority>{prio}</priority></url>")
+    x.append("</urlset>")
+    (ZIEL / "sitemap.xml").write_text("\n".join(x), encoding="utf-8")
+    print(f"Website in {ZIEL}: {len(INFOS)} Modelle × {len(SPRACHEN)} Sprachen, "
+          f"{sum(1 for z in ZEILEN if z['gratis'])} kostenlose Modelle, Sitemap mit {len(x) - 3} Adressen")
+
+if __name__ == "__main__":
+    main()

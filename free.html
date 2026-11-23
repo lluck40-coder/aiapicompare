@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free AI models via API – aiapicompare</title>
+<meta name="description" content="AI models you can currently use via API for free – with context window, model ID and setup guide.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:image" content="https://aiapicompare.com/og-image.png">
+<link rel="stylesheet" href="style.css">
+<script src="theme.js"></script>
+<style>
+  .filter{display:flex;flex-wrap:wrap;gap:.7rem;align-items:end;margin:1.2rem 0 1rem}
+  .filter label{display:block;font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem}
+  .filter input,.filter select{padding:.5rem .7rem;border:1px solid var(--border2);border-radius:.45rem;background:var(--input);font-size:.95rem}
+  .filter input{min-width:260px}
+  .filter input:focus,.filter select:focus{outline:none;border-color:var(--blue)}
+  .zahl{margin-left:auto;color:var(--muted);font-size:.85rem}
+  td.num,th.num{text-align:right}
+  .mid{font-family:var(--mono);font-size:.78rem;color:var(--dim)}
+  .kopier{margin-left:.4rem;padding:.1rem .45rem;font-size:.7rem;border:1px solid var(--border2);border-radius:.35rem;background:var(--input);color:var(--muted);cursor:pointer}
+  .kopier.ok{color:var(--accent);border-color:var(--accent)}
+  a.mlink{color:var(--fg);text-decoration:none;font-weight:600}
+  a.mlink:hover{color:var(--accent);text-decoration:underline}
+  .tag.g{display:inline-block;margin-left:.35rem;padding:.05rem .4rem;border-radius:.3rem;font-size:.7rem;font-weight:700;background:var(--accent-bg);color:var(--accent)}
+  .howto{margin-top:1.6rem}
+  .howto h2{font-size:1.05rem;margin:0 0 .6rem}
+  .howto ol{margin:.2rem 0 0;padding-left:1.2rem;line-height:1.7}
+  .howto code{font-family:var(--mono);background:var(--codebg);padding:.05rem .35rem;border-radius:.25rem;font-size:.85em}
+  .leer{padding:2rem;text-align:center;color:var(--muted)}
+  .stand{font-size:.78rem;color:var(--dim);margin-top:.8rem}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="index.html" aria-label="aiapicompare"><img class="logo-d" src="logo/logo.svg" alt="aiapicompare" width="166" height="30"><img class="logo-l" src="logo/logo-hell.svg" alt="aiapicompare" width="166" height="30"></a>
+  <nav class="nav">
+    <a href="index.html" data-t="nav_vergleich"></a>
+    <a href="kosten.html" data-t="nav_kosten"></a>
+    <a href="free.html" class="active" data-t="nav_gratis"></a>
+    <a href="anbindung.html" data-t="nav_anbindung"></a>
+  </nav>
+  <button class="themebtn" title="Light / dark"><span class="ti-l">☀</span><span class="ti-d">☾</span></button>
+  <div class="langbtns">
+    <button data-lang="de">DE</button><button data-lang="en">EN</button><button data-lang="zh">中文</button><button data-lang="ru">RU</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="disclosure" id="disclosure" hidden></div>
+  <h1 data-t="h1"></h1>
+  <p class="lead" data-t="lead"></p>
+
+  <div class="filter">
+    <div><label for="suche" data-t="suche"></label><input id="suche" type="search"></div>
+    <div><label for="ctx" data-t="minctx"></label><select id="ctx"></select></div>
+    <div><label for="sort" data-t="sortierung"></label><select id="sort"></select></div>
+    <div class="zahl" id="zahl"></div>
+  </div>
+
+  <div class="tablewrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+  <p class="stand" id="stand"></p>
+
+  <div class="card howto">
+    <h2 data-t="howto_h"></h2>
+    <ol id="howto"></ol>
+  </div>
+
+  <div class="legal">
+    <a href="index.html" data-t="nav_vergleich"></a><a href="impressum.html" data-t="impressum"></a><a href="datenschutz.html" data-t="datenschutz"></a>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="out/data.js"></script>
+<script>
+"use strict";
+const D = window.API_DATEN || {};
+const C = window.SITE_CONFIG || {kennzeichnung:"Anzeige", hatAffiliate:function(){return false;},
+  linkHtml:function(k,u,t,c){ return u ? '<a class="'+(c||"")+'" href="'+u+'" target="_blank" rel="noopener">'+t+'</a>' : ""; }};
+const QUELLEN = {openrouter:"OpenRouter", uplinkswitch:"UplinkSwitch", anymodel:"AnyModel", nanogpt:"NanoGPT", chutes:"Chutes",
+  deepinfra:"DeepInfra", novita:"Novita AI", cometapi:"CometAPI", kyma:"Kyma API"};
+const FARBE = {openrouter:"#a78bfa", uplinkswitch:"#f472b6", anymodel:"#fbbf24", nanogpt:"#34d399", chutes:"#f87171",
+  deepinfra:"#60a5fa", novita:"#2dd4bf", cometapi:"#fb923c", kyma:"#c084fc"};
+const BASIS = {openrouter:"https://openrouter.ai/api/v1", uplinkswitch:"https://api.uplinkswitch.com/v1", anymodel:"https://anymodel.org/v1",
+  nanogpt:"https://nano-gpt.com/api/v1", chutes:"https://llm.chutes.ai/v1", deepinfra:"https://api.deepinfra.com/v1/openai",
+  novita:"https://api.novita.ai/openai/v1", cometapi:"https://api.cometapi.com/v1", kyma:"https://kymaapi.com/v1"};
+
+const L10N = {
+de:{h1:"Kostenlose KI-Modelle per API",
+  lead:"Diese Modelle lassen sich derzeit kostenlos per API nutzen. Kostenlose Modelle haben meist strenge Ratenlimits, und Anbieter dürfen Anfragen teils zur Verbesserung ihrer Dienste verwenden – vor sensiblen Daten die Bedingungen des Anbieters prüfen.",
+  nav_vergleich:"Preisvergleich", nav_kosten:"Kostenrechner", nav_gratis:"Kostenlose Modelle", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
+  suche:"Suchen", suche_ph:"z. B. gemma, nemotron …", minctx:"Min. Kontextfenster", egal:"beliebig", sortierung:"Sortieren",
+  sort:{ctx:"Größtes Kontextfenster", name:"Name A–Z"}, zahl:function(n,g){ return n === g ? n + " Modelle" : n + " von " + g + " Modellen"; },
+  th:["Modell","Anbieter","Kontext",""], los:"Ausprobieren ↗", kopieren:"ID kopieren", kopiert:"kopiert ✓", gratis:"kostenlos",
+  leer:"In den aktuellen Daten gibt es keine kostenlosen Modelle. Die Liste wird täglich aktualisiert.",
+  keintreffer:"Keine Modelle passen zum Filter.", stand:function(d){ return "Stand der Daten: " + d + " · Angaben ohne Gewähr, maßgeblich ist die Seite des Anbieters."; },
+  howto_h:"So nutzt du ein kostenloses Modell",
+  howto:["Beim Anbieter ein kostenloses Konto anlegen und einen API-Schlüssel erzeugen.",
+         "In deinem Programm (z. B. VS Code, Cline, Hermes) die Basis-URL des Anbieters eintragen – bei OpenRouter <code>https://openrouter.ai/api/v1</code>.",
+         "Als Modell die ID aus der Tabelle verwenden (Knopf „ID kopieren“), z. B. <code>{id}</code>.",
+         "Schritt-für-Schritt-Anleitungen für viele Programme findest du unter <a href=\"anbindung.html\">Anbindung &amp; Einrichtung</a>."],
+  disclosure:function(k){ return "<b>Transparenz:</b> Links mit dem Hinweis „"+k+"“ sind Affiliate-Links (Werbung). Wir erhalten ggf. eine Provision – für dich ändert sich der Preis nicht. Die Reihenfolge wird dadurch nicht beeinflusst."; }},
+en:{h1:"Free AI models via API",
+  lead:"These models can currently be used via API at no cost. Free models usually have strict rate limits, and providers may use requests to improve their services – check the provider’s terms before sending sensitive data.",
+  nav_vergleich:"Price comparison", nav_kosten:"Cost calculator", nav_gratis:"Free models", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
+  suche:"Search", suche_ph:"e.g. gemma, nemotron …", minctx:"Min. context window", egal:"any", sortierung:"Sort by",
+  sort:{ctx:"Largest context window", name:"Name A–Z"}, zahl:function(n,g){ return n === g ? n + " models" : n + " of " + g + " models"; },
+  th:["Model","Provider","Context",""], los:"Try it ↗", kopieren:"Copy ID", kopiert:"copied ✓", gratis:"free",
+  leer:"There are no free models in the current data. The list is updated daily.",
+  keintreffer:"No models match the filter.", stand:function(d){ return "Data as of " + d + " · No guarantee – the provider’s website is authoritative."; },
+  howto_h:"How to use a free model",
+  howto:["Create a free account with the provider and generate an API key.",
+         "In your tool (e.g. VS Code, Cline, Hermes) enter the provider’s base URL – for OpenRouter <code>https://openrouter.ai/api/v1</code>.",
+         "Use the ID from the table as the model (“Copy ID” button), e.g. <code>{id}</code>.",
+         "Step-by-step guides for many tools: <a href=\"anbindung.html\">Setup &amp; integration</a>."],
+  disclosure:function(k){ return "<b>Transparency:</b> Links marked “"+k+"” are affiliate links (advertising). We may receive a commission – the price stays the same for you. Ranking is not affected."; }},
+zh:{h1:"可免费调用的 AI 模型（API）",
+  lead:"以下模型目前可通过 API 免费使用。免费模型通常有严格的速率限制，提供商可能会将请求用于改进服务——发送敏感数据前请查看提供商条款。",
+  nav_vergleich:"价格对比", nav_kosten:"成本计算器", nav_gratis:"免费模型", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
+  suche:"搜索", suche_ph:"如 gemma、nemotron …", minctx:"最小上下文窗口", egal:"不限", sortierung:"排序",
+  sort:{ctx:"上下文窗口最大", name:"名称 A–Z"}, zahl:function(n,g){ return n === g ? n + " 个模型" : n + " / " + g + " 个模型"; },
+  th:["模型","提供商","上下文",""], los:"试用 ↗", kopieren:"复制 ID", kopiert:"已复制 ✓", gratis:"免费",
+  leer:"当前数据中没有免费模型。列表每日更新。",
+  keintreffer:"没有符合筛选条件的模型。", stand:function(d){ return "数据日期：" + d + " · 仅供参考，以提供商网站为准。"; },
+  howto_h:"如何使用免费模型",
+  howto:["在提供商处注册免费账户并创建 API 密钥。",
+         "在你的工具（如 VS Code、Cline、Hermes）中填写提供商的 Base URL——OpenRouter 为 <code>https://openrouter.ai/api/v1</code>。",
+         "模型名称使用表格中的 ID（“复制 ID”按钮），例如 <code>{id}</code>。",
+         "各工具的详细步骤见 <a href=\"anbindung.html\">接入与配置</a>。"],
+  disclosure:function(k){ return "<b>透明声明：</b>标有“"+k+"”的链接为推广（联盟）链接，属于广告。我们可能获得佣金，您的价格不变，排序不受影响。"; }},
+ru:{h1:"Бесплатные AI-модели по API",
+  lead:"Эти модели сейчас можно использовать через API бесплатно. У бесплатных моделей обычно строгие лимиты запросов, а поставщики могут использовать запросы для улучшения своих сервисов – проверьте условия перед отправкой конфиденциальных данных.",
+  nav_vergleich:"Сравнение цен", nav_kosten:"Калькулятор", nav_gratis:"Бесплатные модели", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
+  suche:"Поиск", suche_ph:"напр. gemma, nemotron …", minctx:"Мин. контекст", egal:"любой", sortierung:"Сортировка",
+  sort:{ctx:"Наибольший контекст", name:"Название A–Z"}, zahl:function(n,g){ return n === g ? n + " моделей" : n + " из " + g + " моделей"; },
+  th:["Модель","Поставщик","Контекст",""], los:"Попробовать ↗", kopieren:"Копировать ID", kopiert:"скопировано ✓", gratis:"бесплатно",
+  leer:"В текущих данных нет бесплатных моделей. Список обновляется ежедневно.",
+  keintreffer:"Нет моделей, подходящих под фильтр.", stand:function(d){ return "Данные на " + d + " · Без гарантии, действует информация на сайте поставщика."; },
+  howto_h:"Как использовать бесплатную модель",
+  howto:["Создайте бесплатный аккаунт у поставщика и получите API-ключ.",
+         "В вашем инструменте (VS Code, Cline, Hermes и др.) укажите базовый URL поставщика – для OpenRouter <code>https://openrouter.ai/api/v1</code>.",
+         "В качестве модели используйте ID из таблицы (кнопка «Копировать ID»), напр. <code>{id}</code>.",
+         "Пошаговые инструкции для многих инструментов: <a href=\"anbindung.html\">Подключение</a>."],
+  disclosure:function(k){ return "<b>Прозрачность:</b> ссылки с пометкой «"+k+"» – партнёрские (реклама). Мы можем получить комиссию, цена для вас не меняется."; }}
+};
+
+/* ---------- Daten: alle kostenlosen Einträge ---------- */
+function slug(k){ return String(k).replace(/^media-/, "").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, ""); }
+function sauber(n){ return String(n || "").replace(/^[^:]{1,30}:\s*/, "").replace(/\s*\((free|kostenlos)\)\s*$/i, "").replace(/\s{2,}/g, " "); }
+const Z = [];
+Object.keys(QUELLEN).forEach(function(q){
+  const src = D[q] || {};
+  Object.keys(src).forEach(function(k){
+    const v = src[k];
+    const frei = v.gratis || (v.in === 0 && v.out === 0 && typeof v.media_preis !== "number");
+    if (!frei) return;
+    const roh = v.roh_id || k;
+    Z.push({q:q, kanon:k, roh:roh, name:sauber(v.name || roh), ctx:v.context || 0,
+            url:v.url || (q === "openrouter" ? "https://openrouter.ai/" + roh : "")});
+  });
+});
+
+/* ---------- Zustand ---------- */
+function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+let lang = lsGet("lang") || (navigator.language || "").slice(0,2);
+if (!L10N[lang]) lang = "en";
+const S = {q:"", ctx:0, sort:"ctx"};
+const CTX_OPT = [0, 32000, 128000, 200000, 1000000];
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function fmtCtx(c){ return !c ? "–" : c >= 1e6 ? (Math.round(c / 1e5) / 10) + "M" : Math.round(c / 1000) + "K"; }
+function pfad(){ return lang === "en" ? "" : lang + "/"; }
+
+/* ---------- Darstellung ---------- */
+function rahmen(){
+  const T = L10N[lang];
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+  document.title = T.h1 + " – aiapicompare";
+  document.querySelectorAll("[data-t]").forEach(function(el){ el.textContent = T[el.dataset.t]; });
+  document.querySelectorAll(".langbtns button").forEach(function(b){ b.classList.toggle("active", b.dataset.lang === lang); });
+  document.getElementById("suche").placeholder = T.suche_ph;
+  document.getElementById("ctx").innerHTML = CTX_OPT.map(function(c){
+    return '<option value="'+c+'"'+(c === S.ctx ? " selected" : "")+'>'+(c ? fmtCtx(c) : T.egal)+'</option>'; }).join("");
+  document.getElementById("sort").innerHTML = Object.keys(T.sort).map(function(s){
+    return '<option value="'+s+'"'+(s === S.sort ? " selected" : "")+'>'+T.sort[s]+'</option>'; }).join("");
+  document.getElementById("thead").innerHTML = '<tr>'+T.th.map(function(h,i){ return '<th'+(i >= 2 ? ' class="num"' : '')+'>'+h+'</th>'; }).join("")+'</tr>';
+  const bsp = (Z[0] && Z[0].roh) || "google/gemma-4-31b-it:free";
+  document.getElementById("howto").innerHTML = T.howto.map(function(s){ return "<li>" + s.replace("{id}", esc(bsp)) + "</li>"; }).join("");
+  const st = ((D.meta && D.meta.erstellt) || "").slice(0, 10);
+  document.getElementById("stand").textContent = st ? T.stand(st) : "";
+  const dis = document.getElementById("disclosure");
+  dis.hidden = !C.hatAffiliate();
+  if (C.hatAffiliate()) dis.innerHTML = '<span class="adlabel">'+esc(C.kennzeichnung)+'</span><span>'+T.disclosure(C.kennzeichnung)+'</span>';
+  tabelle();
+}
+function tabelle(){
+  const T = L10N[lang];
+  const q = S.q.trim().toLowerCase();
+  const liste = Z.filter(function(z){
+    if (S.ctx && z.ctx < S.ctx) return false;
+    return !q || (z.name + " " + z.roh + " " + QUELLEN[z.q]).toLowerCase().indexOf(q) >= 0;
+  }).sort(function(a,b){ return S.sort === "name" ? a.name.localeCompare(b.name) : (b.ctx - a.ctx || a.name.localeCompare(b.name)); });
+  document.getElementById("zahl").textContent = Z.length ? T.zahl(liste.length, Z.length) : "";
+  const tb = document.getElementById("tbody");
+  if (!Z.length){ tb.innerHTML = '<tr><td colspan="4" class="leer">'+T.leer+'</td></tr>'; return; }
+  if (!liste.length){ tb.innerHTML = '<tr><td colspan="4" class="leer">'+T.keintreffer+'</td></tr>'; return; }
+  tb.innerHTML = liste.map(function(z){
+    const name = window.MODELLSEITEN ? '<a class="mlink" href="'+pfad()+'models/'+slug(z.kanon)+'.html">'+esc(z.name)+'</a>' : '<b>'+esc(z.name)+'</b>';
+    return '<tr><td>'+name+'<span class="tag g">'+esc(T.gratis)+'</span><br><span class="mid">'+esc(z.roh)+'</span>'+
+      '<button class="kopier" data-id="'+esc(z.roh)+'">'+esc(T.kopieren)+'</button></td>'+
+      '<td><span class="dot" style="background:'+FARBE[z.q]+'"></span>'+esc(QUELLEN[z.q])+'</td>'+
+      '<td class="num">'+fmtCtx(z.ctx)+'</td>'+
+      '<td class="num">'+C.linkHtml(z.q, z.url, T.los, "btn", QUELLEN[z.q])+'</td></tr>';
+  }).join("");
+}
+
+/* ---------- Ereignisse ---------- */
+document.addEventListener("click", function(e){
+  const l = e.target.closest("button[data-lang]");
+  if (l){ lang = l.dataset.lang; lsSet("lang", lang); rahmen(); return; }
+  const k = e.target.closest("button.kopier");
+  if (k){
+    const fertig = function(){ k.textContent = L10N[lang].kopiert; k.classList.add("ok");
+      setTimeout(function(){ k.textContent = L10N[lang].kopieren; k.classList.remove("ok"); }, 1500); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(k.dataset.id).then(fertig, function(){});
+    else { const t = document.createElement("textarea"); t.value = k.dataset.id; document.body.appendChild(t); t.select();
+           try { document.execCommand("copy"); fertig(); } catch(err){} t.remove(); }
+  }
+});
+document.getElementById("suche").addEventListener("input", function(e){ S.q = e.target.value; tabelle(); });
+document.getElementById("ctx").addEventListener("change", function(e){ S.ctx = +e.target.value; tabelle(); });
+document.getElementById("sort").addEventListener("change", function(e){ S.sort = e.target.value; tabelle(); });
+rahmen();
+</script>
+</body>
+</html>

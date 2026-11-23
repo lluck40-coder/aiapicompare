@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>aiapicompare – Compare AI API prices</title>
+<script src="theme.js"></script>
+<meta name="description" content="Compare AI API prices: LLM token prices, image and video models across OpenRouter, NanoGPT, DeepInfra, Novita, CometAPI and more – sortable by provider, price and context window.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="aiapicompare">
+<meta property="og:title" content="aiapicompare – Compare AI API prices">
+<meta property="og:description" content="Token, image &amp; video prices across providers – sortable by provider, price and context window.">
+<meta property="og:url" content="https://aiapicompare.com/">
+<meta property="og:image" content="https://aiapicompare.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0b0c0e">
+<style>
+  :root{
+    --bg:#0b0c0e; --panel:#121418; --panel2:#171a1f; --fg:#e8e9eb; --muted:#8d939c; --dim:#5f656e;
+    --accent:#4ade80; --accent-bg:rgba(74,222,128,.10); --blue:#60a5fa;
+    --border:#23262c; --border2:#2e323a; --input:#0e1013;
+    --mono:ui-monospace,"Cascadia Code",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,sans-serif;background:var(--bg);color:var(--fg);font-size:14px;line-height:1.4}
+  button,input,select{font:inherit;color:inherit}
+  a{color:inherit}
+
+  /* ---------- Kopfzeile ---------- */
+  :root{--topbar:rgba(11,12,14,.92);--cmpbg:#0f1114}
+  [data-theme=light]{--bg:#f8fafc;--panel:#ffffff;--panel2:#f1f5f9;--fg:#0f172a;--muted:#64748b;--dim:#94a3b8;--accent:#16a34a;--accent-bg:rgba(22,163,74,.08);--blue:#2563eb;--border:#e2e8f0;--border2:#cbd5e1;--input:#ffffff;--topbar:rgba(248,250,252,.92);--cmpbg:#f8fafc}
+  [data-theme=light] .disclosure{background:#fffbeb;color:#78350f;border-color:#fcd34d}
+  [data-theme=light] .disclosure b{color:#92400e}
+  [data-theme=light] .switch span:before{box-shadow:0 0 0 1px #cbd5e1}
+  .brand .logo-l{display:none}
+  [data-theme=light] .brand .logo-d{display:none}
+  [data-theme=light] .brand .logo-l{display:block}
+  .themebtn{padding:.3rem .55rem;font-size:.85rem;border:1px solid var(--border2);background:var(--input);border-radius:.35rem;cursor:pointer;color:var(--muted);margin-left:auto}
+  .themebtn+.langbtns{margin-left:0}
+  .themebtn .ti-d{display:none}
+  [data-theme=light] .themebtn .ti-l{display:none}
+  [data-theme=light] .themebtn .ti-d{display:inline}
+  .tag.neu{background:rgba(96,165,250,.12);color:var(--blue);border-color:rgba(96,165,250,.4);font-weight:700}
+  .tag.gratis{background:var(--accent-bg);color:var(--accent);border-color:rgba(74,222,128,.35);font-weight:700}
+  .tag.down{color:var(--accent)}
+  .tag.up{color:#f87171}
+  .sub5{display:block;font-size:.68rem;color:var(--dim);font-weight:400}
+  a.mname{text-decoration:none;color:var(--fg)}
+  a.mname:hover{color:var(--accent);text-decoration:underline}
+  .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:1rem;padding:.75rem 1.25rem;background:var(--topbar);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .brand{font-weight:700;font-size:1.05rem;white-space:nowrap}
+  .brand{display:flex;align-items:center;text-decoration:none}
+  .brand img{display:block;height:30px;width:auto}
+  .searchbox{flex:1;max-width:560px;position:relative}
+  .searchbox input{width:100%;padding:.55rem .9rem .55rem 2.1rem;border:1px solid var(--border2);border-radius:.55rem;background:var(--input);font-size:.95rem}
+  .searchbox input:focus{outline:none;border-color:var(--blue)}
+  .searchbox svg{position:absolute;left:.65rem;top:50%;transform:translateY(-50%);color:var(--muted)}
+  .searchbox kbd{position:absolute;right:.6rem;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:.7rem;color:var(--dim);border:1px solid var(--border2);border-radius:.3rem;padding:0 .35rem}
+  .langbtns{display:flex;gap:.3rem;margin-left:auto}
+  .langbtns button{padding:.3rem .6rem;font-size:.75rem;border:1px solid var(--border2);background:var(--input);border-radius:.35rem;cursor:pointer;color:var(--muted)}
+  .langbtns button.active{border-color:var(--accent);color:var(--accent)}
+  .nav{display:flex;gap:.2rem}
+  .nav a{padding:.35rem .7rem;border-radius:.4rem;text-decoration:none;color:var(--muted);font-size:.85rem;white-space:nowrap}
+  .nav a:hover{color:var(--fg);background:var(--panel2)}
+  .nav a.active{color:var(--fg);background:var(--panel2)}
+  .adlabel{display:inline-block;font-size:.6rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:.05rem .3rem;border-radius:.25rem;background:#3b2f0b;color:#fbbf24;border:1px solid #5c4710;vertical-align:middle;margin-left:.2rem}
+  .disclosure{display:flex;gap:.6rem;align-items:flex-start;font-size:.78rem;line-height:1.5;color:#e5d3a1;background:#1d180a;border:1px solid #4a3a10;border-radius:.5rem;padding:.55rem .8rem;margin-bottom:.8rem}
+  .disclosure[hidden]{display:none}
+  .disclosure b{color:#fbbf24}
+  .gotolink{display:inline-flex;align-items:center;gap:.2rem;padding:.25rem .55rem;border:1px solid var(--border2);border-radius:.4rem;text-decoration:none;font-size:.78rem;color:var(--fg);white-space:nowrap}
+  .gotolink:hover{border-color:var(--accent);color:var(--accent)}
+  .provlink{text-decoration:none}
+  .provlink:hover span.pn{text-decoration:underline;color:var(--accent)}
+  .est{color:#f59e0b;cursor:help;margin-right:.15rem}
+  .legal{margin-top:1rem;font-size:.75rem}
+  .legal a{color:var(--muted);margin-right:.8rem}
+  .infobox{margin-top:1.5rem;padding:.9rem 1rem;border:1px solid var(--border);border-radius:.6rem;background:var(--panel);font-size:.78rem;color:var(--muted);line-height:1.6}
+  .infobox h4{margin:0 0 .3rem;color:var(--fg);font-size:.82rem}
+  .infobox p{margin:.2rem 0 .6rem}
+  .filterbtn{display:none;padding:.45rem .75rem;border:1px solid var(--border2);background:var(--input);border-radius:.5rem;cursor:pointer}
+
+  /* ---------- Layout ---------- */
+  .layout{display:grid;grid-template-columns:270px 1fr;gap:0;min-height:calc(100vh - 57px)}
+  aside{border-right:1px solid var(--border);padding:1rem 1rem 2rem;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto}
+  main{padding:1rem 1.25rem 3rem;min-width:0}
+
+  /* ---------- Seitenleiste ---------- */
+  .fgroup{border-bottom:1px solid var(--border);padding:.8rem 0}
+  .fgroup:first-child{padding-top:0}
+  .fgroup h3{margin:0 0 .55rem;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;display:flex;justify-content:space-between;align-items:center}
+  .fgroup h3 button{background:none;border:0;color:var(--blue);font-size:.7rem;cursor:pointer;text-transform:none;letter-spacing:0;padding:0}
+  .check{display:flex;align-items:center;gap:.5rem;padding:.22rem .3rem;border-radius:.35rem;cursor:pointer;font-size:.86rem}
+  .check:hover{background:var(--panel2)}
+  .check input{accent-color:var(--accent);margin:0}
+  .check .cnt{margin-left:auto;color:var(--dim);font-size:.75rem;font-family:var(--mono)}
+  .dot{width:.55rem;height:.55rem;border-radius:50%;flex:none}
+  .range-val{font-family:var(--mono);font-size:.8rem;color:var(--accent)}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  .range-ticks{display:flex;justify-content:space-between;font-size:.66rem;color:var(--dim);font-family:var(--mono)}
+  .toggle{display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-size:.86rem;cursor:pointer}
+  .switch{position:relative;width:34px;height:19px;flex:none}
+  .switch input{opacity:0;width:0;height:0}
+  .switch span{position:absolute;inset:0;background:var(--border2);border-radius:19px;transition:.15s}
+  .switch span:before{content:"";position:absolute;width:13px;height:13px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.15s}
+  .switch input:checked+span{background:var(--accent)}
+  .switch input:checked+span:before{transform:translateX(15px)}
+  .resetall{margin-top:1rem;width:100%;padding:.5rem;border:1px solid var(--border2);background:var(--input);border-radius:.45rem;cursor:pointer;color:var(--muted)}
+  .resetall:hover{color:var(--fg)}
+
+  /* ---------- Werkzeugleiste ---------- */
+  .toolbar{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.7rem}
+  .count{font-size:.95rem}
+  .count b{font-weight:700}
+  .count small{color:var(--muted);margin-left:.4rem}
+  .tb-right{margin-left:auto;display:flex;gap:.5rem;align-items:center}
+  .tb-right label{font-size:.8rem;color:var(--muted)}
+  select{padding:.42rem .6rem;border:1px solid var(--border2);background:var(--input);border-radius:.45rem;cursor:pointer}
+  .viewtog{display:flex;border:1px solid var(--border2);border-radius:.45rem;overflow:hidden}
+  .viewtog button{padding:.38rem .6rem;background:var(--input);border:0;cursor:pointer;color:var(--muted)}
+  .viewtog button.active{background:var(--panel2);color:var(--fg)}
+  .chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.8rem;min-height:0}
+  .chip{display:inline-flex;align-items:center;gap:.35rem;padding:.2rem .55rem;font-size:.76rem;border:1px solid var(--border2);border-radius:1rem;background:var(--panel);cursor:pointer}
+  .chip:hover{border-color:#f87171}
+  .chip i{font-style:normal;color:var(--muted)}
+  .meta{font-size:.74rem;color:var(--dim);margin-bottom:.8rem}
+
+  /* ---------- Tabelle ---------- */
+  .tablewrap{border:1px solid var(--border);border-radius:.6rem;background:var(--panel)}
+  thead th:first-child{border-top-left-radius:.6rem}
+  thead th:last-child{border-top-right-radius:.6rem}
+  table{width:100%;border-collapse:collapse}
+  thead th{position:sticky;top:57px;z-index:5;background:var(--panel2);padding:.6rem .8rem;font-size:.72rem;font-weight:600;color:var(--muted);text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;user-select:none}
+  th.sortable{cursor:pointer}
+  th.sortable:hover{color:var(--fg)}
+  th.active{color:var(--accent)}
+  th .arr{display:inline-block;margin-left:.25rem;opacity:.35;font-size:.7rem}
+  th.active .arr{opacity:1}
+  th.num,td.num{text-align:right}
+  tbody td{padding:.6rem .8rem;border-bottom:1px solid var(--border);vertical-align:middle}
+  tbody tr.row:hover td{background:rgba(255,255,255,.025)}
+  .mname{font-weight:600;text-decoration:none}
+  .mname:hover{color:var(--accent)}
+  .mid{display:block;font-family:var(--mono);font-size:.72rem;color:var(--dim);margin-top:.1rem;word-break:break-all}
+  .tags{display:inline-flex;gap:.25rem;margin-left:.35rem;vertical-align:middle}
+  .tag{font-size:.62rem;padding:.05rem .35rem;border-radius:.3rem;background:var(--panel2);color:var(--muted);border:1px solid var(--border2)}
+  .tag.best{background:var(--accent-bg);color:var(--accent);border-color:rgba(74,222,128,.35)}
+  .prov{display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap}
+  .prov small{color:var(--dim)}
+  .price{font-family:var(--mono);white-space:nowrap}
+  .price.best{color:var(--accent);font-weight:700}
+  .unit{color:var(--dim);font-size:.7rem}
+  .ctx{font-family:var(--mono);white-space:nowrap}
+  .ctxbar{display:block;height:3px;border-radius:2px;background:var(--border2);margin-top:.3rem;overflow:hidden;width:70px;margin-left:auto}
+  .ctxbar i{display:block;height:100%;background:var(--blue)}
+  .cmpbtn{padding:.2rem .5rem;font-size:.72rem;border:1px solid var(--border2);border-radius:1rem;background:var(--input);cursor:pointer;color:var(--blue);white-space:nowrap}
+  .cmpbtn:hover,.cmpbtn.open{border-color:var(--blue)}
+  .extlink{color:var(--muted);text-decoration:none;font-size:1rem}
+  .extlink:hover{color:var(--accent)}
+  tr.cmp td{background:var(--cmpbg);padding:.4rem .8rem .8rem 2rem}
+  .cmptable{width:100%;max-width:760px;border-collapse:collapse;font-size:.82rem}
+  .cmptable th{position:static;background:none;padding:.35rem .5rem;font-size:.68rem}
+  .cmptable td{padding:.35rem .5rem;border-bottom:1px dashed var(--border)}
+  .cmptable tr.self td{background:rgba(96,165,250,.06)}
+  .diff{font-size:.7rem;color:#f59e0b;margin-left:.3rem}
+  .empty{padding:3rem;color:var(--muted);text-align:center}
+  .more{display:block;margin:1rem auto 0;padding:.6rem 1.4rem;border:1px solid var(--border2);background:var(--panel);border-radius:.5rem;cursor:pointer}
+  .more:hover{border-color:var(--accent)}
+
+  /* ---------- Listenansicht (Karten) ---------- */
+  .caps{display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.35rem}
+  .cap{display:inline-flex;align-items:center;gap:.15rem;font-size:.72rem;line-height:1.3;padding:.05rem .32rem;border:1px solid var(--border2);border-radius:.3rem;background:var(--panel2);cursor:help;white-space:nowrap}
+  .cap b{font-size:.62rem;font-weight:700;color:var(--blue)}
+  .cap.info{color:var(--muted);cursor:default}
+  .cap.on{border-color:var(--accent);background:var(--accent-bg)}
+  .check .ico{width:1.3rem;text-align:center;flex:none}
+  .fhint{font-size:.7rem;color:var(--dim);margin-top:.4rem;line-height:1.4}
+  .cards{display:flex;flex-direction:column;gap:.6rem}
+  .card{border:1px solid var(--border);border-radius:.6rem;background:var(--panel);padding:.9rem 1rem}
+  .card:hover{border-color:var(--border2)}
+  .card-top{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start}
+  .card-stats{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;margin-top:.55rem;font-size:.8rem;color:var(--muted)}
+  .card-stats b{color:var(--fg);font-family:var(--mono);font-weight:600}
+  .card-stats b.best{color:var(--accent)}
+  .card .cmpwrap{margin-top:.6rem}
+
+  footer{margin-top:1.5rem;font-size:.74rem;color:var(--dim);line-height:1.6}
+
+  /* ---------- Mobil ---------- */
+  .backdrop{display:none}
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr}
+    aside{position:fixed;left:0;top:0;bottom:0;width:300px;max-width:86vw;height:100vh;z-index:40;background:var(--bg);transform:translateX(-105%);transition:transform .2s;padding-top:1.2rem}
+    body.drawer aside{transform:none}
+    body.drawer .backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:30}
+    .filterbtn{display:inline-block}
+    .brand small{display:none}
+    .nav{order:6;flex-basis:100%;overflow-x:auto}
+    .topbar{flex-wrap:wrap;gap:.6rem}
+    .searchbox{order:5;flex-basis:100%;max-width:none}
+    .searchbox kbd{display:none}
+    .tablewrap{overflow-x:auto}
+    thead th{position:static}
+  }
+  @media (max-width:640px){
+    main{padding:.8rem}
+    .tb-right{margin-left:0;width:100%}
+    .tb-right select{flex:1;min-width:0}
+    .tb-right label{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="filterbtn" id="filterbtn">☰ <span data-t="filter"></span></button>
+  <a class="brand" href="index.html" aria-label="aiapicompare"><img class="logo-d" src="logo/logo.svg" alt="aiapicompare" width="166" height="30"><img class="logo-l" src="logo/logo-hell.svg" alt="aiapicompare" width="166" height="30"></a>
+  <div class="searchbox">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input type="search" id="search" autocomplete="off">
+    <kbd>/</kbd>
+  </div>
+  <nav class="nav">
+    <a href="index.html" class="active" data-t="nav_vergleich"></a>
+    <a href="kosten.html" data-t="nav_kosten"></a>
+    <a href="free.html" data-t="nav_gratis" id="gratislink"></a>
+    <a href="anbindung.html" data-t="nav_anbindung"></a>
+  </nav>
+  <button class="themebtn"><span class="ti-l">☀</span><span class="ti-d">☾</span></button>
+  <div class="langbtns">
+    <button data-lang="de">DE</button>
+    <button data-lang="en">EN</button>
+    <button data-lang="zh">中文</button>
+    <button data-lang="ru">RU</button>
+  </div>
+</div>
+
+<div class="backdrop" id="backdrop"></div>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+  <main>
+    <div class="toolbar">
+      <div class="count" id="count"></div>
+      <div class="tb-right">
+        <label for="sortsel" data-t="sortieren"></label>
+        <select id="sortsel"></select>
+        <div class="viewtog" id="viewtog">
+          <button data-view="table" title="">▤</button>
+          <button data-view="list" title="">☰</button>
+        </div>
+      </div>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="disclosure" id="disclosure" hidden></div>
+    <div class="meta" id="meta"></div>
+    <div id="results"></div>
+    <div class="infobox" id="infobox"></div>
+    <footer id="footer"></footer>
+    <div class="legal"><a href="impressum.html" data-t="impressum"></a><a href="datenschutz.html" data-t="datenschutz"></a><a href="anbindung.html" data-t="nav_anbindung"></a><a href="api/prices.json" data-t="api"></a></div>
+  </main>
+</div>
+
+<script src="config.js"></script>
+<script src="out/data.js"></script>
+<script>
+"use strict";
+const D = window.API_DATEN || {};
+const C = window.SITE_CONFIG || {kennzeichnung:"Anzeige", hatAffiliate:function(){ return false; },
+  linkHtml:function(k,u,t,c){ return u ? '<a class="'+(c||"")+'" href="'+u+'" target="_blank" rel="noopener">'+t+'</a>' : ""; }};
+
+/* =================== Konfiguration =================== */
+const QUELLEN = [
+  {key:"openrouter",   name:"OpenRouter",   farbe:"#a78bfa"},
+  {key:"uplinkswitch", name:"UplinkSwitch", farbe:"#f472b6"},
+  {key:"anymodel",     name:"AnyModel",     farbe:"#fbbf24"},
+  {key:"nanogpt",      name:"NanoGPT",      farbe:"#34d399"},
+  {key:"chutes",       name:"Chutes",       farbe:"#f87171"},
+  {key:"deepinfra",    name:"DeepInfra",    farbe:"#60a5fa"},
+  {key:"novita",       name:"Novita AI",    farbe:"#2dd4bf"},
+  {key:"cometapi",     name:"CometAPI",     farbe:"#fb923c"},
+  {key:"kyma",         name:"Kyma API",     farbe:"#c084fc"}
+].filter(function(q){ return D[q.key] && Object.keys(D[q.key]).length; });   // nur Anbieter mit Daten anzeigen
+const Q_BY_KEY = {}; QUELLEN.forEach(function(q){ Q_BY_KEY[q.key] = q; });
+
+const FAMILIEN = [
+  {key:"gpt",      label:"GPT · OpenAI",       tokens:["openai","gpt"]},
+  {key:"claude",   label:"Claude · Anthropic", tokens:["anthropic","claude"]},
+  {key:"gemini",   label:"Gemini · Google",    tokens:["google","gemini","gemma"]},
+  {key:"deepseek", label:"DeepSeek",           tokens:["deepseek"]},
+  {key:"grok",     label:"Grok · xAI",         tokens:["xai","grok"]},
+  {key:"glm",      label:"GLM · Z.ai",         tokens:["z.ai","glm"]},
+  {key:"llama",    label:"Llama · Meta",       tokens:["meta","llama"]},
+  {key:"kimi",     label:"Kimi · Moonshot",    tokens:["moonshot","kimi"]},
+  {key:"qwen",     label:"Qwen",               tokens:["qwen"]},
+  {key:"mistral",  label:"Mistral",            tokens:["mistral","codestral","devstral"]},
+  {key:"minimax",  label:"MiniMax",            tokens:["minimax"]}
+];
+/* Fähigkeiten von Bild-/Video-Modellen (Piktogramme) */
+const FAEH = {
+  t2v:      {ico:"📝", art:"video", de:"Text → Video", en:"Text → video", zh:"文生视频", ru:"Текст → видео"},
+  start:    {ico:"⏮️", art:"video", de:"Startbild (Bild → Video)", en:"First frame (image → video)", zh:"首帧（图生视频）", ru:"Первый кадр (изображение → видео)"},
+  ende:     {ico:"⏭️", art:"video", de:"Endbild (letztes Bild vorgeben)", en:"Last frame", zh:"尾帧", ru:"Последний кадр"},
+  ref:      {ico:"🧩", art:"video", de:"Referenzbilder / Figuren", en:"Reference images / characters", zh:"参考图 / 角色", ru:"Референсы / персонажи"},
+  v2v:      {ico:"🎞️", art:"video", de:"Video bearbeiten (Video → Video)", en:"Video editing (video → video)", zh:"视频编辑（视频转视频）", ru:"Редактирование видео"},
+  motion:   {ico:"🕺", art:"video", de:"Bewegung übertragen", en:"Motion transfer", zh:"动作迁移", ru:"Перенос движения"},
+  ton:      {ico:"🔊", art:"video", de:"Mit Ton / Audio", en:"Native audio", zh:"原生音频", ru:"Со звуком"},
+  audio_in: {ico:"🎤", art:"video", de:"Audio-Eingabe / Lippensynchron", en:"Audio input / lip-sync", zh:"音频输入 / 口型同步", ru:"Аудиовход / липсинк"},
+  multishot:{ico:"🎬", art:"video", de:"Mehrere Szenen (Multi-Shot)", en:"Multi-shot", zh:"多镜头", ru:"Несколько сцен"},
+  t2i:      {ico:"📝", art:"bild",  de:"Text → Bild", en:"Text → image", zh:"文生图", ru:"Текст → изображение"},
+  edit:     {ico:"✏️", art:"bild",  de:"Bild bearbeiten", en:"Image editing", zh:"图像编辑", ru:"Редактирование изображений"},
+  multiref: {ico:"🗂️", art:"bild",  de:"Mehrere Eingabebilder", en:"Multiple input images", zh:"多图输入", ru:"Несколько входных изображений"},
+  maske:    {ico:"🖌️", art:"bild",  de:"Maske / Inpainting", en:"Mask / inpainting", zh:"蒙版 / 局部重绘", ru:"Маска / инпейнтинг"},
+  transparent:{ico:"🔳", art:"bild", de:"Transparenter Hintergrund", en:"Transparent background", zh:"透明背景", ru:"Прозрачный фон"},
+  upscale:  {ico:"🔍", art:"bild",  de:"Hochskalieren", en:"Upscaling", zh:"超分放大", ru:"Апскейл"},
+  outpaint: {ico:"↔️", art:"bild",  de:"Bild erweitern (Outpainting)", en:"Outpainting", zh:"扩图", ru:"Расширение изображения"},
+  "4k":     {ico:"<b>4K</b>", art:"beide", de:"Bis 4K-Auflösung", en:"Up to 4K resolution", zh:"最高 4K 分辨率", ru:"До 4K"},
+  unzensiert:{ico:"🔓", art:"beide", de:"Ohne Inhaltsfilter", en:"No content filter", zh:"无内容过滤", ru:"Без фильтра контента"}
+};
+const FAEH_ORDNUNG = Object.keys(FAEH);
+function faehName(k){ const f = FAEH[k]; return f ? (f[lang] || f.en) : k; }
+const TYPEN = ["text","bild","video","audio","3d"];
+
+// Schritte für die Schieberegler
+const CTX_STEPS   = [0, 8000, 32000, 64000, 128000, 200000, 256000, 400000, 1000000];
+const PREIS_STEPS = [0.1, 0.25, 0.5, 1, 2, 5, 10, 25, Infinity];  // max. Input-Preis
+
+const ENTW_MAP = {"openai":"OpenAI","anthropic":"Anthropic","google":"Google","deepseek":"DeepSeek","deepseek-ai":"DeepSeek",
+  "z-ai":"Z.ai","zai-org":"Z.ai","qwen":"Qwen","moonshotai":"Moonshot AI","meta-llama":"Meta","mistralai":"Mistral",
+  "minimax":"MiniMax","minimaxai":"MiniMax","x-ai":"xAI","xai":"xAI","nvidia":"NVIDIA","microsoft":"Microsoft","cohere":"Cohere",
+  "amazon":"Amazon","perplexity":"Perplexity","tencent":"Tencent","xiaomi":"Xiaomi"};
+const BEKANNT = ["OpenAI","Anthropic","Google","DeepSeek","xAI","Meta","Qwen","Moonshot AI","Z.ai","Mistral","MiniMax","NVIDIA","Xiaomi","Tencent","Microsoft"];
+
+/* =================== Übersetzungen =================== */
+const I18N = {
+  de:{
+    seitentitel:"aiapicompare – KI-API-Preise vergleichen",
+    nav_kosten:"Kostenrechner", nav_gratis:"Kostenlose Modelle", gratis:"kostenlos", nur_gratis:"Nur kostenlose Modelle", neu:"NEU", vorher:function(p){ return "vorher "+p; }, theme:"Hell / Dunkel", api:"Daten als JSON", pro5s:"/ 5-s-Clip", gen:"pro Generierung",
+    filter:"Filter", suche:"Modell, Anbieter oder ID suchen …", sortieren:"Sortieren:",
+    nav_vergleich:"Preisvergleich", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
+    zum_anbieter:"Zum Anbieter", einrichten:function(n){ return "So bindest du "+n+" an (Hermes, VS Code …)"; },
+    geschaetzt:"geschätzt – aus dem Abrechnungsfaktor des Anbieters abgeleitet, nicht direkt veröffentlicht",
+    disclosure:function(k){ return "<b>Transparenz:</b> Links mit dem Hinweis „"+k+"“ sind Affiliate-Links (Werbung). Wenn du darüber bei einem Anbieter Guthaben kaufst, erhalten wir eine Provision – für dich ändert sich der Preis nicht. Die Reihenfolge der Ergebnisse wird dadurch nicht beeinflusst."; },
+    infobox:'<h4>Wie die Reihenfolge zustande kommt</h4><p>Die Ergebnisse werden ausschließlich nach dem von dir gewählten Kriterium sortiert (Input-Preis, Output-Preis, Kontextfenster, Anbieter oder Name). Bei Gleichstand stehen bekannte Modellentwickler vorn, danach alphabetisch. Es gibt keine bezahlten Platzierungen; Affiliate-Partnerschaften haben keinen Einfluss auf Reihenfolge oder Auswahl.</p><h4>Woher die Daten kommen</h4><p>Preise werden automatisch aus den öffentlichen Modell-Katalogen bzw. Preisseiten der Anbieter gelesen. Token-Preise in USD pro 1 Mio. Token; Bild-, Video- und 3D-Modelle pro Einheit (Bild, Sekunde, Generierung). Werte mit ≈ sind abgeleitet. Steuern, Mindestaufladungen und Wechselkurse sind nicht berücksichtigt. Maßgeblich ist immer der Preis auf der Seite des Anbieters.</p>',
+    anbieter:"Anbieter", typ:"Ausgabe-Typ", typen:{text:"Text",bild:"Bild",video:"Video",audio:"Audio","3d":"3D"},
+    kontext:"Min. Kontextfenster", preis:"Max. Input-Preis", familie:"Modellfamilie",
+    alle:"alle", keine:"keine", egal:"beliebig", unbegrenzt:"beliebig",
+    faeh_titel:"Fähigkeiten (Bild & Video)", faeh_hint:"Laut Katalog des jeweiligen Anbieters – dasselbe Modell kann je Anbieter unterschiedliche Optionen haben.", dauer_bis:"bis", spalte_faeh:"Fähigkeiten",
+    nur_guenstig:"Nur günstigster Anbieter je Modell", nur_mehrere:"Nur Modelle mit mehreren Anbietern",
+    reset:"Alle Filter zurücksetzen",
+    sorts:{"preis-asc":"Input-Preis: niedrig → hoch","preis-desc":"Input-Preis: hoch → niedrig",
+           "output-asc":"Output-Preis: niedrig → hoch","output-desc":"Output-Preis: hoch → niedrig",
+           "kontext-desc":"Kontext: groß → klein","kontext-asc":"Kontext: klein → groß",
+           "anbieter-asc":"Anbieter: A → Z","anbieter-desc":"Anbieter: Z → A",
+           "name-asc":"Name: A → Z","name-desc":"Name: Z → A","neu-desc":"Neueste zuerst"},
+    cols:{name:"Modell",anbieter:"Anbieter",kontext:"Kontext",preis:"Input $/1M",output:"Output $/1M",cmp:"Vergleich"},
+    treffer:function(n,g){ return "<b>"+n.toLocaleString("de-DE")+"</b> Einträge<small>von "+g.toLocaleString("de-DE")+"</small>"; },
+    anbieter_n:function(n){ return n+" Anbieter"; },
+    guenstigster:"günstigster", ab:"ab", mehr:function(n){ return "Weitere "+n+" anzeigen"; },
+    leer:"Keine Treffer. Filter lockern oder Suche ändern.",
+    veraltet:function(n){ return "nicht aktualisiert: "+n; },
+    meta:function(t){ return "Stand der Daten: "+t+" · Preise in USD pro 1 Mio. Token · Preise ändern sich laufend – ohne Gewähr"; },
+    cmp_titel:"Preise dieses Modells bei allen Anbietern",
+    teurer:function(p){ return "+"+p+" %"; },
+    footer:"„günstigster“ = niedrigster Preis für dieses Modell über alle Anbieter (bei Medien nur innerhalb derselben Abrechnungseinheit). „ab“ = ab-Preis (AnyModel: kein Input/Output-Split; Bild/Video/Audio: Preis pro Einheit statt pro Token). Tastenkürzel: / = Suche. Filter und Sortierung stehen in der Adresszeile und lassen sich als Link teilen.",
+    einheiten:{image:"/Bild",second:"/s","1k_chars":"/1k Zeichen",generation:"/Generierung",minute:"/Min.","1k_bytes":"/1 kB"},
+    ansicht_tabelle:"Tabelle", ansicht_liste:"Liste"
+  },
+  en:{
+    seitentitel:"aiapicompare – Compare AI API prices",
+    nav_kosten:"Cost calculator", nav_gratis:"Free models", gratis:"free", nur_gratis:"Free models only", neu:"NEW", vorher:function(p){ return "previously "+p; }, theme:"Light / dark", api:"Data as JSON", pro5s:"/ 5 s clip", gen:"per generation",
+    filter:"Filters", suche:"Search model, provider or ID …", sortieren:"Sort:",
+    nav_vergleich:"Price comparison", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
+    zum_anbieter:"Go to provider", einrichten:function(n){ return "How to connect "+n+" (Hermes, VS Code …)"; },
+    geschaetzt:"estimated – derived from the provider's billing factor, not published directly",
+    disclosure:function(k){ return "<b>Transparency:</b> Links marked “"+k+"” are affiliate links (advertising). If you buy credits from a provider through them, we receive a commission – the price stays the same for you. The order of results is not affected."; },
+    infobox:'<h4>How results are ranked</h4><p>Results are sorted solely by the criterion you choose (input price, output price, context window, provider or name). Ties are broken by well-known model developers first, then alphabetically. There are no paid placements; affiliate partnerships have no influence on ranking or selection.</p><h4>Where the data comes from</h4><p>Prices are read automatically from the providers’ public model catalogues and pricing pages. Token prices in USD per 1M tokens; image, video and 3D models per unit (image, second, generation). Values marked ≈ are derived. Taxes, minimum top-ups and exchange rates are not included. The price on the provider’s website always prevails.</p>',
+    anbieter:"Providers", typ:"Output type", typen:{text:"Text",bild:"Image",video:"Video",audio:"Audio","3d":"3D"},
+    kontext:"Min. context window", preis:"Max. input price", familie:"Model family",
+    alle:"all", keine:"none", egal:"any", unbegrenzt:"any",
+    faeh_titel:"Capabilities (image & video)", faeh_hint:"According to each provider’s catalogue – the same model may offer different options per provider.", dauer_bis:"up to", spalte_faeh:"Capabilities",
+    nur_guenstig:"Cheapest provider per model only", nur_mehrere:"Only models with several providers",
+    reset:"Reset all filters",
+    sorts:{"preis-asc":"Input price: low → high","preis-desc":"Input price: high → low",
+           "output-asc":"Output price: low → high","output-desc":"Output price: high → low",
+           "kontext-desc":"Context: large → small","kontext-asc":"Context: small → large",
+           "anbieter-asc":"Provider: A → Z","anbieter-desc":"Provider: Z → A",
+           "name-asc":"Name: A → Z","name-desc":"Name: Z → A","neu-desc":"Newest first"},
+    cols:{name:"Model",anbieter:"Provider",kontext:"Context",preis:"Input $/1M",output:"Output $/1M",cmp:"Compare"},
+    treffer:function(n,g){ return "<b>"+n.toLocaleString("en-US")+"</b> entries<small>of "+g.toLocaleString("en-US")+"</small>"; },
+    anbieter_n:function(n){ return n+" providers"; },
+    guenstigster:"cheapest", ab:"from", mehr:function(n){ return "Show "+n+" more"; },
+    leer:"No results. Loosen the filters or change your search.",
+    veraltet:function(n){ return "not updated: "+n; },
+    meta:function(t){ return "Data as of: "+t+" · prices in USD per 1M tokens · prices change constantly – no guarantee"; },
+    cmp_titel:"Prices for this model across all providers",
+    teurer:function(p){ return "+"+p+" %"; },
+    footer:"“cheapest” = lowest price for this model across all providers (for media only within the same billing unit). “from” = starting price (AnyModel: no input/output split; image/video/audio: price per unit instead of per token). Shortcut: / = search. Filters and sorting are kept in the address bar and can be shared as a link.",
+    einheiten:{image:"/image",second:"/s","1k_chars":"/1k chars",generation:"/generation",minute:"/min","1k_bytes":"/1 kB"},
+    ansicht_tabelle:"Table", ansicht_liste:"List"
+  },
+  zh:{
+    seitentitel:"aiapicompare – AI API 价格对比",
+    nav_kosten:"成本计算器", nav_gratis:"免费模型", gratis:"免费", nur_gratis:"仅显示免费模型", neu:"新", vorher:function(p){ return "之前 "+p; }, theme:"浅色 / 深色", api:"JSON 数据", pro5s:"/ 5 秒片段", gen:"每次生成",
+    filter:"筛选", suche:"搜索模型、提供商或 ID …", sortieren:"排序：",
+    nav_vergleich:"价格对比", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
+    zum_anbieter:"前往提供商", einrichten:function(n){ return "如何接入 "+n+"（Hermes、VS Code …）"; },
+    geschaetzt:"估算值 – 根据提供商的计费系数推算，并非官方直接公布",
+    disclosure:function(k){ return "<b>透明声明：</b>标有“"+k+"”的链接为推广（联盟）链接，属于广告。若您通过这些链接在提供商处充值，我们将获得佣金，您的价格不变。结果排序不受影响。"; },
+    infobox:'<h4>排序规则</h4><p>结果仅按您选择的条件排序（输入价格、输出价格、上下文窗口、提供商或名称）。条件相同时，知名模型开发商优先，其次按字母顺序。不存在付费排名；联盟合作不影响排序或展示内容。</p><h4>数据来源</h4><p>价格自动读取自各提供商公开的模型目录和价格页面。Token 价格单位为每百万 Token 美元；图像、视频和 3D 模型按单位计价（每张、每秒、每次生成）。带 ≈ 的数值为推算值。未包含税费、最低充值和汇率。一切以提供商网站上的价格为准。</p>',
+    anbieter:"提供商", typ:"输出类型", typen:{text:"文本",bild:"图像",video:"视频",audio:"音频","3d":"3D"},
+    kontext:"最小上下文窗口", preis:"最高输入价格", familie:"模型系列",
+    alle:"全部", keine:"无", egal:"不限", unbegrenzt:"不限",
+    faeh_titel:"功能（图像与视频）", faeh_hint:"依据各提供商目录——同一模型在不同提供商处的选项可能不同。", dauer_bis:"最长", spalte_faeh:"功能",
+    nur_guenstig:"每个模型仅显示最便宜的提供商", nur_mehrere:"仅显示有多个提供商的模型",
+    reset:"重置所有筛选",
+    sorts:{"preis-asc":"输入价格：从低到高","preis-desc":"输入价格：从高到低",
+           "output-asc":"输出价格：从低到高","output-desc":"输出价格：从高到低",
+           "kontext-desc":"上下文：从大到小","kontext-asc":"上下文：从小到大",
+           "anbieter-asc":"提供商：A → Z","anbieter-desc":"提供商：Z → A",
+           "name-asc":"名称：A → Z","name-desc":"名称：Z → A","neu-desc":"最新优先"},
+    cols:{name:"模型",anbieter:"提供商",kontext:"上下文",preis:"输入 $/1M",output:"输出 $/1M",cmp:"对比"},
+    treffer:function(n,g){ return "<b>"+n.toLocaleString("zh-CN")+"</b> 条<small>共 "+g.toLocaleString("zh-CN")+" 条</small>"; },
+    anbieter_n:function(n){ return n+" 家提供商"; },
+    guenstigster:"最便宜", ab:"起", mehr:function(n){ return "再显示 "+n+" 条"; },
+    leer:"没有结果。请放宽筛选条件或修改搜索内容。",
+    veraltet:function(n){ return "未更新："+n; },
+    meta:function(t){ return "数据时间："+t+" · 价格单位为每百万 Token 美元 · 价格随时变化，仅供参考"; },
+    cmp_titel:"该模型在所有提供商处的价格",
+    teurer:function(p){ return "+"+p+"%"; },
+    footer:"“最便宜” = 该模型在所有提供商中的最低价格（媒体模型仅在相同计费单位内比较）。“起” = 起步价（AnyModel：不区分输入/输出；图像/视频/音频：按单位而非 Token 计价）。快捷键：/ = 搜索。筛选和排序会保存在地址栏中，可作为链接分享。",
+    einheiten:{image:"/张",second:"/秒","1k_chars":"/千字符",generation:"/次",minute:"/分钟","1k_bytes":"/1 kB"},
+    ansicht_tabelle:"表格", ansicht_liste:"列表"
+  },
+  ru:{
+    seitentitel:"aiapicompare – сравнение цен AI API",
+    nav_kosten:"Калькулятор", nav_gratis:"Бесплатные модели", gratis:"бесплатно", nur_gratis:"Только бесплатные модели", neu:"НОВОЕ", vorher:function(p){ return "раньше "+p; }, theme:"Светлая / тёмная", api:"Данные в JSON", pro5s:"/ клип 5 с", gen:"за генерацию",
+    filter:"Фильтры", suche:"Поиск по модели, поставщику или ID …", sortieren:"Сортировка:",
+    nav_vergleich:"Сравнение цен", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
+    zum_anbieter:"К поставщику", einrichten:function(n){ return "Как подключить "+n+" (Hermes, VS Code …)"; },
+    geschaetzt:"оценка – рассчитано по коэффициенту тарификации поставщика",
+    disclosure:function(k){ return "<b>Прозрачность:</b> ссылки с пометкой «"+k+"» – партнёрские (реклама). При покупке через них мы получаем комиссию, цена для вас не меняется. На порядок результатов это не влияет."; },
+    infobox:'<h4>Как формируется порядок</h4><p>Результаты сортируются только по выбранному вами критерию (цена входа, цена выхода, контекст, поставщик или имя). При равенстве сначала известные разработчики, затем по алфавиту. Платных размещений нет; партнёрские программы не влияют на порядок или выбор.</p><h4>Источник данных</h4><p>Цены автоматически берутся из публичных каталогов и страниц цен поставщиков. Токены – USD за 1 млн; картинки, видео и 3D – за единицу. Значения с ≈ рассчитаны. Налоги и курсы валют не учтены. Действует цена на сайте поставщика.</p>',
+    anbieter:"Поставщики", typ:"Тип вывода", typen:{text:"Текст",bild:"Картинка",video:"Видео",audio:"Аудио","3d":"3D"},
+    kontext:"Мин. контекстное окно", preis:"Макс. цена входа", familie:"Семейство моделей",
+    alle:"все", keine:"ничего", egal:"любой", unbegrenzt:"любая",
+    faeh_titel:"Возможности (изображения и видео)", faeh_hint:"По каталогу поставщика – у одной модели опции могут отличаться в зависимости от поставщика.", dauer_bis:"до", spalte_faeh:"Возможности",
+    nur_guenstig:"Только самый дешёвый поставщик", nur_mehrere:"Только модели у нескольких поставщиков",
+    reset:"Сбросить все фильтры",
+    sorts:{"preis-asc":"Цена входа: по возрастанию","preis-desc":"Цена входа: по убыванию",
+           "output-asc":"Цена выхода: по возрастанию","output-desc":"Цена выхода: по убыванию",
+           "kontext-desc":"Контекст: больше → меньше","kontext-asc":"Контекст: меньше → больше",
+           "anbieter-asc":"Поставщик: А → Я","anbieter-desc":"Поставщик: Я → А",
+           "name-asc":"Имя: А → Я","name-desc":"Имя: Я → А","neu-desc":"Сначала новые"},
+    cols:{name:"Модель",anbieter:"Поставщик",kontext:"Контекст",preis:"Вход $/1M",output:"Выход $/1M",cmp:"Сравнение"},
+    treffer:function(n,g){ return "<b>"+n.toLocaleString("ru-RU")+"</b> записей<small>из "+g.toLocaleString("ru-RU")+"</small>"; },
+    anbieter_n:function(n){ return n+" поставщ."; },
+    guenstigster:"дешевле всех", ab:"от", mehr:function(n){ return "Показать ещё "+n; },
+    leer:"Ничего не найдено. Ослабьте фильтры или измените поиск.",
+    veraltet:function(n){ return "не обновлено: "+n; },
+    meta:function(t){ return "Данные от: "+t+" · цены в USD за 1 млн токенов · цены меняются – без гарантии"; },
+    cmp_titel:"Цены этой модели у всех поставщиков",
+    teurer:function(p){ return "+"+p+" %"; },
+    footer:"«дешевле всех» = самая низкая цена входа для этой модели среди всех поставщиков. «от» = минимальная цена (AnyModel: без разделения вход/выход; картинки/видео/аудио: цена за единицу). Клавиша / = поиск. Фильтры и сортировка сохраняются в адресе страницы.",
+    einheiten:{image:"/карт.",second:"/сек","1k_chars":"/1k зн.",generation:"/ген.",minute:"/мин.","1k_bytes":"/1 кБ"},
+    ansicht_tabelle:"Таблица", ansicht_liste:"Список"
+  }
+};
+
+/* =================== Daten aufbereiten =================== */
+const fameOf = function(entw){ const i = BEKANNT.indexOf(entw); return i < 0 ? 99 : i; };
+const zeilen = [];
+QUELLEN.forEach(function(q){
+  const src = D[q.key] || {};
+  Object.keys(src).forEach(function(kanon){
+    const v = src[kanon];
+    const inp  = (typeof v.in  === "number") ? v.in  : null;
+    const outp = (typeof v.out === "number") ? v.out : null;
+    const ab   = (inp === null && typeof v.price === "number") ? v.price : null;
+    const mp   = (typeof v.media_preis === "number") ? v.media_preis : null;
+    const roh  = v.roh_id || kanon;
+    let url = v.url || "";
+    if (!url && q.key === "openrouter")   url = "https://openrouter.ai/" + roh;
+    if (!url && q.key === "uplinkswitch") url = "https://uplinkswitch.ai/models/" + roh;
+    let entw = v.entwickler || "";
+    if (!entw && roh.indexOf("/") > 0) { const pre = roh.split("/")[0].toLowerCase(); entw = ENTW_MAP[pre] || ""; }
+    if (entw && ENTW_MAP[entw.toLowerCase()]) entw = ENTW_MAP[entw.toLowerCase()];
+    const name = v.name || v.display_name || roh;
+    zeilen.push({
+      id: q.key + "|" + kanon, kanon: kanon, qkey: q.key, quelle: q.name, url: url, roh: roh,
+      name: name, entw: entw, fame: fameOf(entw),
+      context: v.context || 0, inp: inp, outp: outp, ab: ab, media: !!v.media || (inp === null && mp !== null), mp: mp,
+      einheit: v.einheit || "", typ: v.typ || ["text"], hinweis: v.hinweis || "", est: !!v.geschaetzt,
+      faeh: v.faeh || [], aufl: v.aufl || "", dauer: v.dauer || 0, refmax: v.refmax || 0, dauer_fix: v.dauer_fix || 0,
+      gratis: !!v.gratis, seit: v.seit || "", vorher: (typeof v.vorher === "number") ? v.vorher : null,
+      preis: inp !== null ? inp : (ab !== null ? ab : (mp !== null ? mp : Infinity)),
+      such: (name + " " + q.name + " " + entw + " " + roh + " " + kanon).toLowerCase()
+    });
+  });
+});
+// Videos: Preis auf "pro Sekunde" umrechnen, damit "pro Sekunde" und "pro Generierung" vergleichbar werden
+zeilen.forEach(function(z){
+  z.ps = null;
+  if (z.typ.indexOf("video") >= 0 && z.mp !== null && z.inp === null) {
+    if (z.einheit === "second") z.ps = z.mp;
+    else if (z.einheit === "generation" && z.dauer_fix) z.ps = z.mp / z.dauer_fix;
+    if (z.ps !== null) z.preis = z.ps;
+  }
+  z.haupt = z.inp !== null ? z.inp : (z.ab !== null ? z.ab : z.mp);
+});
+const STAND = ((D.meta && D.meta.erstellt) || "").slice(0, 10);
+function istNeu(z){ return z.seit && STAND && (Date.parse(STAND) - Date.parse(z.seit)) <= 7 * 864e5; }
+function modellSlug(k){ return String(k).replace(/^media-/, "").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, ""); }
+function sprachPfad(){ return lang === "en" ? "" : lang + "/"; }
+// Gruppen je Modell (kanon) – für "günstigster" und Vergleich
+const gruppen = {};
+// Medien nur innerhalb derselben Abrechnungseinheit vergleichen (pro Sekunde ≠ pro Video)
+zeilen.forEach(function(z){ z.gkey = z.kanon + (z.inp === null && z.ab === null && z.mp !== null ? "|" + (z.ps !== null ? "second" : z.einheit) : ""); });
+zeilen.forEach(function(z){ (gruppen[z.gkey] = gruppen[z.gkey] || []).push(z); });
+Object.keys(gruppen).forEach(function(k){
+  const g = gruppen[k].filter(function(z){ return z.preis !== Infinity; });
+  const min = g.length ? Math.min.apply(null, g.map(function(z){ return z.preis; })) : Infinity;
+  gruppen[k].forEach(function(z){ z.anz = gruppen[k].length; z.minPreis = min; z.best = z.preis !== Infinity && z.preis === min && g.length > 1; });
+});
+const MAXCTX = 2000000;
+
+/* =================== Zustand (in URL gespeichert) =================== */
+const DEFAULT = {q:"", anb:[], typ:[], fam:[], cap:[], ctx:0, pmax:PREIS_STEPS.length-1, sort:"preis", dir:"asc", best:false, multi:false, gratis:false, view:"table"};
+let S = JSON.parse(JSON.stringify(DEFAULT));
+let lang = "de";
+let limit = 100;
+const offen = {};   // aufgeklappte Vergleiche
+
+function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+
+function ladeZustand(){
+  lang = lsGet("lang") || ((navigator.language || "").slice(0,2) === "de" ? "de" : (navigator.language || "").slice(0,2) === "ru" ? "ru" : (navigator.language || "").slice(0,2) === "zh" ? "zh" : "en");
+  if (!I18N[lang]) lang = "en";
+  const v = lsGet("view"); if (v) S.view = v; else if (window.innerWidth < 700) S.view = "list";
+  const h = location.hash.replace(/^#/, "");
+  if (!h) return;
+  const p = new URLSearchParams(h);
+  if (p.has("q")) S.q = p.get("q");
+  ["anb","typ","fam","cap"].forEach(function(k){ if (p.get(k)) S[k] = p.get(k).split(","); });
+  if (p.has("ctx"))  S.ctx  = Math.max(0, Math.min(CTX_STEPS.length-1, +p.get("ctx") || 0));
+  if (p.has("pmax")) S.pmax = Math.max(0, Math.min(PREIS_STEPS.length-1, +p.get("pmax")));
+  if (p.has("sort")) S.sort = p.get("sort");
+  if (p.has("dir"))  S.dir  = p.get("dir") === "desc" ? "desc" : "asc";
+  S.best  = p.get("best") === "1";
+  S.multi = p.get("multi") === "1";
+  S.gratis = p.get("gratis") === "1";
+  if (p.has("view")) S.view = p.get("view");
+}
+function speichereZustand(){
+  const p = new URLSearchParams();
+  if (S.q) p.set("q", S.q);
+  ["anb","typ","fam","cap"].forEach(function(k){ if (S[k].length) p.set(k, S[k].join(",")); });
+  if (S.ctx) p.set("ctx", S.ctx);
+  if (S.pmax !== DEFAULT.pmax) p.set("pmax", S.pmax);
+  if (S.sort !== DEFAULT.sort || S.dir !== DEFAULT.dir){ p.set("sort", S.sort); p.set("dir", S.dir); }
+  if (S.best) p.set("best","1");
+  if (S.gratis) p.set("gratis","1");
+  if (S.multi) p.set("multi","1");
+  const s = p.toString();
+  try { history.replaceState(null, "", s ? "#" + s : location.pathname + location.search); } catch(e){}
+}
+
+/* =================== Hilfsfunktionen =================== */
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function fmtPreis(n){ if (n === null || n === Infinity) return "—"; return "$" + (n >= 100 ? n.toFixed(0) : n >= 1 ? n.toFixed(2) : n >= 0.01 ? n.toFixed(3) : n.toFixed(4)); }
+function fmtCtx(n){
+  if (!n) return "—";
+  if (n >= 1000000) return (n/1000000).toFixed(n % 1000000 ? 2 : 0).replace(/\.?0+$/,"") + "M";
+  if (n >= 1000) return Math.round(n/1000) + "K";
+  return String(n);
+}
+function famMatch(z, key){
+  const f = FAMILIEN.find(function(x){ return x.key === key; });
+  return f && f.tokens.some(function(t){ return z.such.indexOf(t) !== -1; });
+}
+function T(){ return I18N[lang]; }
+
+/* =================== Filtern & Sortieren =================== */
+function filtere(ohne){
+  const q = S.q.trim().toLowerCase();
+  const qn = q.replace(/[.\s_]+/g, "-");
+  const maxP = PREIS_STEPS[S.pmax];
+  const minC = CTX_STEPS[S.ctx];
+  return zeilen.filter(function(z){
+    if (ohne !== "anb" && S.anb.length && S.anb.indexOf(z.qkey) < 0) return false;
+    if (ohne !== "typ" && S.typ.length && !z.typ.some(function(t){ return S.typ.indexOf(t) >= 0; })) return false;
+    if (ohne !== "cap" && S.cap.length && !S.cap.every(function(c){ return z.faeh.indexOf(c) >= 0; })) return false;
+    if (ohne !== "fam" && S.fam.length && !S.fam.some(function(f){ return famMatch(z, f); })) return false;
+    if (minC && z.context < minC) return false;
+    if (maxP !== Infinity && !(z.preis <= maxP)) return false;
+    if (S.best && !(z.preis !== Infinity && z.preis === z.minPreis)) return false;
+    if (S.multi && z.anz < 2) return false;
+    if (S.gratis && !z.gratis) return false;
+    if (q && z.such.indexOf(q) < 0 && z.such.replace(/[.\s_]+/g, "-").indexOf(qn) < 0) return false;
+    return true;
+  });
+}
+function sortiere(liste){
+  const d = S.dir === "desc" ? -1 : 1;
+  const num = function(a, b){   // fehlende Werte immer ans Ende
+    const ma = (a === null || a === Infinity || a === 0 && S.sort === "kontext"), mb = (b === null || b === Infinity || b === 0 && S.sort === "kontext");
+    if (ma && mb) return 0; if (ma) return 1; if (mb) return -1;
+    return (a - b) * d;
+  };
+  const tie = function(a, b){ return (a.fame - b.fame) || a.name.localeCompare(b.name); };
+  const cmp = {
+    preis:   function(a,b){ return num(a.preis, b.preis) || tie(a,b); },
+    output:  function(a,b){ return num(a.outp, b.outp) || num(a.preis, b.preis) || tie(a,b); },
+    kontext: function(a,b){ return num(a.context, b.context) || (a.preis - b.preis) || tie(a,b); },
+    anbieter:function(a,b){ return a.quelle.localeCompare(b.quelle) * d || (a.preis - b.preis) || tie(a,b); },
+    neu:     function(a,b){ return ((b.seit || "") < (a.seit || "") ? -1 : (b.seit || "") > (a.seit || "") ? 1 : 0) || tie(a,b); },
+    name:    function(a,b){ return a.name.localeCompare(b.name, undefined, {numeric:true}) * d || (a.preis - b.preis); }
+  }[S.sort] || function(){ return 0; };
+  return liste.sort(cmp);
+}
+
+/* =================== Seitenleiste =================== */
+function zaehle(liste, fn){ const c = {}; liste.forEach(function(z){ fn(z).forEach(function(k){ c[k] = (c[k]||0) + 1; }); }); return c; }
+
+function renderSidebar(){
+  const t = T();
+  const cA = zaehle(filtere("anb"), function(z){ return [z.qkey]; });
+  const cT = zaehle(filtere("typ"), function(z){ return z.typ; });
+  const cF = zaehle(filtere("fam"), function(z){ return FAMILIEN.filter(function(f){ return famMatch(z, f.key); }).map(function(f){ return f.key; }); });
+  const check = function(gruppe, key, label, cnt, vor){
+    return '<label class="check"><input type="checkbox" data-g="'+gruppe+'" value="'+key+'"'+(S[gruppe].indexOf(key)>=0?" checked":"")+'>'+
+      (vor||"")+'<span>'+esc(label)+'</span><span class="cnt">'+(cnt||0)+'</span></label>';
+  };
+  const kopf = function(titel, gruppe){
+    return '<h3>'+titel+(S[gruppe].length ? '<button data-clear="'+gruppe+'">'+t.alle+'</button>' : "")+'</h3>';
+  };
+  const ctxVal = S.ctx ? "≥ " + fmtCtx(CTX_STEPS[S.ctx]) : t.egal;
+  const pVal = PREIS_STEPS[S.pmax] === Infinity ? t.unbegrenzt : "≤ " + fmtPreis(PREIS_STEPS[S.pmax]);
+
+  document.getElementById("sidebar").innerHTML =
+    '<div class="fgroup">'+kopf(t.anbieter,"anb")+
+      QUELLEN.map(function(q){ return check("anb", q.key, q.name, cA[q.key], '<span class="dot" style="background:'+q.farbe+'"></span>'); }).join("")+'</div>'+
+    '<div class="fgroup"><h3>'+t.kontext+' <span class="range-val">'+ctxVal+'</span></h3>'+
+      '<input type="range" id="ctxrange" min="0" max="'+(CTX_STEPS.length-1)+'" step="1" value="'+S.ctx+'">'+
+      '<div class="range-ticks"><span>0</span><span>128K</span><span>1M</span></div></div>'+
+    '<div class="fgroup"><h3>'+t.preis+' <span class="range-val">'+pVal+'</span></h3>'+
+      '<input type="range" id="prange" min="0" max="'+(PREIS_STEPS.length-1)+'" step="1" value="'+S.pmax+'">'+
+      '<div class="range-ticks"><span>$0.10</span><span>$2</span><span>∞</span></div></div>'+
+    '<div class="fgroup">'+
+      '<label class="toggle"><span>'+t.nur_guenstig+'</span><span class="switch"><input type="checkbox" id="bestchk"'+(S.best?" checked":"")+'><span></span></span></label>'+
+      '<div style="height:.6rem"></div>'+
+      '<label class="toggle"><span>'+t.nur_mehrere+'</span><span class="switch"><input type="checkbox" id="multichk"'+(S.multi?" checked":"")+'><span></span></span></label>'+
+      '<div style="height:.6rem"></div>'+
+      '<label class="toggle"><span>'+t.nur_gratis+'</span><span class="switch"><input type="checkbox" id="gratischk"'+(S.gratis?" checked":"")+'><span></span></span></label></div>'+
+    '<div class="fgroup">'+kopf(t.typ,"typ")+
+      TYPEN.map(function(k){ return check("typ", k, t.typen[k], cT[k]); }).join("")+'</div>'+
+    faehGruppe(t)+
+    '<div class="fgroup">'+kopf(t.familie,"fam")+
+      FAMILIEN.map(function(f){ return check("fam", f.key, f.label, cF[f.key]); }).join("")+'</div>'+
+    '<button class="resetall" id="resetall">↺ '+t.reset+'</button>'+
+    '<div class="legal"><a href="impressum.html">'+t.impressum+'</a><a href="datenschutz.html">'+t.datenschutz+'</a></div>';
+}
+
+function faehGruppe(t){
+  const cC = zaehle(filtere("cap"), function(z){ return z.faeh; });
+  const keys = FAEH_ORDNUNG.filter(function(k){ return cC[k] || S.cap.indexOf(k) >= 0; });
+  if (!keys.length) return "";
+  return '<div class="fgroup"><h3>'+t.faeh_titel+(S.cap.length ? '<button data-clear="cap">'+t.alle+'</button>' : "")+'</h3>'+
+    keys.map(function(k){
+      return '<label class="check"><input type="checkbox" data-g="cap" value="'+k+'"'+(S.cap.indexOf(k)>=0?" checked":"")+'>'+
+        '<span class="ico">'+FAEH[k].ico+'</span><span>'+esc(faehName(k))+'</span><span class="cnt">'+(cC[k]||0)+'</span></label>';
+    }).join("")+'<div class="fhint">'+t.faeh_hint+'</div></div>';
+}
+function capsHtml(z, t){
+  if (!z.faeh.length && !z.aufl && !z.dauer) return "";
+  let h = z.faeh.slice().sort(function(a,b){ return FAEH_ORDNUNG.indexOf(a) - FAEH_ORDNUNG.indexOf(b); }).map(function(k){
+    if (!FAEH[k]) return "";
+    let label = faehName(k);
+    if (k === "multiref" && z.refmax) label += " (" + z.refmax + ")";
+    return '<span class="cap'+(S.cap.indexOf(k)>=0?" on":"")+'" title="'+esc(label)+'">'+FAEH[k].ico+'</span>';
+  }).join("");
+  if (z.aufl && z.aufl !== "4K") h += '<span class="cap info" title="'+esc(t.dauer_bis)+' '+esc(z.aufl)+'">'+esc(z.aufl)+'</span>';
+  if (z.dauer) h += '<span class="cap info" title="'+esc(t.dauer_bis)+' '+z.dauer+' s">≤'+z.dauer+' s</span>';
+  return '<span class="caps">'+h+'</span>';
+}
+
+/* =================== Ergebnisse =================== */
+function preisZelle(z, t){
+  const cls = z.best ? "price best" : "price";
+  if (z.gratis) return '<span class="tag gratis">'+t.gratis+'</span>';
+  if (z.ps !== null) return '<span class="'+cls+'">'+fmtPreis(z.ps)+'<span class="unit">'+esc(t.einheiten.second)+'</span>'+
+    '<span class="sub5">≈ '+fmtPreis(z.ps*5)+' '+t.pro5s+(z.einheit === "generation" ? ' · '+fmtPreis(z.mp)+' '+t.gen+' ('+z.dauer_fix+' s)' : '')+'</span></span>';
+  if (z.inp !== null) return '<span class="'+cls+'">'+fmtPreis(z.inp)+'</span>';
+  if (z.ab !== null)  return '<span class="'+cls+'"><span class="unit">'+t.ab+' </span>'+fmtPreis(z.ab)+'</span>';
+  if (z.mp !== null)  return '<span class="'+cls+'">'+(z.est?'<span class="est" title="'+esc(t.geschaetzt)+'">≈</span>':'')+'<span class="unit">'+t.ab+' </span>'+fmtPreis(z.mp)+'<span class="unit">'+esc(t.einheiten[z.einheit] || "")+'</span></span>';
+  return '<span class="price">—</span>';
+}
+function provZelle(z){
+  return '<a class="prov provlink" href="anbindung.html#anbieter='+z.qkey+'" title="'+esc(T().einrichten(z.quelle))+'"><span class="dot" style="background:'+Q_BY_KEY[z.qkey].farbe+'"></span><span class="pn">'+esc(z.quelle)+'</span></a>';
+}
+function goLink(z, mitText){
+  return C.linkHtml(z.qkey, z.url, mitText ? T().zum_anbieter + " ↗" : "↗", mitText ? "gotolink" : "extlink", z.quelle);
+}
+function mnameHtml(z){
+  // Modellseiten gibt es nur in der zusammengebauten Website (build_pages.py setzt MODELLSEITEN)
+  if (window.OHNE_MODELLSEITEN || !window.MODELLSEITEN) return '<span class="mname">'+esc(z.name)+'</span>';
+  return '<a class="mname" href="'+sprachPfad()+'models/'+modellSlug(z.kanon)+'.html">'+esc(z.name)+'</a>';
+}
+function tagsHtml(z, t){
+  let h = "";
+  if (z.best) h += '<span class="tag best">★ '+t.guenstigster+'</span>';
+  if (istNeu(z)) h += '<span class="tag neu">'+t.neu+'</span>';
+  if (z.vorher !== null && z.haupt !== null && z.vorher > 0 && z.haupt !== z.vorher) {
+    const pz = Math.round((z.haupt / z.vorher - 1) * 100);
+    if (pz !== 0) h += '<span class="tag '+(pz < 0 ? "down" : "up")+'" title="'+esc(t.vorher(fmtPreis(z.vorher)))+'">'+(pz < 0 ? "↓ " : "↑ +")+pz+' %</span>';
+  }
+  z.typ.filter(function(x){ return x !== "text"; }).forEach(function(x){ h += '<span class="tag">'+esc(t.typen[x] || x)+'</span>'; });
+  return h ? '<span class="tags">'+h+'</span>' : "";
+}
+function cmpBtn(z, t){
+  if (z.anz < 2) return '<span class="unit">—</span>';
+  return '<button class="cmpbtn'+(offen[z.id]?" open":"")+'" data-cmp="'+esc(z.id)+'">'+t.anbieter_n(z.anz)+' '+(offen[z.id]?"▴":"▾")+'</button>';
+}
+function vergleichHtml(z, t){
+  const g = gruppen[z.gkey].slice().sort(function(a,b){ return (a.preis - b.preis) || a.quelle.localeCompare(b.quelle); });
+  const medien = g.some(function(x){ return x.faeh.length || x.aufl || x.dauer; });
+  return '<div style="font-size:.72rem;color:var(--muted);margin:.2rem 0 .3rem">'+t.cmp_titel+'</div>'+
+    '<table class="cmptable"><thead><tr><th>'+t.cols.anbieter+'</th><th class="num">'+t.cols.preis+'</th>'+
+      (medien ? '<th>'+t.spalte_faeh+'</th>' : '<th class="num">'+t.cols.output+'</th><th class="num">'+t.cols.kontext+'</th>')+'<th></th></tr></thead><tbody>'+
+    g.map(function(x){
+      const diff = (x.preis !== Infinity && x.minPreis > 0 && x.preis > x.minPreis) ? '<span class="diff">'+t.teurer(Math.round((x.preis/x.minPreis - 1)*100))+'</span>' : "";
+      return '<tr class="'+(x.id===z.id?"self":"")+'"><td>'+provZelle(x)+' <small class="unit">'+esc(x.name)+'</small></td>'+
+        '<td class="num">'+preisZelle(x,t)+diff+'</td>'+
+        (medien ? '<td>'+(capsHtml(x,t) || '<span class="unit">—</span>')+'</td>' :
+          '<td class="num price">'+fmtPreis(x.outp)+'</td><td class="num ctx">'+fmtCtx(x.context)+'</td>')+
+        '<td class="num">'+goLink(x,false)+'</td></tr>';
+    }).join("")+'</tbody></table>';
+}
+
+function renderResults(){
+  const t = T();
+  const liste = sortiere(filtere());
+  document.getElementById("count").innerHTML = t.treffer(liste.length, zeilen.length);
+  const box = document.getElementById("results");
+  if (!liste.length){ box.innerHTML = '<div class="tablewrap"><div class="empty">'+t.leer+'</div></div>'; return; }
+  const sicht = liste.slice(0, limit);
+  const rest = liste.length - sicht.length;
+  const moreBtn = rest > 0 ? '<button class="more" id="more">'+t.mehr(Math.min(rest, 100))+' ('+rest+')</button>' : "";
+
+  if (S.view === "list"){
+    box.innerHTML = '<div class="cards">'+sicht.map(function(z){
+      return '<div class="card"><div class="card-top"><div>'+
+        mnameHtml(z)+tagsHtml(z,t)+
+        '<span class="mid">'+esc(z.roh)+(z.hinweis?' · '+esc(z.hinweis):'')+'</span>'+capsHtml(z,t)+'</div><div>'+provZelle(z)+'</div></div>'+
+        '<div class="card-stats"><span>'+t.cols.preis+' <b class="'+(z.best?"best":"")+'">'+(z.inp!==null?fmtPreis(z.inp):(z.ab!==null?t.ab+" "+fmtPreis(z.ab):(z.mp!==null?(z.est?"≈ ":"")+t.ab+" "+fmtPreis(z.mp)+(t.einheiten[z.einheit]||""):"—")))+'</b></span>'+
+        '<span>'+t.cols.output+' <b>'+fmtPreis(z.outp)+'</b></span>'+
+        '<span>'+t.cols.kontext+' <b>'+fmtCtx(z.context)+'</b></span>'+
+        (z.entw?'<span>'+esc(z.entw)+'</span>':"")+
+        '<span style="margin-left:auto;display:flex;gap:.4rem;align-items:center">'+cmpBtn(z,t)+goLink(z,true)+'</span></div>'+
+        (offen[z.id] ? '<div class="cmpwrap">'+vergleichHtml(z,t)+'</div>' : "")+
+        '</div>';
+    }).join("")+'</div>'+moreBtn;
+    return;
+  }
+
+  const th = function(key, label, num){
+    const aktiv = S.sort === key;
+    const pfeil = aktiv ? (S.dir === "asc" ? "▲" : "▼") : "↕";
+    return '<th class="sortable'+(num?" num":"")+(aktiv?" active":"")+'" data-sort="'+key+'">'+label+'<span class="arr">'+pfeil+'</span></th>';
+  };
+  const maxLog = Math.log10(MAXCTX);
+  box.innerHTML = '<div class="tablewrap"><table><thead><tr>'+
+      th("name", t.cols.name)+th("anbieter", t.cols.anbieter)+th("kontext", t.cols.kontext, true)+
+      th("preis", t.cols.preis, true)+th("output", t.cols.output, true)+
+      '<th class="num">'+t.cols.cmp+'</th><th></th></tr></thead><tbody>'+
+    sicht.map(function(z){
+      const breite = z.context ? Math.max(4, Math.min(100, (Math.log10(z.context) - 3) / (maxLog - 3) * 100)) : 0;
+      return '<tr class="row"><td>'+mnameHtml(z)+tagsHtml(z,t)+
+          '<span class="mid">'+esc(z.roh)+(z.entw?' · '+esc(z.entw):"")+(z.hinweis?' · '+esc(z.hinweis):"")+'</span>'+capsHtml(z,t)+'</td>'+
+        '<td>'+provZelle(z)+'</td>'+
+        '<td class="num"><span class="ctx">'+fmtCtx(z.context)+'</span><span class="ctxbar"><i style="width:'+breite+'%"></i></span></td>'+
+        '<td class="num">'+preisZelle(z,t)+'</td>'+
+        '<td class="num price">'+fmtPreis(z.outp)+'</td>'+
+        '<td class="num">'+cmpBtn(z,t)+'</td>'+
+        '<td class="num">'+goLink(z,false)+'</td></tr>'+
+        (offen[z.id] ? '<tr class="cmp"><td colspan="7">'+vergleichHtml(z,t)+'</td></tr>' : "");
+    }).join("")+'</tbody></table></div>'+moreBtn;
+}
+
+function renderChips(){
+  const t = T();
+  const c = [];
+  if (S.q) c.push(['q','',"„"+S.q+"“"]);
+  S.anb.forEach(function(k){ c.push(['anb',k,Q_BY_KEY[k] ? Q_BY_KEY[k].name : k]); });
+  S.typ.forEach(function(k){ c.push(['typ',k,t.typen[k]||k]); });
+  S.cap.forEach(function(k){ c.push(['cap',k,(FAEH[k] ? FAEH[k].ico.replace(/<[^>]+>/g,"")+" " : "")+faehName(k)]); });
+  S.fam.forEach(function(k){ const f = FAMILIEN.find(function(x){ return x.key===k; }); c.push(['fam',k,f?f.label:k]); });
+  if (S.ctx) c.push(['ctx','',t.cols.kontext+" ≥ "+fmtCtx(CTX_STEPS[S.ctx])]);
+  if (PREIS_STEPS[S.pmax] !== Infinity) c.push(['pmax','',"Input ≤ "+fmtPreis(PREIS_STEPS[S.pmax])]);
+  if (S.best) c.push(['best','',"★ "+t.guenstigster]);
+  if (S.multi) c.push(['multi','',t.nur_mehrere]);
+  if (S.gratis) c.push(['gratis','',t.nur_gratis]);
+  document.getElementById("chips").innerHTML = c.map(function(x){
+    return '<span class="chip" data-chip="'+x[0]+'" data-v="'+esc(x[1])+'">'+esc(x[2])+' <i>✕</i></span>';
+  }).join("");
+}
+
+function renderStatic(){
+  const t = T();
+  document.documentElement.lang = lang;
+  document.title = t.seitentitel;
+  document.getElementById("gratislink").href = (window.MODELLSEITEN ? sprachPfad() : "") + "free.html";
+  document.querySelector(".themebtn").title = t.theme;
+  document.querySelectorAll("[data-t]").forEach(function(el){ el.textContent = t[el.dataset.t]; });
+  document.getElementById("search").placeholder = t.suche;
+  document.querySelectorAll(".langbtns button").forEach(function(b){ b.classList.toggle("active", b.dataset.lang === lang); });
+  document.querySelector('#viewtog [data-view="table"]').title = t.ansicht_tabelle;
+  document.querySelector('#viewtog [data-view="list"]').title = t.ansicht_liste;
+  document.getElementById("sortsel").innerHTML = Object.keys(t.sorts).map(function(k){
+    return '<option value="'+k+'"'+(k === S.sort+"-"+S.dir ? " selected" : "")+'>'+t.sorts[k]+'</option>';
+  }).join("");
+  document.querySelectorAll("#viewtog button").forEach(function(b){ b.classList.toggle("active", b.dataset.view === S.view); });
+  const alt = Object.keys((D.meta && D.meta.veraltet) || {}).map(function(k){ return Q_BY_KEY[k] ? Q_BY_KEY[k].name : k; });
+  document.getElementById("meta").textContent = t.meta((D.meta && D.meta.erstellt) || "?") + (alt.length ? " · ⚠ " + t.veraltet(alt.join(", ")) : "");
+  document.getElementById("footer").textContent = t.footer;
+  document.getElementById("infobox").innerHTML = t.infobox;
+  const dis = document.getElementById("disclosure");
+  dis.hidden = !C.hatAffiliate();
+  if (C.hatAffiliate()) dis.innerHTML = '<span class="adlabel">'+esc(C.kennzeichnung)+'</span><span>'+t.disclosure(C.kennzeichnung)+'</span>';
+}
+
+function render(resetLimit){
+  if (resetLimit) limit = 100;
+  renderStatic(); renderSidebar(); renderChips(); renderResults(); speichereZustand();
+}
+
+/* =================== Ereignisse =================== */
+const $ = function(id){ return document.getElementById(id); };
+let suchTimer = null;
+$("search").addEventListener("input", function(e){
+  clearTimeout(suchTimer);
+  suchTimer = setTimeout(function(){ S.q = e.target.value; render(true); }, 120);
+});
+document.addEventListener("keydown", function(e){
+  if (e.key === "/" && document.activeElement !== $("search")) { e.preventDefault(); $("search").focus(); $("search").select(); }
+  if (e.key === "Escape") document.body.classList.remove("drawer");
+});
+$("sortsel").addEventListener("change", function(e){
+  const p = e.target.value.split("-"); S.sort = p[0]; S.dir = p[1]; render(true);
+});
+$("viewtog").addEventListener("click", function(e){
+  const b = e.target.closest("button[data-view]"); if (!b) return;
+  S.view = b.dataset.view; lsSet("view", S.view); render();
+});
+document.querySelector(".langbtns").addEventListener("click", function(e){
+  const b = e.target.closest("button[data-lang]"); if (!b) return;
+  lang = b.dataset.lang; lsSet("lang", lang); render();
+});
+$("filterbtn").addEventListener("click", function(){ document.body.classList.add("drawer"); });
+$("backdrop").addEventListener("click", function(){ document.body.classList.remove("drawer"); });
+
+const sb = $("sidebar");
+sb.addEventListener("change", function(e){
+  const el = e.target;
+  if (el.dataset.g){
+    const arr = S[el.dataset.g]; const i = arr.indexOf(el.value);
+    if (el.checked && i < 0) arr.push(el.value); if (!el.checked && i >= 0) arr.splice(i, 1);
+  } else if (el.id === "bestchk") S.best = el.checked;
+  else if (el.id === "multichk") S.multi = el.checked;
+  else if (el.id === "gratischk") S.gratis = el.checked;
+  else if (el.id === "ctxrange") S.ctx = +el.value;
+  else if (el.id === "prange") S.pmax = +el.value;
+  else return;
+  render(true);
+});
+sb.addEventListener("input", function(e){   // Live-Anzeige beim Ziehen der Regler
+  const el = e.target, t = T();
+  if (el.id === "ctxrange") el.parentNode.querySelector(".range-val").textContent = +el.value ? "≥ " + fmtCtx(CTX_STEPS[+el.value]) : t.egal;
+  if (el.id === "prange")   el.parentNode.querySelector(".range-val").textContent = PREIS_STEPS[+el.value] === Infinity ? t.unbegrenzt : "≤ " + fmtPreis(PREIS_STEPS[+el.value]);
+});
+sb.addEventListener("click", function(e){
+  const c = e.target.closest("[data-clear]");
+  if (c){ S[c.dataset.clear] = []; render(true); return; }
+  if (e.target.closest("#resetall")){
+    const view = S.view; S = JSON.parse(JSON.stringify(DEFAULT)); S.view = view; $("search").value = ""; render(true);
+  }
+});
+$("chips").addEventListener("click", function(e){
+  const c = e.target.closest(".chip"); if (!c) return;
+  const k = c.dataset.chip, v = c.dataset.v;
+  if (k === "q"){ S.q = ""; $("search").value = ""; }
+  else if (k === "anb" || k === "typ" || k === "fam" || k === "cap") S[k] = S[k].filter(function(x){ return x !== v; });
+  else S[k] = DEFAULT[k];
+  render(true);
+});
+$("results").addEventListener("click", function(e){
+  const th = e.target.closest("th[data-sort]");
+  if (th){
+    const k = th.dataset.sort;
+    if (S.sort === k) S.dir = S.dir === "asc" ? "desc" : "asc";
+    else { S.sort = k; S.dir = (k === "kontext") ? "desc" : "asc"; }
+    render(true); return;
+  }
+  const cb = e.target.closest("[data-cmp]");
+  if (cb){ const id = cb.dataset.cmp; offen[id] = !offen[id]; renderResults(); return; }
+  if (e.target.id === "more"){ limit += 100; renderResults(); }
+});
+
+ladeZustand();
+$("search").value = S.q;
+render(true);
+</script>
+</body>
+</html>
