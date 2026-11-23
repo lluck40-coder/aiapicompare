@@ -52,6 +52,9 @@ jobs:
         with:
           path: _site
 
+      - name: Neue Seiten an Suchmaschinen melden (IndexNow, erst wenn die Domain live ist)
+        run: python3 indexnow.py _site || echo "IndexNow übersprungen"
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
