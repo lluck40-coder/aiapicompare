@@ -186,6 +186,19 @@ T = {
 }
 
 # ------------------------------------------------------------------ Hilfen
+def ctx_zahl(v):
+    """Kontextfenster als ganze Zahl. Manche Anbieter liefern Text wie "200k", "1,000k tokens" oder "1M"."""
+    if isinstance(v, bool) or v is None:
+        return 0
+    if isinstance(v, (int, float)):
+        return int(v) if v > 0 else 0
+    s = str(v).strip().lower().replace(",", "").replace("_", "").replace(" ", "")
+    m = re.match(r"^(\d+(?:\.\d+)?)(k|m)?", s)
+    if not m:
+        return 0
+    return int(float(m.group(1)) * {"k": 1_000, "m": 1_000_000}.get(m.group(2), 1))
+
+
 def esc(s):
     return html.escape(str(s), quote=True)
 
@@ -219,7 +232,7 @@ for q, (qname, farbe, base, env) in ANBIETER.items():
         mp = v.get("media_preis") if isinstance(v.get("media_preis"), (int, float)) else None
         typ = v.get("typ") or ["text"]
         z = dict(q=q, quelle=qname, farbe=farbe, kanon=k, slug=slug(k), name=v.get("name") or v.get("roh_id") or k,
-                 roh=v.get("roh_id") or k, entw=v.get("entwickler") or "", ctx=v.get("context") or 0,
+                 roh=v.get("roh_id") or k, entw=v.get("entwickler") or "", ctx=ctx_zahl(v.get("context")),
                  inp=inp, out=out, ab=ab, mp=mp, einheit=v.get("einheit") or "", typ=typ,
                  faeh=v.get("faeh") or [], aufl=v.get("aufl") or "", dauer=v.get("dauer") or 0,
                  dauer_fix=v.get("dauer_fix") or 0, gratis=bool(v.get("gratis")), url=v.get("url") or "")

@@ -35,6 +35,19 @@ def load_anymodel_key():
     return None
 
 
+def ctx_zahl(v):
+    """Kontextfenster als ganze Zahl. Manche Anbieter liefern Text wie "200k", "1,000k tokens" oder "1M"."""
+    if isinstance(v, bool) or v is None:
+        return 0
+    if isinstance(v, (int, float)):
+        return int(v) if v > 0 else 0
+    s = str(v).strip().lower().replace(",", "").replace("_", "").replace(" ", "")
+    m = re.match(r"^(\d+(?:\.\d+)?)(k|m)?", s)
+    if not m:
+        return 0
+    return int(float(m.group(1)) * {"k": 1_000, "m": 1_000_000}.get(m.group(2), 1))
+
+
 def kanon(name):
     """Normalisiert Modell-IDs (ggf. mit Anbieter-Präfix) zu einem Familien-Kürzel."""
     s = name.split("/")[-1].lower().strip()
@@ -693,6 +706,13 @@ for k in list(payload.keys()):
 meta["veraltet"] = veraltet
 if veraltet and all(k in veraltet for k, v in payload.items() if k != "meta" and v):
     meta["erstellt"] = alt_stand   # nichts wurde aktualisiert -> alten Stand anzeigen
+
+# Kontextfenster überall als Zahl speichern (auch in übernommenen Altdaten)
+for k, v in payload.items():
+    if k != "meta":
+        for e in v.values():
+            if "context" in e:
+                e["context"] = ctx_zahl(e["context"])
 
 gesamt = sum(len(v) for k, v in payload.items() if k != "meta")
 if gesamt == 0:
