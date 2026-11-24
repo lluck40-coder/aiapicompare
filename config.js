@@ -28,7 +28,7 @@ window.SITE_CONFIG = {
   // Solange websiteId leer ist, bleibt die Statistik aus und es erscheint
   // KEIN Cookie-Fenster (es gibt dann nichts, wozu man einwilligen müsste).
   statistik: {
-    websiteId: "",                                        // z. B. "94db1cb1-74f4-4a40-ad6c-962362670409"
+    websiteId: "0afb117f-50e6-446a-a1d4-c40c433b9b47",    // aus dem Umami-Tracking-Code (24.11.2026)
     script:    "https://cloud.umami.is/script.js",
     hostUrl:   "",
     domains:   "aiapicompare.com,www.aiapicompare.com"    // nur auf diesen Adressen zählen (nicht bei Tests)
