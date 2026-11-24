@@ -1,1 +1,1 @@
-window.PREISINDEX = {"start":"2026-11-23","stand":"2026-11-23","n_alle":2127,"n_top":142,"punkte":[["2026-11-23",100.0,100.0]],"monate":[{"m":"2026-11","runter":0,"hoch":0,"neu":4}]};
+window.PREISINDEX = {"start":"2026-11-23","stand":"2026-11-24","n_alle":2127,"n_top":142,"punkte":[["2026-11-23",100.0,100.0],["2026-11-24",99.95,100.3]],"monate":[{"m":"2026-11","runter":3,"hoch":6,"neu":5}]};
