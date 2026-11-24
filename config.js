@@ -1,61 +1,37 @@
 // =====================================================================
 //  config.js – zentrale Einstellungen für alle Seiten
-//  Hier tragen Sie Ihre Affiliate-/Empfehlungslinks ein.
-//
-//  So funktioniert es:
-//   aktiv      : true  = Programm ist eingerichtet, Links werden gekennzeichnet
-//   startseite : Ihr persönlicher Empfehlungslink (z. B. https://nano-gpt.com/r/CODE).
-//                Wird für die Buttons "Zum Anbieter" / "Konto erstellen" verwendet.
-//   parameter  : NUR wenn das Programm einen Link-Zusatz erlaubt (z. B. "ref=CODE"
-//                oder "via=CODE"). Dann werden auch alle Modell-Links zum Anbieter
-//                zu Affiliate-Links. Leer lassen, wenn es nur einen festen Link gibt.
-//
-//  Gekennzeichnet ("Anzeige", rel="sponsored") wird ein Link nur, wenn er
-//  wirklich Ihre Partnerkennung enthält – also nicht versehentlich normale Links.
-//
-//  Die Felder "programm", "provision" und "anmeldung" sind nur Notizen für Sie
-//  (Stand: Recherche 22.11.2026 – Bedingungen ändern sich, bitte vor Anmeldung prüfen).
 // =====================================================================
 window.SITE_CONFIG = {
 
   seitenname: "aiapicompare",
 
-  // Kennzeichnung direkt am Link. Empfehlung: "Anzeige" oder "Werbung".
-  kennzeichnung: "Anzeige",
+  // Startseiten der Anbieter – für „Zum Anbieter“ / „Konto erstellen“ und
+  // damit die Statistik Klicks dem richtigen Anbieter zuordnen kann.
+  anbieter: {
+    openrouter:   "https://openrouter.ai",
+    uplinkswitch: "https://uplinkswitch.ai",
+    anymodel:     "https://anymodel.org",
+    nanogpt:      "https://nano-gpt.com",
+    chutes:       "https://chutes.ai",
+    deepinfra:    "https://deepinfra.com",
+    novita:       "https://novita.ai",
+    cometapi:     "https://www.cometapi.com",
+    kyma:         "https://kymaapi.com"
+  },
 
-  affiliate: {
-    // ---------- Anbieter mit bezahltem Partnerprogramm ----------
-    cometapi: {
-      aktiv: false, parameter: "", startseite: "https://www.cometapi.com",
-      programm: "Affiliate (Tolt)", provision: "20 % jeder Aufladung, 120 Tage Cookie",
-      anmeldung: "https://www.cometapi.com/affiliate/"
-    },
-    uplinkswitch: {
-      aktiv: false, parameter: "", startseite: "https://uplinkswitch.ai",
-      programm: "Affiliate über Whop", provision: "30 % (Whop-Standard), Auszahlung nach 30 Tagen",
-      anmeldung: "https://whop.com/uplinkswitch-0fbc/"
-    },
-    kyma: {
-      aktiv: false, parameter: "", startseite: "https://kymaapi.com",
-      programm: "Affiliate (Affitor)", provision: "12 % wiederkehrend für 18 Monate, 30 Tage Cookie, ab 20 $",
-      anmeldung: "https://openaffiliate.dev/programs/kyma-api"
-    },
-    novita: {
-      aktiv: false, parameter: "", startseite: "https://novita.ai",
-      programm: "Affiliate (Tapfiliate)", provision: "10 % der Ausgaben für 180 Tage, Auszahlung ab 50 $",
-      anmeldung: "https://novita.ai/affiliate"
-    },
-    nanogpt: {
-      aktiv: false, parameter: "", startseite: "https://nano-gpt.com",
-      programm: "Empfehlungslink (Konto → Earn)", provision: "10 % Umsatzbeteiligung (in Nano), Geworbene erhalten 5 % Rabatt",
-      anmeldung: "https://nano-gpt.com/earn"
-    },
-
-    // ---------- Anbieter ohne bekanntes Partnerprogramm (normale Links) ----------
-    openrouter: { aktiv: false, parameter: "", startseite: "https://openrouter.ai",  programm: "keins gefunden (nur Startup-Programm)" },
-    anymodel:   { aktiv: false, parameter: "", startseite: "https://anymodel.org",   programm: "keins gefunden" },
-    chutes:     { aktiv: false, parameter: "", startseite: "https://chutes.ai",      programm: "keins gefunden" },
-    deepinfra:  { aktiv: false, parameter: "", startseite: "https://deepinfra.com",  programm: "keins gefunden (nur Startup-Credits)" }
+  // Besucherstatistik mit Umami Cloud (ohne Cookies). Das Skript wird NUR
+  // geladen, nachdem jemand im Cookie-Fenster „Akzeptieren“ gewählt hat
+  // (siehe einwilligung.js).
+  // So füllst du es aus: Umami-Dashboard → Websites → Website bearbeiten →
+  // „Tracking-Code“. Dort stehen src="…" (→ script) und data-website-id="…"
+  // (→ websiteId). Enthält der Code data-host-url="…", das bei hostUrl eintragen.
+  // Solange websiteId leer ist, bleibt die Statistik aus und es erscheint
+  // KEIN Cookie-Fenster (es gibt dann nichts, wozu man einwilligen müsste).
+  statistik: {
+    websiteId: "",                                        // z. B. "94db1cb1-74f4-4a40-ad6c-962362670409"
+    script:    "https://cloud.umami.is/script.js",
+    hostUrl:   "",
+    domains:   "aiapicompare.com,www.aiapicompare.com"    // nur auf diesen Adressen zählen (nicht bei Tests)
   }
 };
 
@@ -66,35 +42,17 @@ window.SITE_CONFIG = {
   "use strict";
   const C = window.SITE_CONFIG;
 
-  // Liefert {url, affiliate}. url leer/null = Startseite (Empfehlungslink) des Anbieters.
+  // Liefert {url}. url leer/null = Startseite des Anbieters.
   C.link = function (anbieterKey, url) {
-    const a = (C.affiliate || {})[anbieterKey];
-    const startseite = (a && a.startseite) || "";
-    const istStart = !url;
-    url = url || startseite;
-    if (!a || !a.aktiv || !url) return { url: url, affiliate: false };
-    if (a.parameter) {
-      const hashPos = url.indexOf("#");
-      const hash = hashPos >= 0 ? url.slice(hashPos) : "";
-      const basis = hashPos >= 0 ? url.slice(0, hashPos) : url;
-      return { url: basis + (basis.indexOf("?") >= 0 ? "&" : "?") + a.parameter + hash, affiliate: true };
-    }
-    // Ohne Parameter trägt nur der Empfehlungslink selbst die Partnerkennung
-    return { url: url, affiliate: istStart };
+    return { url: url || (C.anbieter || {})[anbieterKey] || "" };
   };
 
   C.linkHtml = function (anbieterKey, url, text, cls, titel) {
     const l = C.link(anbieterKey, url);
     if (!l.url) return "";
     const esc = function (s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); };
-    const rel = l.affiliate ? "sponsored noopener" : "noopener";
-    const t = l.affiliate ? (titel ? titel + " – " : "") + C.kennzeichnung + ": Affiliate-Link, wir erhalten ggf. eine Provision" : (titel || "");
-    return '<a class="' + (cls || "") + (l.affiliate ? " aff" : "") + '" href="' + esc(l.url) + '" target="_blank" rel="' + rel + '"' +
-      (t ? ' title="' + esc(t) + '"' : "") + ">" + text +
-      (l.affiliate ? ' <span class="adlabel">' + esc(C.kennzeichnung) + "</span>" : "") + "</a>";
-  };
-
-  C.hatAffiliate = function () {
-    return Object.keys(C.affiliate || {}).some(function (k) { return C.affiliate[k].aktiv; });
+    return '<a class="' + (cls || "") + '" href="' + esc(l.url) + '" target="_blank" rel="noopener"' +
+      (anbieterKey ? ' data-anbieter="' + esc(anbieterKey) + '"' : "") +
+      (titel ? ' title="' + esc(titel) + '"' : "") + ">" + text + "</a>";
   };
 })();

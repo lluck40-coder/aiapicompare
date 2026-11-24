@@ -26,10 +26,6 @@ h3{font-size:.95rem;margin:1.2rem 0 .4rem}
 .lead{color:var(--muted);margin:0 0 1.2rem}
 code,pre{font-family:var(--mono);font-size:.82rem}
 :not(pre)>code{background:var(--panel2);border:1px solid var(--border2);padding:.05rem .35rem;border-radius:.3rem}
-.adlabel{display:inline-block;font-size:.6rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:.05rem .3rem;border-radius:.25rem;background:#3b2f0b;color:#fbbf24;border:1px solid #5c4710;vertical-align:middle;margin-left:.2rem}
-.disclosure{display:flex;gap:.6rem;align-items:flex-start;font-size:.8rem;line-height:1.5;color:#e5d3a1;background:#1d180a;border:1px solid #4a3a10;border-radius:.5rem;padding:.55rem .8rem;margin-bottom:1rem}
-.disclosure[hidden]{display:none}
-.disclosure b{color:#fbbf24}
 .card{border:1px solid var(--border);border-radius:.6rem;background:var(--panel);padding:1rem 1.1rem}
 .note{border-left:3px solid var(--blue);background:rgba(96,165,250,.06);padding:.6rem .9rem;border-radius:0 .4rem .4rem 0;font-size:.88rem;margin:.8rem 0}
 .note.warn{border-color:#f59e0b;background:rgba(245,158,11,.07)}
@@ -56,8 +52,6 @@ th{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.
 
 /* ---------- heller Modus ---------- */
 [data-theme=light]{--bg:#f8fafc;--panel:#ffffff;--panel2:#f1f5f9;--fg:#0f172a;--muted:#64748b;--dim:#94a3b8;--accent:#16a34a;--accent-bg:rgba(22,163,74,.08);--blue:#2563eb;--border:#e2e8f0;--border2:#cbd5e1;--input:#ffffff;--topbar:rgba(248,250,252,.92);--codebg:#f1f5f9}
-[data-theme=light] .disclosure{background:#fffbeb;color:#78350f;border-color:#fcd34d}
-[data-theme=light] .disclosure b{color:#92400e}
 [data-theme=light] .ph{background:#fef3c7;color:#92400e}
 .brand .logo-l{display:none}
 [data-theme=light] .brand .logo-d{display:none}

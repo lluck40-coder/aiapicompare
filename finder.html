@@ -52,7 +52,6 @@
 </div>
 
 <div class="wrap">
-  <div class="disclosure" id="disclosure" hidden></div>
   <h1 data-t="h1"></h1>
   <p class="lead" data-t="lead"></p>
 
@@ -79,7 +78,7 @@
 "use strict";
 const D = window.API_DATEN || {};
 const ST = window.STAERKEN || null;
-const C = window.SITE_CONFIG || {kennzeichnung:"Anzeige", hatAffiliate:function(){return false;},
+const C = window.SITE_CONFIG || {
   linkHtml:function(k,u,t,c){ return u ? '<a class="'+(c||"")+'" href="'+u+'" target="_blank" rel="noopener">'+t+'</a>' : ""; }};
 const QUELLEN = {openrouter:"OpenRouter", uplinkswitch:"UplinkSwitch", anymodel:"AnyModel", nanogpt:"NanoGPT", chutes:"Chutes",
   deepinfra:"DeepInfra", novita:"Novita AI", cometapi:"CometAPI", kyma:"Kyma API"};
@@ -101,8 +100,7 @@ de:{h1:"Modell-Finder: Welches KI-Modell passt zu mir?", lead:"Drei kurze Fragen
   leer:"Für diese Kombination gibt es kein passendes Modell mit Preis bei unseren Anbietern. Probiere ein höheres Budget.",
   frei_media:"Kostenlose Bild- und Video-Modelle gibt es bei unseren Anbietern derzeit nicht.",
   keine:"Der Modell-Finder braucht die Bestenliste – sie wird beim nächsten täglichen Datenabruf erstellt.",
-  hinweis:function(m){ return "Vorschläge auf Basis der Platzierungen von Arena (arena.ai, ehemals LMArena; Datensatz lmarena-ai/leaderboard-dataset, Lizenz CC BY 4.0, Stand " + m.stand + ") und unserer Preisdaten – keine persönliche Beratung. Partnerprogramme beeinflussen die Vorschläge nicht. Angebote weit unter dem Referenzpreis und veraltete Preise werden standardmäßig nicht berücksichtigt."; },
-  disclosure:function(k){ return "<b>Transparenz:</b> Links mit dem Hinweis „"+k+"“ sind Affiliate-Links (Werbung). Wir erhalten ggf. eine Provision – für dich ändert sich der Preis nicht. Die Vorschläge werden dadurch nicht beeinflusst."; }},
+  hinweis:function(m){ return "Vorschläge auf Basis der Platzierungen von Arena (arena.ai, ehemals LMArena; Datensatz lmarena-ai/leaderboard-dataset, Lizenz CC BY 4.0, Stand " + m.stand + ") und unserer Preisdaten – keine persönliche Beratung. Angebote weit unter dem Referenzpreis und veraltete Preise werden standardmäßig nicht berücksichtigt."; }},
 en:{h1:"Model finder: which AI model suits me?", lead:"Three quick questions – and you get matching models with the cheapest API price. Based on the Arena leaderboard ranks and our daily price comparison.",
   nav_vergleich:"Price comparison", nav_kosten:"Cost calculator", nav_finder:"Model finder", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
   f1:"What do you need the model for?", f2:"How much may it cost?", f3:"What matters more to you?", auch_auff:"Also consider offers far below reference price ⚠",
@@ -115,8 +113,7 @@ en:{h1:"Model finder: which AI model suits me?", lead:"Three quick questions –
   leer:"There is no matching model with a price at our providers for this combination. Try a higher budget.",
   frei_media:"There are currently no free image or video models at our providers.",
   keine:"The model finder needs the leaderboard – it will be created with the next daily data update.",
-  hinweis:function(m){ return "Suggestions based on the ranks from Arena (arena.ai, formerly LMArena; dataset lmarena-ai/leaderboard-dataset, license CC BY 4.0, as of " + m.stand + ") and our price data – not personal advice. Affiliate programs do not influence the suggestions. Offers far below the reference price and outdated prices are not considered by default."; },
-  disclosure:function(k){ return "<b>Transparency:</b> Links marked “"+k+"” are affiliate links (advertising). We may receive a commission – the price stays the same for you. Suggestions are not affected."; }},
+  hinweis:function(m){ return "Suggestions based on the ranks from Arena (arena.ai, formerly LMArena; dataset lmarena-ai/leaderboard-dataset, license CC BY 4.0, as of " + m.stand + ") and our price data – not personal advice. Offers far below the reference price and outdated prices are not considered by default."; }},
 zh:{h1:"模型推荐：哪个 AI 模型适合我？", lead:"回答三个简单问题，即可获得合适的模型及最低 API 价格。依据 Arena 排行榜名次和我们的每日价格对比。",
   nav_vergleich:"价格对比", nav_kosten:"成本计算器", nav_finder:"模型推荐", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
   f1:"你需要模型做什么？", f2:"预算是多少？", f3:"你更看重什么？", auch_auff:"同时考虑远低于参考价的报价 ⚠",
@@ -129,8 +126,7 @@ zh:{h1:"模型推荐：哪个 AI 模型适合我？", lead:"回答三个简单�
   leer:"此组合下没有在我们提供商处有价格的合适模型。请尝试提高预算。",
   frei_media:"我们的提供商目前没有免费的图像或视频模型。",
   keine:"模型推荐需要排行榜数据——将在下一次每日数据更新时生成。",
-  hinweis:function(m){ return "推荐依据 Arena（arena.ai，原 LMArena；数据集 lmarena-ai/leaderboard-dataset，CC BY 4.0 许可，数据日期 " + m.stand + "）的名次和我们的价格数据——并非个人建议。推广计划不影响推荐结果。默认不考虑远低于参考价的报价和过时价格。"; },
-  disclosure:function(k){ return "<b>透明声明：</b>标有“"+k+"”的链接为推广（联盟）链接，属于广告。我们可能获得佣金，您的价格不变，推荐不受影响。"; }},
+  hinweis:function(m){ return "推荐依据 Arena（arena.ai，原 LMArena；数据集 lmarena-ai/leaderboard-dataset，CC BY 4.0 许可，数据日期 " + m.stand + "）的名次和我们的价格数据——并非个人建议。默认不考虑远低于参考价的报价和过时价格。"; }},
 ru:{h1:"Подбор модели: какая AI-модель мне подходит?", lead:"Три коротких вопроса – и вы получите подходящие модели с самой низкой ценой API. На основе мест в рейтинге Arena и нашего ежедневного сравнения цен.",
   nav_vergleich:"Сравнение цен", nav_kosten:"Калькулятор", nav_finder:"Подбор модели", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
   f1:"Для чего нужна модель?", f2:"Сколько она может стоить?", f3:"Что для вас важнее?", auch_auff:"Учитывать предложения намного ниже эталона ⚠",
@@ -143,8 +139,7 @@ ru:{h1:"Подбор модели: какая AI-модель мне подхо�
   leer:"Для этой комбинации нет подходящей модели с ценой у наших поставщиков. Попробуйте больший бюджет.",
   frei_media:"Бесплатных моделей для изображений и видео у наших поставщиков сейчас нет.",
   keine:"Для подбора нужен рейтинг – он будет создан при следующем ежедневном обновлении данных.",
-  hinweis:function(m){ return "Варианты на основе мест Arena (arena.ai, ранее LMArena; набор данных lmarena-ai/leaderboard-dataset, лицензия CC BY 4.0, данные на " + m.stand + ") и наших цен – не персональная консультация. Партнёрские программы не влияют на варианты. Предложения намного ниже эталонной цены и устаревшие цены по умолчанию не учитываются."; },
-  disclosure:function(k){ return "<b>Прозрачность:</b> ссылки с пометкой «"+k+"» – партнёрские (реклама). Мы можем получить комиссию, цена для вас не меняется."; }}
+  hinweis:function(m){ return "Варианты на основе мест Arena (arena.ai, ранее LMArena; набор данных lmarena-ai/leaderboard-dataset, лицензия CC BY 4.0, данные на " + m.stand + ") и наших цен – не персональная консультация. Предложения намного ниже эталонной цены и устаревшие цены по умолчанию не учитываются."; }}
 };
 
 /* ---------- Angebote (wie in der Bestenliste) ---------- */
@@ -213,9 +208,6 @@ function render(){
   document.title = T.h1 + " – aiapicompare";
   document.querySelectorAll("[data-t]").forEach(function(el){ el.textContent = T[el.dataset.t]; });
   document.querySelectorAll(".langbtns button").forEach(function(b){ b.classList.toggle("active", b.dataset.lang === lang); });
-  const dis = document.getElementById("disclosure");
-  dis.hidden = !C.hatAffiliate();
-  if (C.hatAffiliate()) dis.innerHTML = '<span class="adlabel">'+esc(C.kennzeichnung)+'</span><span>'+T.disclosure(C.kennzeichnung)+'</span>';
   if (!BUDGET[S.budget]) S.budget = "egal";
   if (!T.prio[S.prio]) S.prio = "ausgewogen";
   if (!ST){ document.getElementById("ergebnis").innerHTML = '<div class="leer">'+T.keine+'</div>'; return; }
@@ -259,5 +251,6 @@ document.addEventListener("click", function(e){
 document.getElementById("auff").addEventListener("change", function(e){ S.auff = e.target.checked; render(); });
 render();
 </script>
+<script src="einwilligung.js"></script>
 </body>
 </html>

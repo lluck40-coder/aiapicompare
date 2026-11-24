@@ -88,7 +88,7 @@ de:{h1:"So vergleichen wir", lead:"Woher unsere Preise kommen, wie wir sie vergl
   '<h2>Platzierungen (Bestenliste)</h2>'+
   '<p>Die Platzierungen stammen von Arena (arena.ai, ehemals LMArena), Datensatz <a href="'+DATASET+'" rel="noopener" target="_blank">lmarena-ai/leaderboard-dataset</a>, Lizenz <a href="'+LIZENZ+'" rel="noopener" target="_blank">CC BY 4.0</a>. Sie beruhen auf Abstimmungen von Nutzern, die Antworten zweier Modelle vergleichen – ein guter Anhaltspunkt, aber keine Messung für deinen konkreten Einsatz. Die Zuordnung zu den Modellen in unserem Preisvergleich erfolgt automatisch über die Modellnamen; Fehler sind möglich.</p>'+
   '<h2>Unabhängigkeit</h2>'+
-  '<p>Die Reihenfolge richtet sich nur nach dem gewählten Kriterium (z. B. Preis) bzw. nach der Platzierung. Es gibt keine bezahlten Platzierungen. Falls wir Partnerlinks nutzen, sind sie mit „Anzeige“ gekennzeichnet und beeinflussen weder Reihenfolge noch Kennzeichnung.</p>'+
+  '<p>Die Reihenfolge richtet sich nur nach dem gewählten Kriterium (z. B. Preis) bzw. nach der Platzierung. Es gibt keine bezahlten Platzierungen.</p>'+
   '<h2>Fehler gefunden?</h2>'+
   '<p>Schreib uns an '+MAIL+' – am besten mit Link zum Modell und zur Preisseite des Anbieters. Alle Angaben ohne Gewähr.</p>'; }},
 en:{h1:"How we compare", lead:"Where our prices come from, how we compare them and why some offers are flagged.",
@@ -118,7 +118,7 @@ en:{h1:"How we compare", lead:"Where our prices come from, how we compare them a
   '<h2>Ranks (leaderboard)</h2>'+
   '<p>The ranks come from Arena (arena.ai, formerly LMArena), dataset <a href="'+DATASET+'" rel="noopener" target="_blank">lmarena-ai/leaderboard-dataset</a>, license <a href="'+LIZENZ+'" rel="noopener" target="_blank">CC BY 4.0</a>. They are based on votes by users comparing the answers of two models – a good indication, but not a measurement for your specific use. They are matched to the models in our price comparison automatically by model name; errors are possible.</p>'+
   '<h2>Independence</h2>'+
-  '<p>The order depends only on the chosen criterion (e.g. price) or the rank. There are no paid placements. If we use affiliate links, they are labelled as advertising and influence neither the order nor the flags.</p>'+
+  '<p>The order depends only on the chosen criterion (e.g. price) or the rank. There are no paid placements.</p>'+
   '<h2>Found an error?</h2>'+
   '<p>Write to '+MAIL+' – ideally with a link to the model and to the provider’s pricing page. All information without guarantee.</p>'; }},
 zh:{h1:"我们的比较方法", lead:"我们的价格从何而来、如何比较，以及为什么部分报价会被标注。",
@@ -148,7 +148,7 @@ zh:{h1:"我们的比较方法", lead:"我们的价格从何而来、如何比较
   '<h2>名次（排行榜）</h2>'+
   '<p>名次来自 Arena（arena.ai，原 LMArena），数据集 <a href="'+DATASET+'" rel="noopener" target="_blank">lmarena-ai/leaderboard-dataset</a>，许可证 <a href="'+LIZENZ+'" rel="noopener" target="_blank">CC BY 4.0</a>。名次基于用户对两个模型回答的比较投票——可作为参考，但并非针对你具体用途的测量。与我们价格对比中模型的对应关系按模型名称自动匹配，可能存在错误。</p>'+
   '<h2>独立性</h2>'+
-  '<p>排序仅取决于所选条件（如价格）或名次。不存在付费排名。如我们使用推广链接，会标注为广告，且不影响排序和标注。</p>'+
+  '<p>排序仅取决于所选条件（如价格）或名次。不存在付费排名。</p>'+
   '<h2>发现错误？</h2>'+
   '<p>请写信至 '+MAIL+'——最好附上模型链接和提供商的价格页面。所有信息不作保证。</p>'; }},
 ru:{h1:"Как мы сравниваем", lead:"Откуда наши цены, как мы их сравниваем и почему некоторые предложения помечены.",
@@ -178,7 +178,7 @@ ru:{h1:"Как мы сравниваем", lead:"Откуда наши цены,
   '<h2>Места (рейтинг)</h2>'+
   '<p>Места взяты из Arena (arena.ai, ранее LMArena), набор данных <a href="'+DATASET+'" rel="noopener" target="_blank">lmarena-ai/leaderboard-dataset</a>, лицензия <a href="'+LIZENZ+'" rel="noopener" target="_blank">CC BY 4.0</a>. Они основаны на голосах пользователей, сравнивающих ответы двух моделей, – хороший ориентир, но не измерение для вашей конкретной задачи. Сопоставление с моделями в нашем сравнении цен выполняется автоматически по названиям; возможны ошибки.</p>'+
   '<h2>Независимость</h2>'+
-  '<p>Порядок зависит только от выбранного критерия (например, цены) или места в рейтинге. Платных размещений нет. Если мы используем партнёрские ссылки, они помечены как реклама и не влияют ни на порядок, ни на пометки.</p>'+
+  '<p>Порядок зависит только от выбранного критерия (например, цены) или места в рейтинге. Платных размещений нет.</p>'+
   '<h2>Нашли ошибку?</h2>'+
   '<p>Напишите на '+MAIL+' – лучше со ссылкой на модель и страницу цен поставщика. Вся информация без гарантии.</p>'; }}
 };
@@ -206,5 +206,7 @@ document.addEventListener("click", function(e){
 });
 render();
 </script>
+<script src="config.js"></script>
+<script src="einwilligung.js"></script>
 </body>
 </html>

@@ -26,7 +26,7 @@ SPRACHEN = ["en", "de", "zh", "ru"]          # en liegt im Stammverzeichnis
 STATISCH = ["index.html", "anbindung.html", "kosten.html","free.html", "bestenliste.html", "news.html", "bereiche.js",
             "finder.html", "preisindex.html", "einbetten.html", "methodik.html", "referenz.js",
             "impressum.html", "datenschutz.html",
-            "style.css", "sprache.js", "theme.js", "config.js", "favicon.svg", "favicon-32.png",
+            "style.css", "sprache.js", "theme.js", "config.js", "einwilligung.js", "favicon.svg", "favicon-32.png",
             "apple-touch-icon.png", "og-image.png", "robots.txt", "CNAME"]
 
 # ------------------------------------------------------------------ Daten laden
@@ -112,8 +112,7 @@ T = {
   idx_titel="All AI models & API prices A–Z | aiapicompare", idx_h1="All AI models A–Z",
   idx_desc="API prices for {n} AI models from {p} providers – text, image and video models, updated daily.",
   idx_lead="{n} models from {p} providers. Click a model for the full price comparison.",
-  th_modell="Model", th_anz="Providers", th_ab="From", zurueck="← Back to the price comparison",
-  disclosure="<b>Transparency:</b> Links marked “{k}” are affiliate links (advertising). If you buy credits through them, we receive a commission – the price stays the same for you."),
+  th_modell="Model", th_anz="Providers", th_ab="From", zurueck="← Back to the price comparison"),
 "de": dict(htmllang="de", nav_finder="Modell-Finder", fuss_anb="Anbieter", fuss_index="KI-Preisindex", fuss_widget="Widget einbetten", fuss_methodik="So vergleichen wir", nav_best="Bestenliste", nav_news="Neuigkeiten", nav_vergleich="Preisvergleich", nav_kosten="Kostenrechner", nav_gratis="Kostenlose Modelle",
   nav_anbindung="Anbindung & Einrichtung", impressum="Impressum", datenschutz="Datenschutz", alle_modelle="Alle Modelle", api="Daten als JSON",
   titel1="{name} API-Preis & Fähigkeiten | aiapicompare", lead_flat="{name} ist bei {n} Anbieter(n) verfügbar. Am günstigsten: <b>{prov}</b> mit <b>{inp}</b> pro 1 Mio. Token (Pauschalpreis für Input und Output).",
@@ -140,8 +139,7 @@ T = {
   idx_titel="Alle KI-Modelle & API-Preise von A–Z | aiapicompare", idx_h1="Alle KI-Modelle von A–Z",
   idx_desc="API-Preise für {n} KI-Modelle von {p} Anbietern – Text-, Bild- und Videomodelle, täglich aktualisiert.",
   idx_lead="{n} Modelle von {p} Anbietern. Ein Klick auf ein Modell zeigt den vollständigen Preisvergleich.",
-  th_modell="Modell", th_anz="Anbieter", th_ab="Ab", zurueck="← Zurück zum Preisvergleich",
-  disclosure="<b>Transparenz:</b> Links mit dem Hinweis „{k}“ sind Affiliate-Links (Werbung). Kaufst du darüber Guthaben, erhalten wir eine Provision – für dich ändert sich der Preis nicht."),
+  th_modell="Modell", th_anz="Anbieter", th_ab="Ab", zurueck="← Zurück zum Preisvergleich"),
 "zh": dict(htmllang="zh-CN", nav_finder="模型推荐", fuss_anb="提供商", fuss_index="AI 价格指数", fuss_widget="嵌入小组件", fuss_methodik="比较方法", nav_best="排行榜", nav_news="动态", nav_vergleich="价格对比", nav_kosten="成本计算器", nav_gratis="免费模型",
   nav_anbindung="接入与配置", impressum="网站信息", datenschutz="隐私政策", alle_modelle="全部模型", api="JSON 数据",
   titel1="{name} API 价格与功能 | aiapicompare", lead_flat="{name} 共有 {n} 家提供商。最便宜：<b>{prov}</b>，每百万 Token <b>{inp}</b>（输入输出统一价格）。",
@@ -168,8 +166,7 @@ T = {
   idx_titel="全部 AI 模型及 API 价格（A–Z）| aiapicompare", idx_h1="全部 AI 模型（A–Z）",
   idx_desc="{p} 家提供商的 {n} 个 AI 模型的 API 价格——文本、图像和视频模型，每日更新。",
   idx_lead="来自 {p} 家提供商的 {n} 个模型。点击模型查看完整价格对比。",
-  th_modell="模型", th_anz="提供商", th_ab="起价", zurueck="← 返回价格对比",
-  disclosure="<b>透明声明：</b>标有“{k}”的链接为推广（联盟）链接，属于广告。若您通过这些链接充值，我们将获得佣金，您的价格不变。"),
+  th_modell="模型", th_anz="提供商", th_ab="起价", zurueck="← 返回价格对比"),
 "ru": dict(htmllang="ru", nav_finder="Подбор модели", fuss_anb="Поставщики", fuss_index="Индекс цен AI", fuss_widget="Виджет для сайта", fuss_methodik="Как мы сравниваем", nav_best="Рейтинг", nav_news="Новости", nav_vergleich="Сравнение цен", nav_kosten="Калькулятор", nav_gratis="Бесплатные модели",
   nav_anbindung="Подключение", impressum="Импрессум", datenschutz="Конфиденциальность", alle_modelle="Все модели", api="Данные в JSON",
   titel1="{name}: цена API и возможности | aiapicompare", lead_flat="{name} доступна у {n} поставщиков. Дешевле всего: <b>{prov}</b> — <b>{inp}</b> за 1 млн токенов (единая цена за вход и выход).",
@@ -196,8 +193,7 @@ T = {
   idx_titel="Все AI-модели и цены API от A до Z | aiapicompare", idx_h1="Все AI-модели от A до Z",
   idx_desc="Цены API для {n} AI-моделей от {p} поставщиков – текст, изображения и видео, ежедневное обновление.",
   idx_lead="{n} моделей от {p} поставщиков. Нажмите на модель, чтобы увидеть полное сравнение цен.",
-  th_modell="Модель", th_anz="Поставщики", th_ab="От", zurueck="← Назад к сравнению цен",
-  disclosure="<b>Прозрачность:</b> ссылки с пометкой «{k}» – партнёрские (реклама). При покупке через них мы получаем комиссию, цена для вас не меняется."),
+  th_modell="Модель", th_anz="Поставщики", th_ab="От", zurueck="← Назад к сравнению цен"),
 }
 
 # ------------------------------------------------------------------ Hilfen
@@ -523,7 +519,6 @@ def kopf(lang, rel, titel, desc, rest, alternativen=True):
   <div class="langbtns langlinks">{sprachlinks}</div>
 </div>
 <div class="wrap seite">
-<div class="disclosure" id="disclosure" hidden></div>
 '''
 
 def fuss(lang, rel):
@@ -531,22 +526,15 @@ def fuss(lang, rel):
     return f'''
 <div class="legal"><a href="{rel}index.html">{t["nav_vergleich"]}</a><a href="{rel}{pfad(lang, "models/index.html")}">{t["alle_modelle"]}</a><a href="{rel}{pfad(lang, "providers/index.html")}">{t["fuss_anb"]}</a><a href="{rel}preisindex.html">{t["fuss_index"]}</a><a href="{rel}einbetten.html">{t["fuss_widget"]}</a><a href="{rel}methodik.html">{t["fuss_methodik"]}</a><a href="{rel}api/prices.json">{t["api"]}</a><a href="{rel}impressum.html">{t["impressum"]}</a><a href="{rel}datenschutz.html">{t["datenschutz"]}</a></div>
 </div>
-<script src="{rel}config.js"></script>
 <script>
 (function(){{
-  var C = window.SITE_CONFIG; var lang = "{lang}";
+  var lang = "{lang}";
   try {{ localStorage.setItem("lang", lang); }} catch(e) {{}}
   document.addEventListener("click", function(e){{ var a = e.target.closest("a[data-setlang]"); if (a) try {{ localStorage.setItem("lang", a.dataset.setlang); }} catch(_) {{}} }});
-  if (!C) return;
-  document.querySelectorAll("a[data-anb]").forEach(function(a){{
-    var l = C.link(a.dataset.anb, a.dataset.start ? null : a.getAttribute("href"));
-    a.setAttribute("href", l.url);
-    if (l.affiliate) {{ a.rel = "sponsored noopener"; a.insertAdjacentHTML("beforeend", ' <span class="adlabel">' + C.kennzeichnung + '</span>'); }}
-  }});
-  if (C.hatAffiliate()) {{ var d = document.getElementById("disclosure"); d.hidden = false;
-    d.innerHTML = '<span class="adlabel">' + C.kennzeichnung + '</span><span>' + {json.dumps(t["disclosure"])}.replace("{{k}}", C.kennzeichnung) + '</span>'; }}
 }})();
 </script>
+<script src="{rel}config.js"></script>
+<script src="{rel}einwilligung.js"></script>
 </body>
 </html>
 '''
@@ -1378,7 +1366,8 @@ def seite_404():
     """Eigene Fehlerseite; GitHub Pages liefert sie für jede unbekannte Adresse aus (daher absolute Pfade)."""
     texte = {l: dict(titel=PV[l]["nf_titel"], text=PV[l]["nf_text"], suche=PV[l]["nf_suche"], v=T[l]["nav_vergleich"],
                      k=T[l]["nav_kosten"], g=T[l]["nav_gratis"], b=T[l]["nav_best"], n=T[l]["nav_news"], a=T[l]["alle_modelle"],
-                     c=VS[l]["alle"], p=PV[l]["alle"], f=T[l]["nav_finder"], pf=("" if l == "en" else l + "/")) for l in SPRACHEN}
+                     c=VS[l]["alle"], p=PV[l]["alle"], f=T[l]["nav_finder"], pf=("" if l == "en" else l + "/"),
+                     im=T[l]["impressum"], ds=T[l]["datenschutz"]) for l in SPRACHEN}
     return f'''<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex"><title>404 – aiapicompare</title>
@@ -1390,7 +1379,8 @@ def seite_404():
 <button class="themebtn" title="Light / dark"><span class="ti-l">☀</span><span class="ti-d">☾</span></button></div>
 <div class="nf"><div class="gross">404</div><h1 id="t"></h1><p id="x" style="color:var(--muted)"></p>
 <form action="/index.html" id="f"><input id="q" type="search" autocomplete="off"><button class="btn" type="submit">→</button></form>
-<div class="rel" id="links"></div></div>
+<div class="rel" id="links"></div>
+<div class="legal" style="justify-content:center;margin-top:2.5rem"><a href="/impressum.html" id="li"></a><a href="/datenschutz.html" id="ld"></a></div></div>
 <script>
 (function(){{
   var T = {json.dumps(texte, ensure_ascii=False)};
@@ -1404,8 +1394,12 @@ def seite_404():
   var L = [["/", t.v], ["/kosten.html", t.k], ["/finder.html", t.f], ["/bestenliste.html", t.b], ["/news.html", t.n],
            ["/" + t.pf + "free.html", t.g], ["/" + t.pf + "models/index.html", t.a], ["/" + t.pf + "compare/index.html", t.c], ["/" + t.pf + "providers/index.html", t.p]];
   document.getElementById("links").innerHTML = L.map(function(x){{ return '<a class="btn" href="' + x[0] + '">' + x[1] + '</a>'; }}).join("");
+  document.getElementById("li").textContent = t.im; document.getElementById("ld").textContent = t.ds;
 }})();
-</script></body></html>
+</script>
+<script src="/config.js"></script>
+<script src="/einwilligung.js"></script>
+</body></html>
 '''
 
 # ------------------------------------------------------------------ Ausgabe

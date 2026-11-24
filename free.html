@@ -51,7 +51,6 @@
 </div>
 
 <div class="wrap">
-  <div class="disclosure" id="disclosure" hidden></div>
   <h1 data-t="h1"></h1>
   <p class="lead" data-t="lead"></p>
 
@@ -80,7 +79,7 @@
 <script>
 "use strict";
 const D = window.API_DATEN || {};
-const C = window.SITE_CONFIG || {kennzeichnung:"Anzeige", hatAffiliate:function(){return false;},
+const C = window.SITE_CONFIG || {
   linkHtml:function(k,u,t,c){ return u ? '<a class="'+(c||"")+'" href="'+u+'" target="_blank" rel="noopener">'+t+'</a>' : ""; }};
 const QUELLEN = {openrouter:"OpenRouter", uplinkswitch:"UplinkSwitch", anymodel:"AnyModel", nanogpt:"NanoGPT", chutes:"Chutes",
   deepinfra:"DeepInfra", novita:"Novita AI", cometapi:"CometAPI", kyma:"Kyma API"};
@@ -103,8 +102,7 @@ de:{h1:"Kostenlose KI-Modelle per API",
   howto:["Beim Anbieter ein kostenloses Konto anlegen und einen API-Schlüssel erzeugen.",
          "In deinem Programm (z. B. VS Code, Cline, Hermes) die Basis-URL des Anbieters eintragen – bei OpenRouter <code>https://openrouter.ai/api/v1</code>.",
          "Als Modell die ID aus der Tabelle verwenden (Knopf „ID kopieren“), z. B. <code>{id}</code>.",
-         "Schritt-für-Schritt-Anleitungen für viele Programme findest du unter <a href=\"anbindung.html\">Anbindung &amp; Einrichtung</a>."],
-  disclosure:function(k){ return "<b>Transparenz:</b> Links mit dem Hinweis „"+k+"“ sind Affiliate-Links (Werbung). Wir erhalten ggf. eine Provision – für dich ändert sich der Preis nicht. Die Reihenfolge wird dadurch nicht beeinflusst."; }},
+         "Schritt-für-Schritt-Anleitungen für viele Programme findest du unter <a href=\"anbindung.html\">Anbindung &amp; Einrichtung</a>."]},
 en:{h1:"Free AI models via API",
   lead:"These models can currently be used via API at no cost. Free models usually have strict rate limits, and providers may use requests to improve their services – check the provider’s terms before sending sensitive data.",
   nav_vergleich:"Price comparison", nav_kosten:"Cost calculator", nav_finder:"Model finder", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
@@ -117,8 +115,7 @@ en:{h1:"Free AI models via API",
   howto:["Create a free account with the provider and generate an API key.",
          "In your tool (e.g. VS Code, Cline, Hermes) enter the provider’s base URL – for OpenRouter <code>https://openrouter.ai/api/v1</code>.",
          "Use the ID from the table as the model (“Copy ID” button), e.g. <code>{id}</code>.",
-         "Step-by-step guides for many tools: <a href=\"anbindung.html\">Setup &amp; integration</a>."],
-  disclosure:function(k){ return "<b>Transparency:</b> Links marked “"+k+"” are affiliate links (advertising). We may receive a commission – the price stays the same for you. Ranking is not affected."; }},
+         "Step-by-step guides for many tools: <a href=\"anbindung.html\">Setup &amp; integration</a>."]},
 zh:{h1:"可免费调用的 AI 模型（API）",
   lead:"以下模型目前可通过 API 免费使用。免费模型通常有严格的速率限制，提供商可能会将请求用于改进服务——发送敏感数据前请查看提供商条款。",
   nav_vergleich:"价格对比", nav_kosten:"成本计算器", nav_finder:"模型推荐", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
@@ -131,8 +128,7 @@ zh:{h1:"可免费调用的 AI 模型（API）",
   howto:["在提供商处注册免费账户并创建 API 密钥。",
          "在你的工具（如 VS Code、Cline、Hermes）中填写提供商的 Base URL——OpenRouter 为 <code>https://openrouter.ai/api/v1</code>。",
          "模型名称使用表格中的 ID（“复制 ID”按钮），例如 <code>{id}</code>。",
-         "各工具的详细步骤见 <a href=\"anbindung.html\">接入与配置</a>。"],
-  disclosure:function(k){ return "<b>透明声明：</b>标有“"+k+"”的链接为推广（联盟）链接，属于广告。我们可能获得佣金，您的价格不变，排序不受影响。"; }},
+         "各工具的详细步骤见 <a href=\"anbindung.html\">接入与配置</a>。"]},
 ru:{h1:"Бесплатные AI-модели по API",
   lead:"Эти модели сейчас можно использовать через API бесплатно. У бесплатных моделей обычно строгие лимиты запросов, а поставщики могут использовать запросы для улучшения своих сервисов – проверьте условия перед отправкой конфиденциальных данных.",
   nav_vergleich:"Сравнение цен", nav_kosten:"Калькулятор", nav_finder:"Подбор модели", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
@@ -145,8 +141,7 @@ ru:{h1:"Бесплатные AI-модели по API",
   howto:["Создайте бесплатный аккаунт у поставщика и получите API-ключ.",
          "В вашем инструменте (VS Code, Cline, Hermes и др.) укажите базовый URL поставщика – для OpenRouter <code>https://openrouter.ai/api/v1</code>.",
          "В качестве модели используйте ID из таблицы (кнопка «Копировать ID»), напр. <code>{id}</code>.",
-         "Пошаговые инструкции для многих инструментов: <a href=\"anbindung.html\">Подключение</a>."],
-  disclosure:function(k){ return "<b>Прозрачность:</b> ссылки с пометкой «"+k+"» – партнёрские (реклама). Мы можем получить комиссию, цена для вас не меняется."; }}
+         "Пошаговые инструкции для многих инструментов: <a href=\"anbindung.html\">Подключение</a>."]}
 };
 
 /* ---------- Daten: alle kostenlosen Einträge ---------- */
@@ -193,9 +188,6 @@ function rahmen(){
   document.getElementById("howto").innerHTML = T.howto.map(function(s){ return "<li>" + s.replace("{id}", esc(bsp)) + "</li>"; }).join("");
   const st = ((D.meta && D.meta.erstellt) || "").slice(0, 10);
   document.getElementById("stand").textContent = st ? T.stand(st) : "";
-  const dis = document.getElementById("disclosure");
-  dis.hidden = !C.hatAffiliate();
-  if (C.hatAffiliate()) dis.innerHTML = '<span class="adlabel">'+esc(C.kennzeichnung)+'</span><span>'+T.disclosure(C.kennzeichnung)+'</span>';
   tabelle();
 }
 function tabelle(){
@@ -237,5 +229,6 @@ document.getElementById("ctx").addEventListener("change", function(e){ S.ctx = +
 document.getElementById("sort").addEventListener("change", function(e){ S.sort = e.target.value; tabelle(); });
 rahmen();
 </script>
+<script src="einwilligung.js"></script>
 </body>
 </html>

@@ -7,9 +7,9 @@ und veröffentlicht die Website neu. Kosten: nur die Domain (ca. 10–15 € pro
 
 ## 1. Vorher erledigen (rechtlich nötig)
 - [ ] `impressum.html` – gelb markierte Angaben im **deutschen** Teil ausfüllen
-- [ ] `datenschutz.html` – Name, Anschrift, E-Mail, Datum, Aufsichtsbehörde und die
-      Rechtsgrundlage für die Übermittlung in die USA eintragen (Hinweis steht direkt im Text)
-- [ ] Partnerlinks in `config.js` eintragen (siehe `PARTNERPROGRAMME.md`)
+- [ ] `datenschutz.html` – Name, Anschrift und Aufsichtsbehörde eintragen (gelb markiert)
+- [ ] Besucherstatistik: Umami-Konto anlegen (Datenregion **EU**) und die Website-ID in `config.js`
+      eintragen – siehe `LIESMICH.md`, Abschnitt „Cookie-Fenster und Besucherstatistik“
 
 ## 2. Domain kaufen
 Bei einem Anbieter deiner Wahl **aiapicompare.com** registrieren (z. B. Cloudflare Registrar,
@@ -30,7 +30,7 @@ Am einfachsten mit **GitHub Desktop** (https://desktop.github.com):
    → „create a repository“ bestätigen.
 3. **Publish repository** → Name `aiapicompare`, Haken bei „Keep this code private“ **entfernen**.
 
-Die Datei `.gitignore` sorgt dafür, dass interne Dateien (z. B. `PARTNERPROGRAMME.md`,
+Die Datei `.gitignore` sorgt dafür, dass interne Dateien (z. B. persönliche Notizen,
 die Mobil-Datei) **nicht** hochgeladen werden.
 
 ## 4b. Automatik einschalten (einmalig, 1 Minute)
@@ -86,7 +86,7 @@ Schlüssel niemals in Dateien schreiben, die hochgeladen werden.
 ---
 
 ## Im Alltag
-- **Änderungen** (z. B. neue Partnerlinks in `config.js`): Datei lokal ändern → in GitHub Desktop
+- **Änderungen** (z. B. die Statistik-ID in `config.js`): Datei lokal ändern → in GitHub Desktop
   **Commit** → **Push**. Die Seite ist wenige Minuten später aktualisiert.
 - **Preise sofort aktualisieren:** Actions → Run workflow.
 - **Wenn ein Anbieter ausfällt:** Seine letzten Preise bleiben stehen, oben auf der Seite erscheint

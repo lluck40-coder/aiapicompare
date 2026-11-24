@@ -28,24 +28,33 @@
 | `github-workflow/preise.yml` | nächtliche Aktualisierung + Veröffentlichung (siehe `ANLEITUNG-ONLINE.md`) |
 | `anbindung.html` | Anleitungen: Anbieter in Hermes, VS Code, Cursor, Open WebUI, Aider, eigenen Code einbinden |
 | `impressum.html`, `datenschutz.html` | Vorlagen – **gelb markierte Platzhalter ausfüllen** |
-| `config.js` | **Affiliate-Links** und Kennzeichnung – nur hier ändern |
-| `PARTNERPROGRAMME.md` | interne Übersicht aller gefundenen Partnerprogramme (Provision, Anmeldung) – nicht veröffentlichen |
+| `config.js` | Startseiten der Anbieter und **Besucherstatistik** (Umami-Website-ID) – nur hier ändern |
+| `einwilligung.js` | Cookie-Fenster beim ersten Besuch („Ablehnen“ / „Akzeptieren“, gleichwertig) und Besucherstatistik – lädt Umami erst nach Einwilligung; „Cookie-Einstellungen“ erscheint automatisch in jeder Fußzeile |
 | `style.css`, `sprache.js` | gemeinsames Aussehen bzw. Sprachumschaltung (DE/EN/中文) der Unterseiten |
 | `build_data.py` → `out/data.js` | Preise neu abrufen: `python build_data.py` (9 Anbieter; für Novita ggf. vorher `set NOVITA_API_KEY=…`) |
 | `api-token-vergleich_mobil.html` | Preisvergleich als Einzeldatei (Daten eingebettet) |
 
-## Affiliate-Links aktivieren
-In `config.js` beim Anbieter `aktiv: true` setzen und entweder
-- `parameter: "ref=MEINCODE"` (wird an jeden Link zu diesem Anbieter angehängt) und/oder
-- `startseite: "https://…/mein-partnerlink"` (für „Zum Anbieter“/„Konto erstellen“)
-
-eintragen. Alle Links zu diesem Anbieter bekommen dann automatisch den Hinweis **„Anzeige“**,
-`rel="sponsored"`, und oben auf den Seiten erscheint der Transparenz-Hinweis.
-Ohne aktiven Affiliate-Link wird nichts gekennzeichnet (dann ist es keine Werbung).
+## Cookie-Fenster und Besucherstatistik (Umami)
+- **Einrichten:** kostenloses Konto bei Umami Cloud (cloud.umami.is) anlegen – bei der Anmeldung die
+  **Datenregion EU** wählen (lässt sich später nicht ändern). Website `aiapicompare.com` hinzufügen und im
+  Tracking-Code die `data-website-id` kopieren → in `config.js` bei `statistik.websiteId` eintragen.
+  Den Auftragsverarbeitungsvertrag (DPA) schließt Umami mit dem Konto automatisch ab.
+- Solange `websiteId` leer ist, gibt es **kein** Fenster und keine Zählung.
+- Mit ID: Beim ersten Besuch erscheint das Fenster. Erst nach „Akzeptieren“ wird das Umami-Skript geladen
+  (ohne Cookies). „Ablehnen“ ist gleich groß und gleich gestaltet (Rechtsprechung: VG Hannover 2025).
+  Die Wahl gilt 12 Monate; Widerruf jederzeit über „Cookie-Einstellungen“ in jeder Fußzeile.
+- Gezählt werden Seitenaufrufe (ohne Teil nach dem #, ohne Parameter) und diese Ereignisse:
+  „Zum Anbieter“ (Anbieter + Zielseite), „Externer Link“, „Vergleich geöffnet“ (Modell), „Auswahl“ (Filter,
+  Sortierung, Ansicht, Finder-Antworten, Rechner-Modus …), „Sprache“, „Design“, „Kopiert“, „Datei“ (API/RSS),
+  „E-Mail“, „Klick“ (übrige Knöpfe). Eingaben in Such-, Text- und Zahlenfeldern werden **nie** erfasst.
+- Auswertung: im Umami-Dashboard unter „Events“ (Eigenschaften wie `anbieter`, `feld`, `wert`, `seite`).
+- Gezählt wird nur auf `aiapicompare.com` (nicht bei lokalen Tests). Die Widgets auf fremden Seiten zählen nie.
+- Wird ein anderer Dienst eingesetzt oder kommt etwas dazu: `einwilligung.js` (Texte) und `datenschutz.html`
+  anpassen und in `einwilligung.js` `VERSION` erhöhen – dann wird jeder erneut gefragt.
 
 ## Vor der Veröffentlichung
 1. `impressum.html` und `datenschutz.html` ausfüllen (der gelbe Vorlage-Hinweis verschwindet automatisch, wenn alle Platzhalter ersetzt sind).
-2. Abschnitt „Hosting“ in der Datenschutzerklärung an den tatsächlichen Hoster anpassen.
+2. Abschnitt „Hosting“ in der Datenschutzerklärung an den tatsächlichen Hoster anpassen (vorbereitet: GitHub Pages).
 3. Nach jedem `python build_data.py` die Mobil-Datei neu erzeugen (Daten sind dort eingebettet).
 
 ## Sprachen

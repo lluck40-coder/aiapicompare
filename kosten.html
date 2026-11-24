@@ -58,7 +58,6 @@
 </div>
 
 <div class="wrap">
-  <div class="disclosure" id="disclosure" hidden></div>
   <h1 data-t="titel"></h1>
   <p class="lead" data-t="lead"></p>
 
@@ -90,7 +89,7 @@
 <script>
 "use strict";
 const D = window.API_DATEN || {};
-const C = window.SITE_CONFIG || {kennzeichnung:"Anzeige", hatAffiliate:function(){return false;},
+const C = window.SITE_CONFIG || {
   linkHtml:function(k,u,t,c){ return u ? '<a class="'+(c||"")+'" href="'+u+'" target="_blank" rel="noopener">'+t+'</a>' : ""; }};
 
 const QUELLEN = {openrouter:"OpenRouter", uplinkswitch:"UplinkSwitch", anymodel:"AnyModel", nanogpt:"NanoGPT", chutes:"Chutes",
@@ -111,7 +110,6 @@ de:{titel:"Kostenrechner: Was kostet mein KI-Projekt?", lead:"Gib ein, wie viel 
   ersparnis:function(x,pz,n){ return "Gegenüber dem teuersten der "+n+" Anbieter für dasselbe Modell sparst du "+x+" pro Monat ("+pz+" %)."; },
   leer:"Keine passenden Modelle – Filter lockern.", pauschal:"Pauschalpreis Input = Output",
   hinweis:"Schätzung auf Basis der aktuellen Listenpreise in USD, ohne Steuern, Rabatte, Prompt-Caching oder Mindestaufladungen. Videopreise sind auf Sekunden umgerechnet. Maßgeblich sind die Preise auf der Seite des Anbieters.",
-  disclosure:function(k){ return "<b>Transparenz:</b> Links mit dem Hinweis „"+k+"“ sind Affiliate-Links (Werbung). Wir erhalten ggf. eine Provision – für dich ändert sich der Preis nicht. Die Reihenfolge wird dadurch nicht beeinflusst."; },
   caps:{t2v:"📝 Text→Video",start:"⏮️ Startbild",ende:"⏭️ Endbild",ref:"🧩 Referenzen",ton:"🔊 Ton",edit:"✏️ Bearbeiten","4k":"4K",transparent:"🔳 Transparent",multiref:"🗂️ Mehrere Bilder"},
   einheit:{image:"/Bild",second:"/s"}, ab:"ab", gratis:"kostenlos"},
 en:{titel:"Cost calculator: what does my AI project cost?", lead:"Enter how much you need per month – the calculator shows the cheapest providers and models with monthly and yearly cost.",
@@ -126,7 +124,6 @@ en:{titel:"Cost calculator: what does my AI project cost?", lead:"Enter how much
   ersparnis:function(x,pz,n){ return "Compared with the most expensive of the "+n+" providers for the same model you save "+x+" per month ("+pz+" %)."; },
   leer:"No matching models – loosen the filters.", pauschal:"flat rate input = output",
   hinweis:"Estimate based on current list prices in USD, excluding taxes, discounts, prompt caching or minimum top-ups. Video prices are converted to seconds. The provider’s website is authoritative.",
-  disclosure:function(k){ return "<b>Transparency:</b> Links marked “"+k+"” are affiliate links (advertising). We may receive a commission – the price stays the same for you. Ranking is not affected."; },
   caps:{t2v:"📝 Text→video",start:"⏮️ First frame",ende:"⏭️ Last frame",ref:"🧩 References",ton:"🔊 Audio",edit:"✏️ Editing","4k":"4K",transparent:"🔳 Transparent",multiref:"🗂️ Multiple images"},
   einheit:{image:"/image",second:"/s"}, ab:"from", gratis:"free"},
 zh:{titel:"成本计算器：我的 AI 项目要花多少钱？", lead:"输入每月用量——计算器会列出最便宜的提供商和模型，以及月度和年度费用。",
@@ -141,7 +138,6 @@ zh:{titel:"成本计算器：我的 AI 项目要花多少钱？", lead:"输入�
   ersparnis:function(x,pz,n){ return "与同一模型的 "+n+" 家提供商中最贵的相比，每月可节省 "+x+"（"+pz+"%）。"; },
   leer:"没有符合条件的模型——请放宽筛选。", pauschal:"输入输出统一价格",
   hinweis:"基于当前美元标价的估算，不含税费、折扣、提示缓存或最低充值。视频价格已换算为每秒。一切以提供商网站为准。",
-  disclosure:function(k){ return "<b>透明声明：</b>标有“"+k+"”的链接为推广（联盟）链接，属于广告。我们可能获得佣金，您的价格不变，排序不受影响。"; },
   caps:{t2v:"📝 文生视频",start:"⏮️ 首帧",ende:"⏭️ 尾帧",ref:"🧩 参考图",ton:"🔊 音频",edit:"✏️ 编辑","4k":"4K",transparent:"🔳 透明",multiref:"🗂️ 多图"},
   einheit:{image:"/张",second:"/秒"}, ab:"起", gratis:"免费"},
 ru:{titel:"Калькулятор: сколько стоит мой AI-проект?", lead:"Укажите месячный объём – калькулятор покажет самых дешёвых поставщиков и модели с ценой за месяц и год.",
@@ -156,7 +152,6 @@ ru:{titel:"Калькулятор: сколько стоит мой AI-прое�
   ersparnis:function(x,pz,n){ return "По сравнению с самым дорогим из "+n+" поставщиков той же модели экономия "+x+" в месяц ("+pz+" %)."; },
   leer:"Нет подходящих моделей – ослабьте фильтры.", pauschal:"единая цена вход = выход",
   hinweis:"Оценка по текущим прайсам в USD без налогов, скидок, кеширования и минимальных пополнений. Цены на видео пересчитаны в секунды. Действует цена на сайте поставщика.",
-  disclosure:function(k){ return "<b>Прозрачность:</b> ссылки с пометкой «"+k+"» – партнёрские (реклама). Мы можем получить комиссию, цена для вас не меняется."; },
   caps:{t2v:"📝 Текст→видео",start:"⏮️ Первый кадр",ende:"⏭️ Последний кадр",ref:"🧩 Референсы",ton:"🔊 Звук",edit:"✏️ Редактирование","4k":"4K",transparent:"🔳 Прозрачный фон",multiref:"🗂️ Несколько изображений"},
   einheit:{image:"/изобр.",second:"/с"}, ab:"от", gratis:"бесплатно"}
 };
@@ -282,9 +277,6 @@ function render(){
   document.querySelectorAll(".langbtns button").forEach(function(b){ b.classList.toggle("active", b.dataset.lang === lang); });
   document.querySelectorAll("#modi button").forEach(function(b){ b.classList.toggle("active", b.dataset.modus === S.modus); });
   document.getElementById("gratislink").href = (window.MODELLSEITEN ? pfad() : "") + "free.html";
-  const dis = document.getElementById("disclosure");
-  dis.hidden = !C.hatAffiliate();
-  if (C.hatAffiliate()) dis.innerHTML = '<span class="adlabel">'+esc(C.kennzeichnung)+'</span><span>'+T.disclosure(C.kennzeichnung)+'</span>';
 
   const f = document.getElementById("form");
   const feld = function(id, label, wert, extra){ return '<div><label for="'+id+'">'+label+'</label><input id="'+id+'" type="number" min="0" step="any" value="'+wert+'"'+(extra||"")+'></div>'; };
@@ -378,5 +370,6 @@ document.getElementById("form").addEventListener("change", function(e){
 });
 render();
 </script>
+<script src="einwilligung.js"></script>
 </body>
 </html>

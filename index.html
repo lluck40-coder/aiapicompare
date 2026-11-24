@@ -33,8 +33,6 @@
   /* ---------- Kopfzeile ---------- */
   :root{--topbar:rgba(11,12,14,.92);--cmpbg:#0f1114}
   [data-theme=light]{--bg:#f8fafc;--panel:#ffffff;--panel2:#f1f5f9;--fg:#0f172a;--muted:#64748b;--dim:#94a3b8;--accent:#16a34a;--accent-bg:rgba(22,163,74,.08);--blue:#2563eb;--border:#e2e8f0;--border2:#cbd5e1;--input:#ffffff;--topbar:rgba(248,250,252,.92);--cmpbg:#f8fafc}
-  [data-theme=light] .disclosure{background:#fffbeb;color:#78350f;border-color:#fcd34d}
-  [data-theme=light] .disclosure b{color:#92400e}
   [data-theme=light] .switch span:before{box-shadow:0 0 0 1px #cbd5e1}
   .brand .logo-l{display:none}
   [data-theme=light] .brand .logo-d{display:none}
@@ -67,10 +65,6 @@
   .nav a{padding:.35rem .7rem;border-radius:.4rem;text-decoration:none;color:var(--muted);font-size:.85rem;white-space:nowrap}
   .nav a:hover{color:var(--fg);background:var(--panel2)}
   .nav a.active{color:var(--fg);background:var(--panel2)}
-  .adlabel{display:inline-block;font-size:.6rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:.05rem .3rem;border-radius:.25rem;background:#3b2f0b;color:#fbbf24;border:1px solid #5c4710;vertical-align:middle;margin-left:.2rem}
-  .disclosure{display:flex;gap:.6rem;align-items:flex-start;font-size:.78rem;line-height:1.5;color:#e5d3a1;background:#1d180a;border:1px solid #4a3a10;border-radius:.5rem;padding:.55rem .8rem;margin-bottom:.8rem}
-  .disclosure[hidden]{display:none}
-  .disclosure b{color:#fbbf24}
   .gotolink{display:inline-flex;align-items:center;gap:.2rem;padding:.25rem .55rem;border:1px solid var(--border2);border-radius:.4rem;text-decoration:none;font-size:.78rem;color:var(--fg);white-space:nowrap}
   .gotolink:hover{border-color:var(--accent);color:var(--accent)}
   .provlink{text-decoration:none}
@@ -279,7 +273,6 @@
       </div>
     </div>
     <div class="chips" id="chips"></div>
-    <div class="disclosure" id="disclosure" hidden></div>
     <div class="meta" id="meta"></div>
     <div id="results"></div>
     <div class="infobox" id="infobox"></div>
@@ -296,7 +289,7 @@
 <script>
 "use strict";
 const D = window.API_DATEN || {};
-const C = window.SITE_CONFIG || {kennzeichnung:"Anzeige", hatAffiliate:function(){ return false; },
+const C = window.SITE_CONFIG || {
   linkHtml:function(k,u,t,c){ return u ? '<a class="'+(c||"")+'" href="'+u+'" target="_blank" rel="noopener">'+t+'</a>' : ""; }};
 
 /* =================== Konfiguration =================== */
@@ -370,8 +363,7 @@ const I18N = {
     nav_vergleich:"Preisvergleich", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
     zum_anbieter:"Zum Anbieter", einrichten:function(n){ return "So bindest du "+n+" an (Hermes, VS Code …)"; },
     geschaetzt:"geschätzt – aus dem Abrechnungsfaktor des Anbieters abgeleitet, nicht direkt veröffentlicht",
-    disclosure:function(k){ return "<b>Transparenz:</b> Links mit dem Hinweis „"+k+"“ sind Affiliate-Links (Werbung). Wenn du darüber bei einem Anbieter Guthaben kaufst, erhalten wir eine Provision – für dich ändert sich der Preis nicht. Die Reihenfolge der Ergebnisse wird dadurch nicht beeinflusst."; },
-    infobox:'<h4>Wie die Reihenfolge zustande kommt</h4><p>Die Ergebnisse werden ausschließlich nach dem von dir gewählten Kriterium sortiert (Input-Preis, Output-Preis, Kontextfenster, Anbieter oder Name). Bei Gleichstand stehen bekannte Modellentwickler vorn, danach alphabetisch. Es gibt keine bezahlten Platzierungen; Affiliate-Partnerschaften haben keinen Einfluss auf Reihenfolge oder Auswahl.</p><h4>Woher die Daten kommen</h4><p>Preise werden automatisch aus den öffentlichen Modell-Katalogen bzw. Preisseiten der Anbieter gelesen. Token-Preise in USD pro 1 Mio. Token; Bild-, Video- und 3D-Modelle pro Einheit (Bild, Sekunde, Generierung). Werte mit ≈ sind abgeleitet. Steuern, Mindestaufladungen und Wechselkurse sind nicht berücksichtigt. Maßgeblich ist immer der Preis auf der Seite des Anbieters.</p><h4>⚠ Weit unter Referenzpreis</h4><p>Liegt ein Angebot weit unter dem üblichen Preis (geschlossene Modelle wie GPT, Claude, Gemini: mehr als 50 % unter dem Listenpreis; offene Modelle: mehr als 80 % unter dem Median aller Anbieter), kennzeichnen wir es. Das ist keine Bewertung des Anbieters – wir können aber nicht prüfen, welches Modell tatsächlich geliefert wird. „★ günstigster“ berücksichtigt solche Angebote nicht. <a href="methodik.html">So vergleichen wir →</a></p>',
+    infobox:'<h4>Wie die Reihenfolge zustande kommt</h4><p>Die Ergebnisse werden ausschließlich nach dem von dir gewählten Kriterium sortiert (Input-Preis, Output-Preis, Kontextfenster, Anbieter oder Name). Bei Gleichstand stehen bekannte Modellentwickler vorn, danach alphabetisch. Es gibt keine bezahlten Platzierungen.</p><h4>Woher die Daten kommen</h4><p>Preise werden automatisch aus den öffentlichen Modell-Katalogen bzw. Preisseiten der Anbieter gelesen. Token-Preise in USD pro 1 Mio. Token; Bild-, Video- und 3D-Modelle pro Einheit (Bild, Sekunde, Generierung). Werte mit ≈ sind abgeleitet. Steuern, Mindestaufladungen und Wechselkurse sind nicht berücksichtigt. Maßgeblich ist immer der Preis auf der Seite des Anbieters.</p><h4>⚠ Weit unter Referenzpreis</h4><p>Liegt ein Angebot weit unter dem üblichen Preis (geschlossene Modelle wie GPT, Claude, Gemini: mehr als 50 % unter dem Listenpreis; offene Modelle: mehr als 80 % unter dem Median aller Anbieter), kennzeichnen wir es. Das ist keine Bewertung des Anbieters – wir können aber nicht prüfen, welches Modell tatsächlich geliefert wird. „★ günstigster“ berücksichtigt solche Angebote nicht. <a href="methodik.html">So vergleichen wir →</a></p>',
     anbieter:"Anbieter", typ:"Ausgabe-Typ", typen:{text:"Text",bild:"Bild",video:"Video",audio:"Audio","3d":"3D"},
     kontext:"Min. Kontextfenster", preis:"Max. Input-Preis", familie:"Modellfamilie",
     alle:"alle", keine:"keine", egal:"beliebig", unbegrenzt:"beliebig",
@@ -403,8 +395,7 @@ const I18N = {
     nav_vergleich:"Price comparison", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
     zum_anbieter:"Go to provider", einrichten:function(n){ return "How to connect "+n+" (Hermes, VS Code …)"; },
     geschaetzt:"estimated – derived from the provider's billing factor, not published directly",
-    disclosure:function(k){ return "<b>Transparency:</b> Links marked “"+k+"” are affiliate links (advertising). If you buy credits from a provider through them, we receive a commission – the price stays the same for you. The order of results is not affected."; },
-    infobox:'<h4>How results are ranked</h4><p>Results are sorted solely by the criterion you choose (input price, output price, context window, provider or name). Ties are broken by well-known model developers first, then alphabetically. There are no paid placements; affiliate partnerships have no influence on ranking or selection.</p><h4>Where the data comes from</h4><p>Prices are read automatically from the providers’ public model catalogues and pricing pages. Token prices in USD per 1M tokens; image, video and 3D models per unit (image, second, generation). Values marked ≈ are derived. Taxes, minimum top-ups and exchange rates are not included. The price on the provider’s website always prevails.</p><h4>⚠ Far below reference price</h4><p>If an offer is far below the usual price (closed models such as GPT, Claude, Gemini: more than 50% below the list price; open models: more than 80% below the median of all providers), we mark it. This is not a rating of the provider – but we cannot verify which model is actually served. “★ cheapest” ignores such offers. <a href="methodik.html">How we compare →</a></p>',
+    infobox:'<h4>How results are ranked</h4><p>Results are sorted solely by the criterion you choose (input price, output price, context window, provider or name). Ties are broken by well-known model developers first, then alphabetically. There are no paid placements.</p><h4>Where the data comes from</h4><p>Prices are read automatically from the providers’ public model catalogues and pricing pages. Token prices in USD per 1M tokens; image, video and 3D models per unit (image, second, generation). Values marked ≈ are derived. Taxes, minimum top-ups and exchange rates are not included. The price on the provider’s website always prevails.</p><h4>⚠ Far below reference price</h4><p>If an offer is far below the usual price (closed models such as GPT, Claude, Gemini: more than 50% below the list price; open models: more than 80% below the median of all providers), we mark it. This is not a rating of the provider – but we cannot verify which model is actually served. “★ cheapest” ignores such offers. <a href="methodik.html">How we compare →</a></p>',
     anbieter:"Providers", typ:"Output type", typen:{text:"Text",bild:"Image",video:"Video",audio:"Audio","3d":"3D"},
     kontext:"Min. context window", preis:"Max. input price", familie:"Model family",
     alle:"all", keine:"none", egal:"any", unbegrenzt:"any",
@@ -436,8 +427,7 @@ const I18N = {
     nav_vergleich:"价格对比", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
     zum_anbieter:"前往提供商", einrichten:function(n){ return "如何接入 "+n+"（Hermes、VS Code …）"; },
     geschaetzt:"估算值 – 根据提供商的计费系数推算，并非官方直接公布",
-    disclosure:function(k){ return "<b>透明声明：</b>标有“"+k+"”的链接为推广（联盟）链接，属于广告。若您通过这些链接在提供商处充值，我们将获得佣金，您的价格不变。结果排序不受影响。"; },
-    infobox:'<h4>排序规则</h4><p>结果仅按您选择的条件排序（输入价格、输出价格、上下文窗口、提供商或名称）。条件相同时，知名模型开发商优先，其次按字母顺序。不存在付费排名；联盟合作不影响排序或展示内容。</p><h4>数据来源</h4><p>价格自动读取自各提供商公开的模型目录和价格页面。Token 价格单位为每百万 Token 美元；图像、视频和 3D 模型按单位计价（每张、每秒、每次生成）。带 ≈ 的数值为推算值。未包含税费、最低充值和汇率。一切以提供商网站上的价格为准。</p><h4>⚠ 远低于参考价</h4><p>如果某个报价远低于通常价格（GPT、Claude、Gemini 等闭源模型：比官方价格低 50% 以上；开源模型：比所有提供商的中位数低 80% 以上），我们会加以标注。这并非对提供商的评价，但我们无法核实实际提供的是哪个模型。“★ 最便宜”不计入此类报价。<a href="methodik.html">我们的比较方法 →</a></p>',
+    infobox:'<h4>排序规则</h4><p>结果仅按您选择的条件排序（输入价格、输出价格、上下文窗口、提供商或名称）。条件相同时，知名模型开发商优先，其次按字母顺序。不存在付费排名。</p><h4>数据来源</h4><p>价格自动读取自各提供商公开的模型目录和价格页面。Token 价格单位为每百万 Token 美元；图像、视频和 3D 模型按单位计价（每张、每秒、每次生成）。带 ≈ 的数值为推算值。未包含税费、最低充值和汇率。一切以提供商网站上的价格为准。</p><h4>⚠ 远低于参考价</h4><p>如果某个报价远低于通常价格（GPT、Claude、Gemini 等闭源模型：比官方价格低 50% 以上；开源模型：比所有提供商的中位数低 80% 以上），我们会加以标注。这并非对提供商的评价，但我们无法核实实际提供的是哪个模型。“★ 最便宜”不计入此类报价。<a href="methodik.html">我们的比较方法 →</a></p>',
     anbieter:"提供商", typ:"输出类型", typen:{text:"文本",bild:"图像",video:"视频",audio:"音频","3d":"3D"},
     kontext:"最小上下文窗口", preis:"最高输入价格", familie:"模型系列",
     alle:"全部", keine:"无", egal:"不限", unbegrenzt:"不限",
@@ -469,8 +459,7 @@ const I18N = {
     nav_vergleich:"Сравнение цен", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
     zum_anbieter:"К поставщику", einrichten:function(n){ return "Как подключить "+n+" (Hermes, VS Code …)"; },
     geschaetzt:"оценка – рассчитано по коэффициенту тарификации поставщика",
-    disclosure:function(k){ return "<b>Прозрачность:</b> ссылки с пометкой «"+k+"» – партнёрские (реклама). При покупке через них мы получаем комиссию, цена для вас не меняется. На порядок результатов это не влияет."; },
-    infobox:'<h4>Как формируется порядок</h4><p>Результаты сортируются только по выбранному вами критерию (цена входа, цена выхода, контекст, поставщик или имя). При равенстве сначала известные разработчики, затем по алфавиту. Платных размещений нет; партнёрские программы не влияют на порядок или выбор.</p><h4>Источник данных</h4><p>Цены автоматически берутся из публичных каталогов и страниц цен поставщиков. Токены – USD за 1 млн; картинки, видео и 3D – за единицу. Значения с ≈ рассчитаны. Налоги и курсы валют не учтены. Действует цена на сайте поставщика.</p><h4>⚠ Намного ниже эталонной цены</h4><p>Если предложение намного ниже обычной цены (закрытые модели – GPT, Claude, Gemini: более чем на 50 % ниже прайса; открытые модели: более чем на 80 % ниже медианы всех поставщиков), мы его помечаем. Это не оценка поставщика, но мы не можем проверить, какая модель реально используется. «★ дешевле всех» такие предложения не учитывает. <a href="methodik.html">Как мы сравниваем →</a></p>',
+    infobox:'<h4>Как формируется порядок</h4><p>Результаты сортируются только по выбранному вами критерию (цена входа, цена выхода, контекст, поставщик или имя). При равенстве сначала известные разработчики, затем по алфавиту. Платных размещений нет.</p><h4>Источник данных</h4><p>Цены автоматически берутся из публичных каталогов и страниц цен поставщиков. Токены – USD за 1 млн; картинки, видео и 3D – за единицу. Значения с ≈ рассчитаны. Налоги и курсы валют не учтены. Действует цена на сайте поставщика.</p><h4>⚠ Намного ниже эталонной цены</h4><p>Если предложение намного ниже обычной цены (закрытые модели – GPT, Claude, Gemini: более чем на 50 % ниже прайса; открытые модели: более чем на 80 % ниже медианы всех поставщиков), мы его помечаем. Это не оценка поставщика, но мы не можем проверить, какая модель реально используется. «★ дешевле всех» такие предложения не учитывает. <a href="methodik.html">Как мы сравниваем →</a></p>',
     anbieter:"Поставщики", typ:"Тип вывода", typen:{text:"Текст",bild:"Картинка",video:"Видео",audio:"Аудио","3d":"3D"},
     kontext:"Мин. контекстное окно", preis:"Макс. цена входа", familie:"Семейство моделей",
     alle:"все", keine:"ничего", egal:"любой", unbegrenzt:"любая",
@@ -897,9 +886,6 @@ function renderStatic(){
     (window.STAERKEN ? ' · <a href="bestenliste.html" style="color:inherit">' + esc(t.arena_hinweis) + '</a>' : "");
   document.getElementById("footer").textContent = t.footer;
   document.getElementById("infobox").innerHTML = t.infobox;
-  const dis = document.getElementById("disclosure");
-  dis.hidden = !C.hatAffiliate();
-  if (C.hatAffiliate()) dis.innerHTML = '<span class="adlabel">'+esc(C.kennzeichnung)+'</span><span>'+t.disclosure(C.kennzeichnung)+'</span>';
 }
 
 function render(resetLimit){
@@ -978,13 +964,13 @@ $("results").addEventListener("click", function(e){
   if (e.target.closest("a")) return;   // Links (Anbieter, Modellseite, Zum Anbieter) nicht abfangen
   if (window.getSelection && String(window.getSelection()).length > 2) return;   // Text markieren erlaubt
   const cb = e.target.closest("[data-cmp]");
-  if (cb){ const id = cb.dataset.cmp; offen[id] = !offen[id]; renderResults(); return; }
+  if (cb){ const id = cb.dataset.cmp; offen[id] = !offen[id]; if (offen[id] && window.aacEreignis) window.aacEreignis("Vergleich geöffnet", {modell: id}); renderResults(); return; }
   if (e.target.id === "more"){ limit += 100; renderResults(); }
 });
 
 $("results").addEventListener("keydown", function(e){
   const cb = e.target.closest(".mname[data-cmp]");
-  if (cb && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); offen[cb.dataset.cmp] = !offen[cb.dataset.cmp]; renderResults(); }
+  if (cb && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); const id = cb.dataset.cmp; offen[id] = !offen[id]; if (offen[id] && window.aacEreignis) window.aacEreignis("Vergleich geöffnet", {modell: id}); renderResults(); }
 });
 
 // Höhe der (ggf. zweizeiligen) Kopfleiste für klebende Tabellenköpfe
@@ -996,5 +982,6 @@ $("search").value = S.q;
 render(true);
 kopfHoehe();
 </script>
+<script src="einwilligung.js"></script>
 </body>
 </html>

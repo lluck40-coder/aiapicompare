@@ -66,7 +66,6 @@
 </div>
 
 <div class="wrap">
-  <div class="disclosure" id="disclosure" hidden></div>
   <h1 data-t="titel"></h1>
   <p class="lead" data-h="lead"></p>
 
@@ -114,7 +113,7 @@
 <script>
 "use strict";
 const D = window.API_DATEN || {};
-const C = window.SITE_CONFIG || {kennzeichnung:"Anzeige", hatAffiliate:function(){return false;}, link:function(k,u){return {url:u,affiliate:false};},
+const C = window.SITE_CONFIG || {
   linkHtml:function(k,u,t,c){ return u ? '<a class="'+(c||"")+'" href="'+u+'" target="_blank" rel="noopener">'+t+'</a>' : ""; }};
 
 /* ================= Texte ================= */
@@ -133,7 +132,6 @@ de:{
   hint_eigen:"Eigene Modell-ID – bitte im Katalog des Anbieters prüfen.",
   hint_leer:"Für diesen Anbieter liegen noch keine Preisdaten vor (erscheinen nach dem nächsten Datenabruf). Modell-ID bitte aus dem Katalog des Anbieters eintragen.",
   kontext:"Kontext", input:"Input",
-  disclosure:function(k){ return "<b>Transparenz:</b> Links mit dem Hinweis „"+k+"“ sind Affiliate-Links (Werbung). Bei einer Registrierung oder Aufladung darüber erhalten wir eine Provision; für dich ändert sich der Preis nicht."; },
   anymodel_hint:'Modell-IDs bei AnyModel: die ID aus dem Katalog (<code>/v1/models</code>) verwenden; die Anleitungen von AnyModel zeigen teils Kurzformen ohne Präfix.',
   key_platzhalter:"DEIN_API_KEY", hallo:"Hallo!", antwort:"antwort",
   h:{
@@ -181,7 +179,6 @@ en:{
   hint_eigen:"Custom model ID – please check the provider’s catalogue.",
   hint_leer:"No price data for this provider yet (will appear after the next data refresh). Please enter a model ID from the provider’s catalogue.",
   kontext:"Context", input:"input",
-  disclosure:function(k){ return "<b>Transparency:</b> Links marked “"+k+"” are affiliate links (advertising). If you sign up or top up through them, we receive a commission; the price stays the same for you."; },
   anymodel_hint:'AnyModel model IDs: use the ID from the catalogue (<code>/v1/models</code>); AnyModel’s own guides sometimes show short forms without the prefix.',
   key_platzhalter:"YOUR_API_KEY", hallo:"Hello!", antwort:"response",
   h:{
@@ -229,7 +226,6 @@ zh:{
   hint_eigen:"自定义模型 ID——请在提供商目录中核对。",
   hint_leer:"该提供商暂无价格数据（下次数据更新后显示）。请从提供商目录中填写模型 ID。",
   kontext:"上下文", input:"输入",
-  disclosure:function(k){ return "<b>透明声明：</b>标有“"+k+"”的链接为推广（联盟）链接，属于广告。若您通过这些链接注册或充值，我们将获得佣金，您的价格不变。"; },
   anymodel_hint:'AnyModel 的模型 ID：请使用目录（<code>/v1/models</code>）中的 ID；AnyModel 自己的教程有时使用不带前缀的简写。',
   key_platzhalter:"YOUR_API_KEY", hallo:"你好！", antwort:"response",
   h:{
@@ -437,9 +433,6 @@ function render(){
   document.querySelectorAll("[data-h]").forEach(function(el){ el.innerHTML = T[el.dataset.h]; });
   document.querySelectorAll(".langbtns button").forEach(function(b){ b.classList.toggle("active", b.dataset.lang === lang); });
 
-  const dis = document.getElementById("disclosure");
-  dis.hidden = !C.hatAffiliate();
-  if (C.hatAffiliate()) dis.innerHTML = '<span class="adlabel">'+esc(C.kennzeichnung)+'</span><span>'+T.disclosure(C.kennzeichnung)+'</span>';
 
   document.getElementById("provs").innerHTML = REIHENFOLGE.map(function(k){
     const n = modelleFuer(k).length;
@@ -508,5 +501,6 @@ window.addEventListener("hashchange", function(){ ladeHash(); render(); });
 ladeHash();
 render();
 </script>
+<script src="einwilligung.js"></script>
 </body>
 </html>

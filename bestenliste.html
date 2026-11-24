@@ -70,7 +70,6 @@
 </div>
 
 <div class="wrap">
-  <div class="disclosure" id="disclosure" hidden></div>
   <h1 data-t="h1"></h1>
   <p class="lead" data-t="lead"></p>
 
@@ -108,7 +107,7 @@
 "use strict";
 const D = window.API_DATEN || {};
 const ST = window.STAERKEN || null;
-const C = window.SITE_CONFIG || {kennzeichnung:"Anzeige", hatAffiliate:function(){return false;},
+const C = window.SITE_CONFIG || {
   linkHtml:function(k,u,t,c){ return u ? '<a class="'+(c||"")+'" href="'+u+'" target="_blank" rel="noopener">'+t+'</a>' : ""; }};
 const QUELLEN = {openrouter:"OpenRouter", uplinkswitch:"UplinkSwitch", anymodel:"AnyModel", nanogpt:"NanoGPT", chutes:"Chutes",
   deepinfra:"DeepInfra", novita:"Novita AI", cometapi:"CometAPI", kyma:"Kyma API"};
@@ -125,8 +124,7 @@ de:{h1:"Welches KI-Modell ist wofür am besten?",
   pro:{text:" / 1 Mio. Input-Token", bild:" pro Bild", video:" pro Sekunde"}, ab:"ab", gratis:"kostenlos",
   viz_titel:function(b){ return "Preis-Leistung: "+b; }, viz_unter:"Jeder Punkt ist ein Modell. Orange: Kein anderes Modell ist zugleich günstiger und besser bewertet.", leg_front:"Bestes Preis-Leistungs-Verhältnis", leg_rest:"Weitere Modelle", achse_x:{text:"Günstigster Input-Preis pro 1 Mio. Token (logarithmisch)", bild:"Günstigster Preis pro Bild (logarithmisch)", video:"Günstigster Preis pro Sekunde (logarithmisch)"}, achse_y:"Arena-Punkte", erkl:"Höhere Punktzahl = wurde in direkten Vergleichen häufiger bevorzugt. Kleine Punktunterschiede (unter ca. 10) sind statistisch oft nicht eindeutig.",
   leer:"Die Bestenliste wird beim nächsten täglichen Datenabruf erstellt.",
-  quelle:function(m){ return "Quelle der Platzierungen: "+m.quelle+", Datensatz <a href=\""+m.datensatz+"\" target=\"_blank\" rel=\"noopener\">lmarena-ai/leaderboard-dataset</a>, lizenziert unter <a href=\""+m.lizenz_url+"\" target=\"_blank\" rel=\"noopener\">CC BY 4.0</a>, Stand "+m.stand+". Änderungen durch aiapicompare: Auszug der ersten 50 Plätze je Bereich; Varianten eines Modells mit unterschiedlichem Denkaufwand sind zusammengefasst (die beste zählt), daher kann die Platznummer von der Arena abweichen; Zuordnung zu unseren Preisdaten. Keine Verbindung zu Arena; die Platzierungen geben die Bewertungen der Arena-Nutzer wieder und sind keine Empfehlung von aiapicompare. Die Reihenfolge wird nicht durch Partnerprogramme beeinflusst."; },
-  disclosure:function(k){ return "<b>Transparenz:</b> Links mit dem Hinweis „"+k+"“ sind Affiliate-Links (Werbung). Wir erhalten ggf. eine Provision – für dich ändert sich der Preis nicht. Die Reihenfolge wird dadurch nicht beeinflusst."; }},
+  quelle:function(m){ return "Quelle der Platzierungen: "+m.quelle+", Datensatz <a href=\""+m.datensatz+"\" target=\"_blank\" rel=\"noopener\">lmarena-ai/leaderboard-dataset</a>, lizenziert unter <a href=\""+m.lizenz_url+"\" target=\"_blank\" rel=\"noopener\">CC BY 4.0</a>, Stand "+m.stand+". Änderungen durch aiapicompare: Auszug der ersten 50 Plätze je Bereich; Varianten eines Modells mit unterschiedlichem Denkaufwand sind zusammengefasst (die beste zählt), daher kann die Platznummer von der Arena abweichen; Zuordnung zu unseren Preisdaten. Keine Verbindung zu Arena; die Platzierungen geben die Bewertungen der Arena-Nutzer wieder und sind keine Empfehlung von aiapicompare. Die Reihenfolge wird nicht durch Partnerprogramme beeinflusst."; }},
 en:{h1:"Which AI model is best for what?",
   lead:"Rankings per use case from the Arena leaderboard – users worldwide compare the answers of two anonymous models and vote for the better one. Next to it we show the cheapest API price from our price comparison.",
   nav_vergleich:"Price comparison", nav_kosten:"Cost calculator", nav_finder:"Model finder", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
@@ -136,8 +134,7 @@ en:{h1:"Which AI model is best for what?",
   pro:{text:" / 1M input tokens", bild:" per image", video:" per second"}, ab:"from", gratis:"free",
   viz_titel:function(b){ return "Price vs. performance: "+b; }, viz_unter:"Each dot is a model. Orange: no other model is both cheaper and rated higher.", leg_front:"Best value for money", leg_rest:"Other models", achse_x:{text:"Cheapest input price per 1M tokens (log scale)", bild:"Cheapest price per image (log scale)", video:"Cheapest price per second (log scale)"}, achse_y:"Arena score", erkl:"Higher score = preferred more often in head-to-head comparisons. Small differences (below about 10 points) are often not statistically clear.",
   leer:"The leaderboard will be created with the next daily data update.",
-  quelle:function(m){ return "Source of the rankings: "+m.quelle+", dataset <a href=\""+m.datensatz+"\" target=\"_blank\" rel=\"noopener\">lmarena-ai/leaderboard-dataset</a>, licensed under <a href=\""+m.lizenz_url+"\" target=\"_blank\" rel=\"noopener\">CC BY 4.0</a>, as of "+m.stand+". Changes by aiapicompare: excerpt of the top 50 per category; variants of a model with different reasoning effort are merged (the best counts), so the rank number may differ from the Arena; matched to our price data. Not affiliated with Arena; the rankings reflect the votes of Arena users and are not a recommendation by aiapicompare. The order is not influenced by affiliate programs."; },
-  disclosure:function(k){ return "<b>Transparency:</b> Links marked “"+k+"” are affiliate links (advertising). We may receive a commission – the price stays the same for you. Ranking is not affected."; }},
+  quelle:function(m){ return "Source of the rankings: "+m.quelle+", dataset <a href=\""+m.datensatz+"\" target=\"_blank\" rel=\"noopener\">lmarena-ai/leaderboard-dataset</a>, licensed under <a href=\""+m.lizenz_url+"\" target=\"_blank\" rel=\"noopener\">CC BY 4.0</a>, as of "+m.stand+". Changes by aiapicompare: excerpt of the top 50 per category; variants of a model with different reasoning effort are merged (the best counts), so the rank number may differ from the Arena; matched to our price data. Not affiliated with Arena; the rankings reflect the votes of Arena users and are not a recommendation by aiapicompare. The order is not influenced by affiliate programs."; }},
 zh:{h1:"哪个 AI 模型最适合做什么？",
   lead:"各应用领域的排名来自 Arena 排行榜——全球用户比较两个匿名模型的回答，并投票选出更好的一个。旁边显示我们价格对比中最便宜的 API 价格。",
   nav_vergleich:"价格对比", nav_kosten:"成本计算器", nav_finder:"模型推荐", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
@@ -147,8 +144,7 @@ zh:{h1:"哪个 AI 模型最适合做什么？",
   pro:{text:" / 百万输入 Token", bild:" / 张", video:" / 秒"}, ab:"起", gratis:"免费",
   viz_titel:function(b){ return "性价比："+b; }, viz_unter:"每个点代表一个模型。橙色：没有其他模型既更便宜又评分更高。", leg_front:"性价比最佳", leg_rest:"其他模型", achse_x:{text:"每百万输入 Token 最低价格（对数刻度）", bild:"每张图片最低价格（对数刻度）", video:"每秒最低价格（对数刻度）"}, achse_y:"Arena 分数", erkl:"分数越高 = 在两两比较中越常被选中。较小的分差（约 10 分以内）在统计上往往并不明确。",
   leer:"排行榜将在下一次每日数据更新时生成。",
-  quelle:function(m){ return "排名来源："+m.quelle+"，数据集 <a href=\""+m.datensatz+"\" target=\"_blank\" rel=\"noopener\">lmarena-ai/leaderboard-dataset</a>，采用 <a href=\""+m.lizenz_url+"\" target=\"_blank\" rel=\"noopener\">CC BY 4.0</a> 许可，数据日期 "+m.stand+"。aiapicompare 所做修改：每个领域仅摘取前 50 名；同一模型不同推理强度的版本已合并（取最佳），因此名次可能与 Arena 不同；并与我们的价格数据对应。与 Arena 无关联；排名反映 Arena 用户的投票，并非 aiapicompare 的推荐。排序不受推广计划影响。"; },
-  disclosure:function(k){ return "<b>透明声明：</b>标有“"+k+"”的链接为推广（联盟）链接，属于广告。我们可能获得佣金，您的价格不变，排序不受影响。"; }},
+  quelle:function(m){ return "排名来源："+m.quelle+"，数据集 <a href=\""+m.datensatz+"\" target=\"_blank\" rel=\"noopener\">lmarena-ai/leaderboard-dataset</a>，采用 <a href=\""+m.lizenz_url+"\" target=\"_blank\" rel=\"noopener\">CC BY 4.0</a> 许可，数据日期 "+m.stand+"。aiapicompare 所做修改：每个领域仅摘取前 50 名；同一模型不同推理强度的版本已合并（取最佳），因此名次可能与 Arena 不同；并与我们的价格数据对应。与 Arena 无关联；排名反映 Arena 用户的投票，并非 aiapicompare 的推荐。排序不受推广计划影响。"; }},
 ru:{h1:"Какая AI-модель для чего лучше?",
   lead:"Места по областям применения из рейтинга Arena – пользователи со всего мира сравнивают ответы двух анонимных моделей и голосуют за лучший. Рядом – самая низкая цена API из нашего сравнения.",
   nav_vergleich:"Сравнение цен", nav_kosten:"Калькулятор", nav_finder:"Подбор модели", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
@@ -158,8 +154,7 @@ ru:{h1:"Какая AI-модель для чего лучше?",
   pro:{text:" / 1 млн входных токенов", bild:" за изображение", video:" за секунду"}, ab:"от", gratis:"бесплатно",
   viz_titel:function(b){ return "Цена и качество: "+b; }, viz_unter:"Каждая точка – модель. Оранжевые: нет другой модели, которая одновременно дешевле и оценена выше.", leg_front:"Лучшее соотношение цены и качества", leg_rest:"Другие модели", achse_x:{text:"Самая низкая цена за 1 млн входных токенов (лог. шкала)", bild:"Самая низкая цена за изображение (лог. шкала)", video:"Самая низкая цена за секунду (лог. шкала)"}, achse_y:"Баллы Arena", erkl:"Больше баллов = чаще выбиралась в парных сравнениях. Небольшая разница (меньше ~10 баллов) статистически часто неоднозначна.",
   leer:"Рейтинг будет создан при следующем ежедневном обновлении данных.",
-  quelle:function(m){ return "Источник мест: "+m.quelle+", набор данных <a href=\""+m.datensatz+"\" target=\"_blank\" rel=\"noopener\">lmarena-ai/leaderboard-dataset</a>, лицензия <a href=\""+m.lizenz_url+"\" target=\"_blank\" rel=\"noopener\">CC BY 4.0</a>, данные на "+m.stand+". Изменения aiapicompare: выборка первых 50 мест по каждой области; варианты модели с разным уровнем рассуждения объединены (учитывается лучший), поэтому номер места может отличаться от Arena; сопоставление с нашими ценами. Не связано с Arena; места отражают голоса пользователей Arena и не являются рекомендацией aiapicompare. Партнёрские программы не влияют на порядок."; },
-  disclosure:function(k){ return "<b>Прозрачность:</b> ссылки с пометкой «"+k+"» – партнёрские (реклама). Мы можем получить комиссию, цена для вас не меняется."; }}
+  quelle:function(m){ return "Источник мест: "+m.quelle+", набор данных <a href=\""+m.datensatz+"\" target=\"_blank\" rel=\"noopener\">lmarena-ai/leaderboard-dataset</a>, лицензия <a href=\""+m.lizenz_url+"\" target=\"_blank\" rel=\"noopener\">CC BY 4.0</a>, данные на "+m.stand+". Изменения aiapicompare: выборка первых 50 мест по каждой области; варианты модели с разным уровнем рассуждения объединены (учитывается лучший), поэтому номер места может отличаться от Arena; сопоставление с нашими ценами. Не связано с Arena; места отражают голоса пользователей Arena и не являются рекомендацией aiapicompare. Партнёрские программы не влияют на порядок."; }}
 };
 
 /* ---------- Angebote aus den Preisdaten ---------- */
@@ -218,9 +213,6 @@ function render(){
   document.querySelectorAll(".langbtns button").forEach(function(b){ b.classList.toggle("active", b.dataset.lang === lang); });
   const vl = document.getElementById("vslink");   // Vergleichsseiten gibt es nur in der zusammengebauten Website
   vl.hidden = !window.MODELLSEITEN; vl.href = (lang === "en" ? "" : lang + "/") + "compare/index.html";
-  const dis = document.getElementById("disclosure");
-  dis.hidden = !C.hatAffiliate();
-  if (C.hatAffiliate()) dis.innerHTML = '<span class="adlabel">'+esc(C.kennzeichnung)+'</span><span>'+T.disclosure(C.kennzeichnung)+'</span>';
   if (!ST || !VORHANDEN.length){
     document.getElementById("tabs").innerHTML = "";
     document.getElementById("thead").innerHTML = "";
@@ -352,5 +344,6 @@ window.addEventListener("hashchange", function(){
 });
 render();
 </script>
+<script src="einwilligung.js"></script>
 </body>
 </html>
