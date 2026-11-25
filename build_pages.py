@@ -25,7 +25,7 @@ SPRACHEN = ["en", "de", "zh", "ru"]          # en liegt im Stammverzeichnis
 
 STATISCH = ["index.html", "anbindung.html", "kosten.html","free.html", "bestenliste.html", "news.html", "bereiche.js",
             "finder.html", "preisindex.html", "einbetten.html", "methodik.html", "referenz.js",
-            "impressum.html", "datenschutz.html",
+            "impressum.html", "datenschutz.html", "nutzungsbedingungen.html",
             "style.css", "sprache.js", "theme.js", "config.js", "einwilligung.js", "favicon.svg", "favicon-32.png",
             "apple-touch-icon.png", "og-image.png", "robots.txt", "CNAME"]
 

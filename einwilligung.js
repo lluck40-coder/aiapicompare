@@ -34,7 +34,7 @@
       noetig: "Immer aktiv (technisch nötig): Sprache, Ansicht, hell/dunkel und diese Wahl werden nur in deinem Browser gespeichert. Ändern kannst du deine Wahl jederzeit unten über „Cookie-Einstellungen“.",
       nein: "Ablehnen", ja: "Akzeptieren",
       stand_ja: "Aktuell: Statistik erlaubt.", stand_nein: "Aktuell: Statistik abgelehnt.", stand_offen: "Aktuell: noch keine Entscheidung.",
-      datenschutz: "Datenschutzerklärung", impressum: "Impressum", einstellungen: "Cookie-Einstellungen", anker: "statistik"
+      datenschutz: "Datenschutzerklärung", impressum: "Impressum", einstellungen: "Cookie-Einstellungen", nutzung: "Nutzungsbedingungen", anker: "statistik"
     },
     en: {
       titel: "Cookies &amp; statistics",
@@ -42,7 +42,7 @@
       noetig: "Always active (technically necessary): language, view, light/dark mode and this choice are stored only in your browser. You can change your choice at any time via “Cookie settings” at the bottom.",
       nein: "Decline", ja: "Accept",
       stand_ja: "Current setting: statistics allowed.", stand_nein: "Current setting: statistics declined.", stand_offen: "Current setting: no choice made yet.",
-      datenschutz: "Privacy policy", impressum: "Imprint", einstellungen: "Cookie settings", anker: "statistik-en"
+      datenschutz: "Privacy policy", impressum: "Imprint", einstellungen: "Cookie settings", nutzung: "Terms of use", anker: "statistik-en"
     },
     zh: {
       titel: "Cookie 与访问统计",
@@ -50,7 +50,7 @@
       noetig: "始终启用（技术必需）：语言、视图、浅色/深色模式以及本次选择仅保存在您的浏览器中。您可随时通过页面底部的“Cookie 设置”更改选择。",
       nein: "拒绝", ja: "接受",
       stand_ja: "当前设置：已允许统计。", stand_nein: "当前设置：已拒绝统计。", stand_offen: "当前设置：尚未选择。",
-      datenschutz: "隐私政策", impressum: "网站信息", einstellungen: "Cookie 设置", anker: "statistik-zh"
+      datenschutz: "隐私政策", impressum: "网站信息", einstellungen: "Cookie 设置", nutzung: "使用条款", anker: "statistik-zh"
     },
     ru: {
       titel: "Cookie и статистика",
@@ -58,7 +58,7 @@
       noetig: "Всегда активно (технически необходимо): язык, вид, светлая/тёмная тема и этот выбор сохраняются только в вашем браузере. Изменить выбор можно в любой момент внизу страницы через «Настройки cookie».",
       nein: "Отклонить", ja: "Принять",
       stand_ja: "Сейчас: статистика разрешена.", stand_nein: "Сейчас: статистика отклонена.", stand_offen: "Сейчас: выбор ещё не сделан.",
-      datenschutz: "Политика конфиденциальности", impressum: "Импрессум", einstellungen: "Настройки cookie", anker: "statistik-en"
+      datenschutz: "Политика конфиденциальности", impressum: "Импрессум", einstellungen: "Настройки cookie", nutzung: "Условия использования", anker: "statistik-en"
     }
   };
   function sprache() {
@@ -290,6 +290,15 @@
   function fussLinks() {
     var t = T();
     document.querySelectorAll(".legal").forEach(function (l) {
+      var n = l.querySelector("a[data-nutzung]");
+      if (!n) {
+        n = document.createElement("a"); n.setAttribute("data-nutzung", "");
+        var im = l.querySelector('a[href$="impressum.html"]');
+        n.href = im ? im.getAttribute("href").replace("impressum.html", "nutzungsbedingungen.html") : "nutzungsbedingungen.html";
+        var ds = l.querySelector('a[href$="datenschutz.html"]');
+        if (ds && ds.nextSibling) l.insertBefore(n, ds.nextSibling); else l.appendChild(n);
+      }
+      if (n.textContent !== t.nutzung) n.textContent = t.nutzung;
       var a = l.querySelector("a[data-cookie-einstellungen]");
       if (!a) { a = document.createElement("a"); a.href = "#"; a.setAttribute("data-cookie-einstellungen", ""); l.appendChild(a); }
       if (a.textContent !== t.einstellungen) a.textContent = t.einstellungen;
