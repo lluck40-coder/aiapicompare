@@ -162,6 +162,12 @@ def baue_staerken(daten):
 
 
 # ------------------------------------------------------------------ Neuigkeiten aus eigenen Daten
+# Veränderte „Varianten“ (uncensored, abliterated …) sind keine eigenständigen Modelle; ihre
+# Preisänderungen verzerren die Übersicht und werden deshalb nicht als Preisänderung gezeigt.
+VARIANTE = re.compile(r"uncensor|abliterat|obliterat|unfilter|unrestrict|no[ -]?filter|nsfw|jailbr", re.I)
+# Sehr große Sprünge sind oft Tarifumstellungen oder Datenfehler → mit Warnhinweis zeigen
+WARN_HOCH, WARN_TIEF = 100, -50
+
 def baue_news(daten):
     try:
         verlauf = json.loads((OUT / "verlauf.json").read_text(encoding="utf-8"))
@@ -181,16 +187,19 @@ def baue_news(daten):
                             "in": v.get("in"), "out": v.get("out"), "ab": v.get("price"),
                             "mp": v.get("media_preis"), "e": v.get("einheit") or "", "g": bool(v.get("gratis"))})
             p = h.get("p") or []
+            if VARIANTE.search(name + " " + k):
+                p = []
             if len(p) > 1 and p[-1][0] >= grenze and p[-2][1] and p[-1][1] != p[-2][1]:
                 alt, jetzt = p[-2][1], p[-1][1]
                 # Einheit nur bei Medienpreisen (der Verlauf speichert sonst den Input-Preis pro 1 Mio. Token)
                 text = isinstance(v.get("in"), (int, float)) or isinstance(v.get("price"), (int, float))
-                preis.append({"d": p[-1][0], "q": q, "k": basis, "n": name, "alt": alt, "neu": jetzt,
-                              "pz": round((jetzt / alt - 1) * 100) if alt else None,
+                pz = round((jetzt / alt - 1) * 100) if alt else None
+                preis.append({"d": p[-1][0], "q": q, "k": basis, "n": name, "alt": alt, "neu": jetzt, "pz": pz,
+                              "w": pz is not None and (pz >= WARN_HOCH or pz <= WARN_TIEF),
                               "e": "" if text else (v.get("einheit") or "")})
     neu.sort(key=lambda x: (x["d"], x["n"]), reverse=True)
     preis.sort(key=lambda x: (x["d"], abs(x["pz"] or 0)), reverse=True)
-    return {"stand": (daten.get("meta") or {}).get("erstellt", ""), "neu": neu[:150], "preis": preis[:150]}
+    return {"stand": (daten.get("meta") or {}).get("erstellt", ""), "neu": neu[:150], "preis": preis[:400]}
 
 
 # ------------------------------------------------------------------ KI-Preisindex aus dem eigenen Preisverlauf

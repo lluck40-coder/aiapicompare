@@ -25,7 +25,7 @@ SPRACHEN = ["en", "de", "zh", "ru"]          # en liegt im Stammverzeichnis
 
 STATISCH = ["index.html", "anbindung.html", "kosten.html","free.html", "bestenliste.html", "news.html", "bereiche.js",
             "finder.html", "preisindex.html", "einbetten.html", "methodik.html", "referenz.js",
-            "impressum.html", "datenschutz.html", "nutzungsbedingungen.html",
+            "impressum.html", "datenschutz.html", "nutzungsbedingungen.html", "preisaenderungen.html",
             "style.css", "sprache.js", "theme.js", "config.js", "einwilligung.js", "favicon.svg", "favicon-32.png",
             "apple-touch-icon.png", "og-image.png", "robots.txt", "CNAME"]
 
@@ -1053,6 +1053,7 @@ def llms_txt():
         f"- [All models A–Z]({DOMAIN}models/index.html): one page per model with all providers, price history and FAQ",
         f"- [Free AI models via API]({DOMAIN}free.html)",
         f"- [News: new models and price changes]({DOMAIN}news.html)",
+        f"- [Price changes: which models got cheaper or more expensive, in percent]({DOMAIN}preisaenderungen.html)",
         f"- [Cost calculator]({DOMAIN}kosten.html): monthly cost for tokens, images or video seconds",
         f"- [Setup guides]({DOMAIN}anbindung.html): base URLs and configuration for VS Code, Cline, Cursor, Hermes and more",
         f"- [How we compare]({DOMAIN}methodik.html): data sources, reference prices and why some offers are flagged as far below the reference price",
@@ -1463,7 +1464,7 @@ def main():
     # Sitemap mit Sprachvarianten
     x = ['<?xml version="1.0" encoding="UTF-8"?>',
          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
-    for loc, prio in [("", "1.0"), ("kosten.html", "0.9"), ("finder.html", "0.9"), ("bestenliste.html", "0.9"), ("news.html", "0.8"),
+    for loc, prio in [("", "1.0"), ("kosten.html", "0.9"), ("finder.html", "0.9"), ("bestenliste.html", "0.9"), ("news.html", "0.8"), ("preisaenderungen.html", "0.8"),
                       ("preisindex.html", "0.8"), ("einbetten.html", "0.5"), ("methodik.html", "0.6"), ("anbindung.html", "0.8")]:
         x.append(f"  <url><loc>{DOMAIN}{loc}</loc><changefreq>daily</changefreq><priority>{prio}</priority></url>")
     for rest, mehrsprachig, freq, prio in urls:

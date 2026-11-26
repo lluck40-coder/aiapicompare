@@ -102,7 +102,7 @@ de:{titel:"Kostenrechner: Was kostet mein KI-Projekt?", lead:"Gib ein, wie viel 
   nav_vergleich:"Preisvergleich", nav_kosten:"Kostenrechner", nav_finder:"Modell-Finder", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
   m_token:"📋 Text einfügen", text_label:"Dein Text (Prompt, Dokument …)", text_ph:"Text hier einfügen – er wird nur in deinem Browser ausgewertet.", ausgabe:"Antwortlänge pro Anfrage (Token)", anfragen:"Anfragen pro Monat", tok_info:function(n){ return "≈ " + n.toLocaleString("de-DE") + " Input-Token pro Anfrage (Schätzung, je nach Modell ±20 %). Der Text verlässt deinen Browser nicht."; }, m_text:"📝 Text (Token)", m_bild:"🖼️ Bilder", m_video:"🎬 Video",
   in_m:"Input-Token pro Monat (Mio.)", out_m:"Output-Token pro Monat (Mio.)", modell:"Modell (optional)", modell_ph:"z. B. deepseek, claude, glm …", minctx:"Min. Kontextfenster", egal:"beliebig",
-  bilder:"Bilder pro Monat", clips:"Videos pro Monat", sek:"Sekunden pro Video", gratis_mit:"Kostenlose Modelle einbeziehen", auff_mit:"Angebote weit unter Referenzpreis einbeziehen ⚠", batch_mit:"Batch-Varianten einbeziehen (verzögerte Antwort)", hinweis_ref:"Angebote weit unter dem Referenzpreis, Batch-Varianten und veraltete Preise (älter als 3 Tage) sind standardmäßig ausgeblendet.", mehr_methodik:"So vergleichen wir →",
+  bilder:"Bilder pro Monat", clips:"Videos pro Monat", sek:"Sekunden pro Video", gratis_mit:"Kostenlose Modelle stehen auf einer eigenen Seite →", auff_mit:"Angebote weit unter Referenzpreis einbeziehen ⚠", batch_mit:"Batch-Varianten einbeziehen (verzögerte Antwort)", hinweis_ref:"Angebote weit unter dem Referenzpreis, Batch-Varianten und veraltete Preise (älter als 3 Tage) sind standardmäßig ausgeblendet.", mehr_methodik:"So vergleichen wir →",
   presets:{token:[], text:[["Chatbot (klein)",2,0.5],["Kundenservice",30,6],["Coding-Agent",80,8],["Dokumente / RAG",40,2],["Großprojekt",500,50]],
            bild:[["Social Media",100],["Shop-Produktbilder",1000],["Agentur",10000]], video:[["Test",10,5],["Social-Media-Clips",60,8],["Produktion",500,10]]},
   th:["#","Modell","Anbieter","Preis","pro Monat","pro Jahr",""], zum:"Zum Anbieter ↗",
@@ -116,7 +116,7 @@ en:{titel:"Cost calculator: what does my AI project cost?", lead:"Enter how much
   nav_vergleich:"Price comparison", nav_kosten:"Cost calculator", nav_finder:"Model finder", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
   m_token:"📋 Paste text", text_label:"Your text (prompt, document …)", text_ph:"Paste text here – it is only analysed in your browser.", ausgabe:"Answer length per request (tokens)", anfragen:"Requests per month", tok_info:function(n){ return "≈ " + n.toLocaleString("en-US") + " input tokens per request (estimate, ±20 % depending on the model). Your text never leaves your browser."; }, m_text:"📝 Text (tokens)", m_bild:"🖼️ Images", m_video:"🎬 Video",
   in_m:"Input tokens per month (M)", out_m:"Output tokens per month (M)", modell:"Model (optional)", modell_ph:"e.g. deepseek, claude, glm …", minctx:"Min. context window", egal:"any",
-  bilder:"Images per month", clips:"Videos per month", sek:"Seconds per video", gratis_mit:"Include free models", auff_mit:"Include offers far below reference price ⚠", batch_mit:"Include batch variants (delayed responses)", hinweis_ref:"Offers far below the reference price, batch variants and outdated prices (older than 3 days) are hidden by default.", mehr_methodik:"How we compare →",
+  bilder:"Images per month", clips:"Videos per month", sek:"Seconds per video", gratis_mit:"Free models have their own page →", auff_mit:"Include offers far below reference price ⚠", batch_mit:"Include batch variants (delayed responses)", hinweis_ref:"Offers far below the reference price, batch variants and outdated prices (older than 3 days) are hidden by default.", mehr_methodik:"How we compare →",
   presets:{token:[], text:[["Chatbot (small)",2,0.5],["Customer support",30,6],["Coding agent",80,8],["Documents / RAG",40,2],["Large project",500,50]],
            bild:[["Social media",100],["Shop product photos",1000],["Agency",10000]], video:[["Test",10,5],["Social clips",60,8],["Production",500,10]]},
   th:["#","Model","Provider","Price","per month","per year",""], zum:"Go to provider ↗",
@@ -130,7 +130,7 @@ zh:{titel:"成本计算器：我的 AI 项目要花多少钱？", lead:"输入�
   nav_vergleich:"价格对比", nav_kosten:"成本计算器", nav_finder:"模型推荐", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
   m_token:"📋 粘贴文本", text_label:"你的文本（提示词、文档 …）", text_ph:"在此粘贴文本——仅在你的浏览器中分析。", ausgabe:"每次请求的回答长度（Token）", anfragen:"每月请求次数", tok_info:function(n){ return "每次请求约 " + n.toLocaleString("zh-CN") + " 个输入 Token（估算，因模型不同约 ±20%）。文本不会离开你的浏览器。"; }, m_text:"📝 文本（Token）", m_bild:"🖼️ 图像", m_video:"🎬 视频",
   in_m:"每月输入 Token（百万）", out_m:"每月输出 Token（百万）", modell:"模型（可选）", modell_ph:"如 deepseek、claude、glm …", minctx:"最小上下文窗口", egal:"不限",
-  bilder:"每月图像数", clips:"每月视频数", sek:"每个视频秒数", gratis_mit:"包含免费模型", auff_mit:"包含远低于参考价的报价 ⚠", batch_mit:"包含批处理版本（响应延迟）", hinweis_ref:"远低于参考价的报价、批处理版本以及过时价格（超过 3 天）默认不显示。", mehr_methodik:"我们的比较方法 →",
+  bilder:"每月图像数", clips:"每月视频数", sek:"每个视频秒数", gratis_mit:"免费模型请见单独页面 →", auff_mit:"包含远低于参考价的报价 ⚠", batch_mit:"包含批处理版本（响应延迟）", hinweis_ref:"远低于参考价的报价、批处理版本以及过时价格（超过 3 天）默认不显示。", mehr_methodik:"我们的比较方法 →",
   presets:{token:[], text:[["小型聊天机器人",2,0.5],["客服",30,6],["编程 Agent",80,8],["文档 / RAG",40,2],["大型项目",500,50]],
            bild:[["社交媒体",100],["电商产品图",1000],["设计机构",10000]], video:[["测试",10,5],["短视频",60,8],["量产",500,10]]},
   th:["#","模型","提供商","价格","每月","每年",""], zum:"前往提供商 ↗",
@@ -144,7 +144,7 @@ ru:{titel:"Калькулятор: сколько стоит мой AI-прое�
   nav_vergleich:"Сравнение цен", nav_kosten:"Калькулятор", nav_finder:"Подбор модели", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
   m_token:"📋 Вставить текст", text_label:"Ваш текст (промпт, документ …)", text_ph:"Вставьте текст – он анализируется только в вашем браузере.", ausgabe:"Длина ответа на запрос (токены)", anfragen:"Запросов в месяц", tok_info:function(n){ return "≈ " + n.toLocaleString("ru-RU") + " входных токенов на запрос (оценка, ±20 % в зависимости от модели). Текст не покидает ваш браузер."; }, m_text:"📝 Текст (токены)", m_bild:"🖼️ Изображения", m_video:"🎬 Видео",
   in_m:"Входные токены в месяц (млн)", out_m:"Выходные токены в месяц (млн)", modell:"Модель (необязательно)", modell_ph:"напр. deepseek, claude, glm …", minctx:"Мин. контекст", egal:"любой",
-  bilder:"Изображений в месяц", clips:"Видео в месяц", sek:"Секунд на видео", gratis_mit:"Учитывать бесплатные модели", auff_mit:"Учитывать предложения намного ниже эталона ⚠", batch_mit:"Учитывать пакетные варианты (ответ с задержкой)", hinweis_ref:"Предложения намного ниже эталонной цены, пакетные варианты и устаревшие цены (старше 3 дней) по умолчанию скрыты.", mehr_methodik:"Как мы сравниваем →",
+  bilder:"Изображений в месяц", clips:"Видео в месяц", sek:"Секунд на видео", gratis_mit:"Бесплатные модели – на отдельной странице →", auff_mit:"Учитывать предложения намного ниже эталона ⚠", batch_mit:"Учитывать пакетные варианты (ответ с задержкой)", hinweis_ref:"Предложения намного ниже эталонной цены, пакетные варианты и устаревшие цены (старше 3 дней) по умолчанию скрыты.", mehr_methodik:"Как мы сравниваем →",
   presets:{token:[], text:[["Чат-бот (малый)",2,0.5],["Поддержка",30,6],["Coding-агент",80,8],["Документы / RAG",40,2],["Крупный проект",500,50]],
            bild:[["Соцсети",100],["Фото товаров",1000],["Агентство",10000]], video:[["Тест",10,5],["Клипы для соцсетей",60,8],["Производство",500,10]]},
   th:["#","Модель","Поставщик","Цена","в месяц","в год",""], zum:"К поставщику ↗",
@@ -194,14 +194,13 @@ const S = {modus:"text", inM:10, outM:2, modell:"", ctx:0, gratis:false, auff:fa
   const p = new URLSearchParams(location.hash.slice(1));
   ["modus","modell"].forEach(function(k){ if (p.get(k) !== null) S[k] = p.get(k); });
   ["inM","outM","ctx","bilder","clips","sek","ausgabe","anfragen"].forEach(function(k){ if (p.get(k) !== null && !isNaN(+p.get(k))) S[k] = +p.get(k); });
-  if (p.get("gratis") === "1") S.gratis = true;
   if (p.get("auff") === "1") S.auff = true;
   if (p.get("batch") === "1") S.batch = true;
   if (p.get("caps")) S.caps = p.get("caps").split(",");
 })();
 function speichern(){
   const p = new URLSearchParams({modus:S.modus});
-  if (S.modus === "text"){ p.set("inM",S.inM); p.set("outM",S.outM); if (S.modell) p.set("modell",S.modell); if (S.ctx) p.set("ctx",S.ctx); if (S.gratis) p.set("gratis","1"); }
+  if (S.modus === "text"){ p.set("inM",S.inM); p.set("outM",S.outM); if (S.modell) p.set("modell",S.modell); if (S.ctx) p.set("ctx",S.ctx); }
   if (S.modus === "token"){ p.set("ausgabe",S.ausgabe); p.set("anfragen",S.anfragen); if (S.modell) p.set("modell",S.modell); }   // der Text selbst wird NICHT gespeichert
   if ((S.modus === "text" || S.modus === "token") && S.auff) p.set("auff","1");
   if ((S.modus === "text" || S.modus === "token") && S.batch) p.set("batch","1");
@@ -236,7 +235,7 @@ function ergebnisse(){
   if (S.modus === "text" || S.modus === "token") {
     Z.forEach(function(z){
       if (z.typ.indexOf("text") < 0 || z.mp !== null && z.inp === null) return;
-      if (z.gratis && !S.gratis) return;
+      if (z.gratis) return;                      // kostenlose Modelle: eigene Seite free.html
       if (z.zuAlt) return;                       // Preise älter als 3 Tage
       if (z.auff && !S.auff) return;             // weit unter Referenzpreis
       if (z.batch && !S.batch) return;           // Batch: verzögerte Antwort
@@ -285,14 +284,14 @@ function render(){
     f.innerHTML = feld("inM", T.in_m, S.inM) + feld("outM", T.out_m, S.outM) +
       '<div><label for="modell">'+T.modell+'</label><input id="modell" type="text" value="'+esc(S.modell)+'" placeholder="'+esc(T.modell_ph)+'"></div>' +
       '<div><label for="ctx">'+T.minctx+'</label><select id="ctx">'+CTX_OPT.map(function(c){ return '<option value="'+c+'"'+(c===S.ctx?" selected":"")+'>'+(c ? (c >= 1e6 ? c/1e6+"M" : c/1000+"K") : T.egal)+'</option>'; }).join("")+'</select></div>' +
-      '<div class="checks"><label class="check" style="text-transform:none;font-size:.86rem;letter-spacing:0;color:var(--fg)"><input id="gratis" type="checkbox"'+(S.gratis?" checked":"")+' style="width:auto"> '+T.gratis_mit+'</label>' +
+      '<div class="checks"><a class="check" href="'+(window.MODELLSEITEN ? pfad() : "")+'free.html" style="text-transform:none;font-size:.86rem;letter-spacing:0">'+T.gratis_mit+'</a>' +
       '<label class="check" style="text-transform:none;font-size:.86rem;letter-spacing:0;color:var(--fg)"><input id="auff" type="checkbox"'+(S.auff?" checked":"")+' style="width:auto"> '+T.auff_mit+'</label>' +
       '<label class="check" style="text-transform:none;font-size:.86rem;letter-spacing:0;color:var(--fg)"><input id="batch" type="checkbox"'+(S.batch?" checked":"")+' style="width:auto"> '+T.batch_mit+'</label></div>';
   } else if (S.modus === "token") {
     f.innerHTML = '<div style="grid-column:1/-1"><label for="text">'+T.text_label+'</label><textarea id="text" rows="7" style="width:100%;padding:.6rem .7rem;border:1px solid var(--border2);border-radius:.45rem;background:var(--input);color:var(--fg);font-size:.92rem" placeholder="'+esc(T.text_ph)+'">'+esc(S.text)+'</textarea></div>' +
       feld("ausgabe", T.ausgabe, S.ausgabe) + feld("anfragen", T.anfragen, S.anfragen) +
       '<div><label for="modell">'+T.modell+'</label><input id="modell" type="text" value="'+esc(S.modell)+'" placeholder="'+esc(T.modell_ph)+'"></div>' +
-      '<div class="checks"><label class="check" style="text-transform:none;font-size:.86rem;letter-spacing:0;color:var(--fg)"><input id="gratis" type="checkbox"'+(S.gratis?" checked":"")+' style="width:auto"> '+T.gratis_mit+'</label>' +
+      '<div class="checks"><a class="check" href="'+(window.MODELLSEITEN ? pfad() : "")+'free.html" style="text-transform:none;font-size:.86rem;letter-spacing:0">'+T.gratis_mit+'</a>' +
       '<label class="check" style="text-transform:none;font-size:.86rem;letter-spacing:0;color:var(--fg)"><input id="auff" type="checkbox"'+(S.auff?" checked":"")+' style="width:auto"> '+T.auff_mit+'</label>' +
       '<label class="check" style="text-transform:none;font-size:.86rem;letter-spacing:0;color:var(--fg)"><input id="batch" type="checkbox"'+(S.batch?" checked":"")+' style="width:auto"> '+T.batch_mit+'</label></div>';
   } else if (S.modus === "bild") {
@@ -356,7 +355,6 @@ document.getElementById("form").addEventListener("input", function(e){
   const el = e.target;
   if (el.id === "text") S.text = el.value;
   else if (el.id === "modell") S.modell = el.value;
-  else if (el.id === "gratis") S.gratis = el.checked;
   else if (el.id === "auff") S.auff = el.checked;
   else if (el.id === "batch") S.batch = el.checked;
   else if (el.id === "ctx") S.ctx = +el.value;
@@ -364,7 +362,6 @@ document.getElementById("form").addEventListener("input", function(e){
   render();
 });
 document.getElementById("form").addEventListener("change", function(e){
-  if (e.target.id === "gratis"){ S.gratis = e.target.checked; render(); }
   if (e.target.id === "auff"){ S.auff = e.target.checked; render(); }
   if (e.target.id === "batch"){ S.batch = e.target.checked; render(); }
 });

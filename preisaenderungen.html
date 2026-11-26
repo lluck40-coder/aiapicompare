@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI API price changes: cheaper & more expensive models – aiapicompare</title>
+<meta name="description" content="Which AI models got cheaper or more expensive in the last 30 days, by how many percent, at which API provider – from our daily price checks.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:image" content="https://aiapicompare.com/og-image.png">
+<link rel="stylesheet" href="style.css">
+<link rel="alternate" type="application/rss+xml" title="aiapicompare RSS (English)" href="feed.xml">
+<link rel="alternate" type="application/rss+xml" title="aiapicompare RSS (Deutsch)" href="de/feed.xml">
+<script src="theme.js"></script>
+<style>
+  h2{font-size:1.15rem;margin:1.8rem 0 .6rem}
+  .tabs{display:flex;flex-wrap:wrap;gap:.35rem;margin:.2rem 0 .8rem}
+  .tabs button{padding:.35rem .75rem;border:1px solid var(--border2);border-radius:2rem;background:var(--input);cursor:pointer;font-size:.82rem;color:var(--muted)}
+  .tabs button.active{border-color:var(--accent);color:var(--accent);background:var(--accent-bg);font-weight:600}
+  td.num,th.num{text-align:right}
+  .price{font-family:var(--mono);white-space:nowrap}
+  .datum{white-space:nowrap;color:var(--dim);font-size:.82rem;width:6.5rem}
+  .pz{display:inline-block;padding:.05rem .45rem;border-radius:.3rem;font-size:.75rem;font-weight:700;font-family:var(--mono)}
+  .pz.down{background:var(--accent-bg);color:var(--accent)}
+  .pz.up{background:rgba(248,113,113,.15);color:#f87171}
+  .alt{color:var(--dim);text-decoration:line-through;margin-right:.3rem}
+  .unit{color:var(--dim);font-size:.75rem}
+  .leer{padding:1.5rem;text-align:center;color:var(--muted)}
+  .links{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.5rem}
+  .links a{display:flex;align-items:center;gap:.5rem;padding:.6rem .8rem;border:1px solid var(--border2);border-radius:.55rem;text-decoration:none;color:var(--fg);background:var(--input)}
+  .links a:hover{border-color:var(--accent)}
+  .links small{color:var(--dim);font-size:.72rem;margin-left:auto}
+  .hinweis{font-size:.78rem;color:var(--dim);margin-top:.6rem;line-height:1.6}
+  a.mlink{color:var(--fg);text-decoration:none;font-weight:600}
+  a.mlink:hover{color:var(--accent);text-decoration:underline}
+  .karten{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.6rem;margin:1rem 0 1.2rem}
+  .karte{border:1px solid var(--border2);border-radius:.6rem;padding:.75rem .9rem;background:var(--input)}
+  .karte b{display:block;font-size:1.5rem;font-family:var(--mono);line-height:1.2}
+  .karte span{font-size:.8rem;color:var(--muted)}
+  .karte.down b{color:var(--accent)} .karte.up b{color:#f87171}
+  .leiste{display:flex;flex-wrap:wrap;gap:.6rem;align-items:flex-end;margin:.2rem 0 .8rem}
+  .leiste label{display:block;font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.2rem}
+  .leiste select,.leiste input{padding:.4rem .55rem;border:1px solid var(--border2);border-radius:.45rem;background:var(--input);color:var(--fg);font-size:.85rem}
+  .warn{cursor:help;margin-left:.25rem}
+  .top2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem}
+  .top2 h3{font-size:.95rem;margin:.4rem 0 .4rem}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="index.html" aria-label="aiapicompare"><img class="logo-d" src="logo/logo.svg" alt="aiapicompare" width="166" height="30"><img class="logo-l" src="logo/logo-hell.svg" alt="aiapicompare" width="166" height="30"></a>
+  <nav class="nav">
+    <a href="index.html" data-t="nav_vergleich"></a>
+    <a href="kosten.html" data-t="nav_kosten"></a>
+    <a href="finder.html" data-t="nav_finder"></a>
+    <a href="free.html" data-t="nav_gratis"></a>
+    <a href="bestenliste.html" data-t="nav_best"></a>
+    <a href="news.html" class="active" data-t="nav_news"></a>
+    <a href="anbindung.html" data-t="nav_anbindung"></a>
+  </nav>
+  <button class="themebtn" title="Light / dark"><span class="ti-l">☀</span><span class="ti-d">☾</span></button>
+  <div class="langbtns">
+    <button data-lang="de">DE</button><button data-lang="en">EN</button><button data-lang="zh">中文</button><button data-lang="ru">RU</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <h1 data-t="h1"></h1>
+  <p class="lead" data-t="lead"></p>
+
+  <div class="karten" id="karten"></div>
+
+  <div class="top2">
+    <div><h3 data-t="h_down"></h3><div class="tablewrap"><table><tbody id="topdown"></tbody></table></div></div>
+    <div><h3 data-t="h_up"></h3><div class="tablewrap"><table><tbody id="topup"></tbody></table></div></div>
+  </div>
+
+  <h2 data-t="h_alle"></h2>
+  <div class="tabs" id="ptabs"></div>
+  <div class="leiste">
+    <div><label for="sort" data-t="l_sort"></label><select id="sort"></select></div>
+    <div><label for="anb" data-t="l_anb"></label><select id="anb"></select></div>
+    <div><label for="suche" data-t="l_suche"></label><input id="suche" type="search" autocomplete="off"></div>
+  </div>
+  <div class="tablewrap"><table><thead id="phead"></thead><tbody id="pbody"></tbody></table></div>
+  <p class="hinweis" id="hinweis"></p>
+  <p class="hinweis" id="stand"></p>
+  <p style="margin:.6rem 0 0"><a href="preisindex.html" data-t="zum_index"></a> · <a href="news.html" data-t="zu_news"></a></p>
+
+  <div class="legal">
+    <a href="index.html" data-t="nav_vergleich"></a><a href="impressum.html" data-t="impressum"></a><a href="datenschutz.html" data-t="datenschutz"></a>
+  </div>
+</div>
+
+<script src="out/news.js"></script>
+<script>
+"use strict";
+const N = window.NEWS || null;
+const QUELLEN = {openrouter:"OpenRouter", uplinkswitch:"UplinkSwitch", anymodel:"AnyModel", nanogpt:"NanoGPT", chutes:"Chutes",
+  deepinfra:"DeepInfra", novita:"Novita AI", cometapi:"CometAPI", kyma:"Kyma API"};
+const FARBE = {openrouter:"#a78bfa", uplinkswitch:"#f472b6", anymodel:"#fbbf24", nanogpt:"#34d399", chutes:"#f87171",
+  deepinfra:"#60a5fa", novita:"#2dd4bf", cometapi:"#fb923c", kyma:"#c084fc"};
+const NAV = {
+ de:{nav_vergleich:"Preisvergleich", nav_kosten:"Kostenrechner", nav_finder:"Modell-Finder", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz"},
+ en:{nav_vergleich:"Price comparison", nav_kosten:"Cost calculator", nav_finder:"Model finder", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy"},
+ zh:{nav_vergleich:"价格对比", nav_kosten:"成本计算器", nav_finder:"模型推荐", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策"},
+ ru:{nav_vergleich:"Сравнение цен", nav_kosten:"Калькулятор", nav_finder:"Подбор модели", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность"}};
+const L10N = {
+de:{h1:"Preisänderungen: welche KI-Modelle günstiger oder teurer wurden",
+  lead:"Alle Preisänderungen der letzten 30 Tage bei den KI-API-Anbietern, mit Veränderung in Prozent – automatisch aus unseren täglichen Preisabfragen.",
+  k_down:"Modelle günstiger geworden", k_up:"Modelle teurer geworden", k_med_down:"typische Senkung (Median)", k_med_up:"typische Erhöhung (Median)",
+  h_down:"↓ Größte Preissenkungen", h_up:"↑ Größte Preiserhöhungen", h_alle:"Alle Preisänderungen",
+  tabs:{alle:"Alle", down:"↓ Günstiger geworden", up:"↑ Teurer geworden"},
+  l_sort:"Sortieren", l_anb:"Anbieter", l_suche:"Modell suchen", alle_anb:"Alle Anbieter",
+  sort:{pz:"Größte Änderung zuerst", neu:"Neueste zuerst", name:"Name A–Z"},
+  pth:["Datum","Modell","Anbieter","Preis vorher → jetzt","Änderung"],
+  einheit:{text:"/ 1M Input", image:"/ Bild", second:"/ s", generation:"/ Video"},
+  warn:"Ungewöhnlich große Änderung – möglicherweise Tarifumstellung oder Datenfehler. Bitte beim Anbieter prüfen.",
+  hinweis:"Gezeigt wird der Input-Preis pro 1 Mio. Token (bei Bild/Video der Stückpreis), jeweils letzte Änderung je Modell und Anbieter. ⚠ = Änderung von +100 % oder mehr bzw. −50 % oder mehr, bitte beim Anbieter prüfen. Veränderte Modellvarianten („uncensored“, „abliterated“ u. ä.) sind nicht enthalten.",
+  leer:"Keine Preisänderungen gefunden.", keine:"Die Daten werden beim nächsten täglichen Datenabruf erstellt.",
+  zum_index:"📈 Langfristige Entwicklung: KI-Preisindex →", zu_news:"Neue Modelle →",
+  stand:function(d){ return "Stand der Preisdaten: " + d + " · Preise in USD · Angaben ohne Gewähr, maßgeblich ist die Seite des Anbieters."; }},
+en:{h1:"Price changes: which AI models got cheaper or more expensive",
+  lead:"All price changes of the last 30 days at AI API providers, with the change in percent – generated automatically from our daily price checks.",
+  k_down:"models got cheaper", k_up:"models got more expensive", k_med_down:"typical cut (median)", k_med_up:"typical increase (median)",
+  h_down:"↓ Biggest price cuts", h_up:"↑ Biggest price increases", h_alle:"All price changes",
+  tabs:{alle:"All", down:"↓ Cheaper", up:"↑ More expensive"},
+  l_sort:"Sort", l_anb:"Provider", l_suche:"Search model", alle_anb:"All providers",
+  sort:{pz:"Largest change first", neu:"Newest first", name:"Name A–Z"},
+  pth:["Date","Model","Provider","Price before → now","Change"],
+  einheit:{text:"/ 1M input", image:"/ image", second:"/ s", generation:"/ video"},
+  warn:"Unusually large change – possibly a tariff change or data error. Please check with the provider.",
+  hinweis:"Shown is the input price per 1M tokens (unit price for image/video), latest change per model and provider. ⚠ = change of +100 % or more or −50 % or more, please check with the provider. Modified model variants (“uncensored”, “abliterated” etc.) are not included.",
+  leer:"No price changes found.", keine:"The data will be created with the next daily data update.",
+  zum_index:"📈 Long-term trend: AI price index →", zu_news:"New models →",
+  stand:function(d){ return "Price data as of " + d + " · Prices in USD · No guarantee, the provider’s website is authoritative."; }},
+zh:{h1:"价格变化：哪些 AI 模型降价或涨价",
+  lead:"过去 30 天 AI API 提供商的全部价格变化及变化百分比——根据我们每日的价格查询自动生成。",
+  k_down:"个模型降价", k_up:"个模型涨价", k_med_down:"典型降幅（中位数）", k_med_up:"典型涨幅（中位数）",
+  h_down:"↓ 降价幅度最大", h_up:"↑ 涨价幅度最大", h_alle:"全部价格变化",
+  tabs:{alle:"全部", down:"↓ 降价", up:"↑ 涨价"},
+  l_sort:"排序", l_anb:"提供商", l_suche:"搜索模型", alle_anb:"全部提供商",
+  sort:{pz:"变化最大优先", neu:"最新优先", name:"名称 A–Z"},
+  pth:["日期","模型","提供商","原价 → 现价","变化"],
+  einheit:{text:"/ 百万输入", image:"/ 张", second:"/ 秒", generation:"/ 视频"},
+  warn:"变化异常大——可能是资费调整或数据错误，请到提供商处核实。",
+  hinweis:"显示每百万输入 Token 的价格（图像/视频为单价），每个模型和提供商的最近一次变化。⚠ = 变化达 +100 % 或以上、−50 % 或以上，请到提供商处核实。不包含修改过的模型变体（如“uncensored”“abliterated”）。",
+  leer:"没有找到价格变化。", keine:"数据将在下一次每日数据更新时生成。",
+  zum_index:"📈 长期趋势：AI 价格指数 →", zu_news:"新模型 →",
+  stand:function(d){ return "价格数据日期：" + d + " · 价格单位为美元 · 仅供参考，以提供商网站为准。"; }},
+ru:{h1:"Изменения цен: какие AI-модели подешевели или подорожали",
+  lead:"Все изменения цен у поставщиков AI-API за последние 30 дней, с изменением в процентах – автоматически по нашим ежедневным проверкам цен.",
+  k_down:"моделей подешевело", k_up:"моделей подорожало", k_med_down:"типичное снижение (медиана)", k_med_up:"типичное повышение (медиана)",
+  h_down:"↓ Самые большие снижения", h_up:"↑ Самые большие повышения", h_alle:"Все изменения цен",
+  tabs:{alle:"Все", down:"↓ Подешевело", up:"↑ Подорожало"},
+  l_sort:"Сортировка", l_anb:"Поставщик", l_suche:"Поиск модели", alle_anb:"Все поставщики",
+  sort:{pz:"Сначала крупные изменения", neu:"Сначала новые", name:"Название А–Я"},
+  pth:["Дата","Модель","Поставщик","Цена было → стало","Изменение"],
+  einheit:{text:"/ 1 млн вход", image:"/ изобр.", second:"/ с", generation:"/ видео"},
+  warn:"Необычно большое изменение – возможно, смена тарифа или ошибка данных. Проверьте у поставщика.",
+  hinweis:"Показана цена за 1 млн входных токенов (для изображений/видео – цена за единицу), последнее изменение по модели и поставщику. ⚠ = изменение на +100 % и более или на −50 % и более, проверьте у поставщика. Изменённые варианты моделей («uncensored», «abliterated» и т. п.) не включены.",
+  leer:"Изменений цен не найдено.", keine:"Данные появятся при следующем ежедневном обновлении.",
+  zum_index:"📈 Долгосрочная динамика: индекс цен AI →", zu_news:"Новые модели →",
+  stand:function(d){ return "Цены на " + d + " · в USD · Без гарантии, действует информация на сайте поставщика."; }}
+};
+Object.keys(L10N).forEach(function(l){ Object.assign(L10N[l], NAV[l]); });
+
+function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+let lang = lsGet("lang") || (navigator.language || "").slice(0,2);
+if (!L10N[lang]) lang = "en";
+const S = {filter:"alle", sort:"pz", anb:"", q:""};
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function fmtP(n){ return "$" + (n >= 100 ? n.toFixed(0) : n >= 1 ? n.toFixed(2) : n >= 0.01 ? n.toFixed(3) : n.toFixed(4)); }
+function sauber(n){ return String(n || "").replace(/^[^:]{1,30}:\s*/, ""); }
+function einheit(e, T){ return T.einheit[e] || T.einheit.text; }
+function anb(q){ return '<span class="dot" style="background:'+(FARBE[q]||"#888")+'"></span>'+esc(QUELLEN[q] || q); }
+function datum(d){ try { return new Date(d + "T00:00:00Z").toLocaleDateString(lang === "zh" ? "zh-CN" : lang, {day:"2-digit", month:"2-digit", year:"numeric", timeZone:"UTC"}); } catch(e){ return d; } }
+function modell(x){ return '<a class="mlink" href="index.html#q='+encodeURIComponent(sauber(x.n).replace(/\s*\((free|batch)\)\s*$/i, ""))+'">'+esc(sauber(x.n))+'</a>'; }
+function median(a){ if (!a.length) return null; a = a.slice().sort(function(x,y){ return x-y; }); const m = Math.floor(a.length/2); return a.length % 2 ? a[m] : (a[m-1]+a[m])/2; }
+function pzHtml(x, T){
+  const down = x.neu < x.alt;
+  return '<span class="pz '+(down ? "down" : "up")+'">'+(down ? "↓ " : "↑ +")+(x.pz !== null && x.pz !== undefined ? Math.abs(x.pz) + " %" : "")+'</span>'+
+    (x.w ? '<span class="warn" title="'+esc(T.warn)+'">⚠</span>' : '');
+}
+function zeile(x, T, kurz){
+  const preis = '<span class="price alt">'+fmtP(x.alt)+'</span><span class="price">'+fmtP(x.neu)+'</span> <span class="unit">'+einheit(x.e, T)+'</span>';
+  if (kurz) return '<tr><td>'+modell(x)+'<br><small>'+anb(x.q)+'</small></td><td class="num">'+preis+'</td><td class="num">'+pzHtml(x, T)+'</td></tr>';
+  return '<tr><td class="datum">'+datum(x.d)+'</td><td>'+modell(x)+'</td><td>'+anb(x.q)+'</td><td class="num">'+preis+'</td><td class="num">'+pzHtml(x, T)+'</td></tr>';
+}
+
+function render(){
+  const T = L10N[lang];
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+  document.title = T.h1 + " – aiapicompare";
+  document.querySelectorAll("[data-t]").forEach(function(el){ el.textContent = T[el.dataset.t]; });
+  document.querySelectorAll(".langbtns button").forEach(function(b){ b.classList.toggle("active", b.dataset.lang === lang); });
+  document.getElementById("ptabs").innerHTML = Object.keys(T.tabs).map(function(k){
+    return '<button data-f="'+k+'" class="'+(k === S.filter ? "active" : "")+'">'+T.tabs[k]+'</button>'; }).join("");
+  document.getElementById("sort").innerHTML = Object.keys(T.sort).map(function(k){ return '<option value="'+k+'"'+(k===S.sort?" selected":"")+'>'+T.sort[k]+'</option>'; }).join("");
+  document.getElementById("phead").innerHTML = '<tr>'+T.pth.map(function(x,i){ return '<th'+(i>=3?' class="num"':'')+'>'+x+'</th>'; }).join("")+'</tr>';
+  document.getElementById("hinweis").textContent = T.hinweis;
+  if (!N){
+    document.getElementById("karten").innerHTML = "";
+    document.getElementById("pbody").innerHTML = '<tr><td colspan="5" class="leer">'+T.keine+'</td></tr>';
+    return;
+  }
+  const P = (N.preis || []).filter(function(x){ return x.alt && x.neu && x.neu !== x.alt; });
+  const anbs = Array.from(new Set(P.map(function(x){ return x.q; }))).sort();
+  document.getElementById("anb").innerHTML = '<option value="">'+T.alle_anb+'</option>' + anbs.map(function(q){ return '<option value="'+esc(q)+'"'+(q===S.anb?" selected":"")+'>'+esc(QUELLEN[q]||q)+'</option>'; }).join("");
+
+  const down = P.filter(function(x){ return x.neu < x.alt; }), up = P.filter(function(x){ return x.neu > x.alt; });
+  // Kennzahlen ohne ⚠-Ausreißer, damit einzelne Datenfehler das Bild nicht verzerren
+  const mDown = median(down.filter(function(x){ return !x.w; }).map(function(x){ return x.pz; }));
+  const mUp = median(up.filter(function(x){ return !x.w; }).map(function(x){ return x.pz; }));
+  document.getElementById("karten").innerHTML =
+    '<div class="karte down"><b>'+down.length+'</b><span>'+T.k_down+'</span></div>'+
+    '<div class="karte up"><b>'+up.length+'</b><span>'+T.k_up+'</span></div>'+
+    '<div class="karte down"><b>'+(mDown !== null ? Math.round(mDown) + " %" : "–")+'</b><span>'+T.k_med_down+'</span></div>'+
+    '<div class="karte up"><b>'+(mUp !== null ? "+" + Math.round(mUp) + " %" : "–")+'</b><span>'+T.k_med_up+'</span></div>';
+
+  const topD = down.slice().sort(function(a,b){ return a.pz - b.pz; }).slice(0, 8);
+  const topU = up.slice().sort(function(a,b){ return b.pz - a.pz; }).slice(0, 8);
+  document.getElementById("topdown").innerHTML = topD.length ? topD.map(function(x){ return zeile(x, T, true); }).join("") : '<tr><td class="leer">'+T.leer+'</td></tr>';
+  document.getElementById("topup").innerHTML = topU.length ? topU.map(function(x){ return zeile(x, T, true); }).join("") : '<tr><td class="leer">'+T.leer+'</td></tr>';
+
+  const q = S.q.trim().toLowerCase();
+  let L = P.filter(function(x){
+    if (S.filter === "down" && !(x.neu < x.alt)) return false;
+    if (S.filter === "up" && !(x.neu > x.alt)) return false;
+    if (S.anb && x.q !== S.anb) return false;
+    if (q && (String(x.n) + " " + x.k).toLowerCase().indexOf(q) < 0) return false;
+    return true;
+  });
+  L.sort(S.sort === "neu" ? function(a,b){ return a.d < b.d ? 1 : a.d > b.d ? -1 : Math.abs(b.pz) - Math.abs(a.pz); }
+       : S.sort === "name" ? function(a,b){ return sauber(a.n).localeCompare(sauber(b.n)); }
+       : function(a,b){ return Math.abs(b.pz) - Math.abs(a.pz); });
+  document.getElementById("pbody").innerHTML = L.length ? L.map(function(x){ return zeile(x, T, false); }).join("") : '<tr><td colspan="5" class="leer">'+T.leer+'</td></tr>';
+  document.getElementById("stand").textContent = T.stand(N.stand || "");
+}
+document.addEventListener("click", function(e){
+  const l = e.target.closest("button[data-lang]");
+  if (l){ lang = l.dataset.lang; lsSet("lang", lang); render(); return; }
+  const f = e.target.closest("button[data-f]");
+  if (f){ S.filter = f.dataset.f; render(); }
+});
+document.getElementById("sort").addEventListener("change", function(e){ S.sort = e.target.value; render(); });
+document.getElementById("anb").addEventListener("change", function(e){ S.anb = e.target.value; render(); });
+document.getElementById("suche").addEventListener("input", function(e){ S.q = e.target.value; render(); });
+render();
+</script>
+<script src="config.js"></script>
+<script src="einwilligung.js"></script>
+</body>
+</html>
