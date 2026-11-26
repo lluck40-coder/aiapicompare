@@ -358,7 +358,7 @@ const BEKANNT = ["OpenAI","Anthropic","Google","DeepSeek","xAI","Meta","Qwen","M
 const I18N = {
   de:{
     seitentitel:"aiapicompare – KI-API-Preise vergleichen",
-    nav_kosten:"Kostenrechner", nav_finder:"Modell-Finder", fuss_index:"KI-Preisindex", fuss_widget:"Widget einbetten", fuss_methodik:"So vergleichen wir", nav_gratis:"Kostenlose Modelle", nav_best:"Bestenliste", nav_news:"Neuigkeiten", arena_titel:function(p,b){ return "Platz "+p+" in der Arena-Bestenliste: "+b; }, arena_hinweis:"🏆 = Platz in der Arena-Bestenliste (arena.ai, CC BY 4.0)", gratis:"kostenlos", nur_gratis:"Nur kostenlose Modelle", neu:"NEU", vorher:function(p){ return "vorher "+p; }, theme:"Hell / Dunkel", api:"Daten als JSON", pro5s:"/ 5-s-Clip", gen:"pro Generierung",
+    nav_kosten:"Kostenrechner", nav_finder:"Modell-Finder", fuss_index:"KI-Preisindex", fuss_widget:"Widget einbetten", fuss_methodik:"So vergleichen wir", nav_gratis:"Kostenlose Modelle", gratis_seite:"Kostenlose Modelle: eigene Seite →", nav_best:"Bestenliste", nav_news:"Neuigkeiten", arena_titel:function(p,b){ return "Platz "+p+" in der Arena-Bestenliste: "+b; }, arena_hinweis:"🏆 = Platz in der Arena-Bestenliste (arena.ai, CC BY 4.0)", gratis:"kostenlos", nur_gratis:"Nur kostenlose Modelle", neu:"NEU", vorher:function(p){ return "vorher "+p; }, theme:"Hell / Dunkel", api:"Daten als JSON", pro5s:"/ 5-s-Clip", gen:"pro Generierung",
     filter:"Filter", suche:"Modell, Anbieter oder ID suchen …", sortieren:"Sortieren:",
     nav_vergleich:"Preisvergleich", nav_anbindung:"Anbindung & Einrichtung", impressum:"Impressum", datenschutz:"Datenschutz",
     zum_anbieter:"Zum Anbieter", einrichten:function(n){ return "So bindest du "+n+" an (Hermes, VS Code …)"; },
@@ -390,7 +390,7 @@ const I18N = {
   },
   en:{
     seitentitel:"aiapicompare – Compare AI API prices",
-    nav_kosten:"Cost calculator", nav_finder:"Model finder", fuss_index:"AI price index", fuss_widget:"Embed widget", fuss_methodik:"How we compare", nav_gratis:"Free models", nav_best:"Leaderboard", nav_news:"News", arena_titel:function(p,b){ return "Rank "+p+" in the Arena leaderboard: "+b; }, arena_hinweis:"🏆 = rank in the Arena leaderboard (arena.ai, CC BY 4.0)", gratis:"free", nur_gratis:"Free models only", neu:"NEW", vorher:function(p){ return "previously "+p; }, theme:"Light / dark", api:"Data as JSON", pro5s:"/ 5 s clip", gen:"per generation",
+    nav_kosten:"Cost calculator", nav_finder:"Model finder", fuss_index:"AI price index", fuss_widget:"Embed widget", fuss_methodik:"How we compare", nav_gratis:"Free models", gratis_seite:"Free models: separate page →", nav_best:"Leaderboard", nav_news:"News", arena_titel:function(p,b){ return "Rank "+p+" in the Arena leaderboard: "+b; }, arena_hinweis:"🏆 = rank in the Arena leaderboard (arena.ai, CC BY 4.0)", gratis:"free", nur_gratis:"Free models only", neu:"NEW", vorher:function(p){ return "previously "+p; }, theme:"Light / dark", api:"Data as JSON", pro5s:"/ 5 s clip", gen:"per generation",
     filter:"Filters", suche:"Search model, provider or ID …", sortieren:"Sort:",
     nav_vergleich:"Price comparison", nav_anbindung:"Setup & integration", impressum:"Imprint", datenschutz:"Privacy",
     zum_anbieter:"Go to provider", einrichten:function(n){ return "How to connect "+n+" (Hermes, VS Code …)"; },
@@ -422,7 +422,7 @@ const I18N = {
   },
   zh:{
     seitentitel:"aiapicompare – AI API 价格对比",
-    nav_kosten:"成本计算器", nav_finder:"模型推荐", fuss_index:"AI 价格指数", fuss_widget:"嵌入小组件", fuss_methodik:"比较方法", nav_gratis:"免费模型", nav_best:"排行榜", nav_news:"动态", arena_titel:function(p,b){ return "Arena 排行榜第 "+p+" 名："+b; }, arena_hinweis:"🏆 = Arena 排行榜名次（arena.ai，CC BY 4.0）", gratis:"免费", nur_gratis:"仅显示免费模型", neu:"新", vorher:function(p){ return "之前 "+p; }, theme:"浅色 / 深色", api:"JSON 数据", pro5s:"/ 5 秒片段", gen:"每次生成",
+    nav_kosten:"成本计算器", nav_finder:"模型推荐", fuss_index:"AI 价格指数", fuss_widget:"嵌入小组件", fuss_methodik:"比较方法", nav_gratis:"免费模型", gratis_seite:"免费模型：单独页面 →", nav_best:"排行榜", nav_news:"动态", arena_titel:function(p,b){ return "Arena 排行榜第 "+p+" 名："+b; }, arena_hinweis:"🏆 = Arena 排行榜名次（arena.ai，CC BY 4.0）", gratis:"免费", nur_gratis:"仅显示免费模型", neu:"新", vorher:function(p){ return "之前 "+p; }, theme:"浅色 / 深色", api:"JSON 数据", pro5s:"/ 5 秒片段", gen:"每次生成",
     filter:"筛选", suche:"搜索模型、提供商或 ID …", sortieren:"排序：",
     nav_vergleich:"价格对比", nav_anbindung:"接入与配置", impressum:"网站信息", datenschutz:"隐私政策",
     zum_anbieter:"前往提供商", einrichten:function(n){ return "如何接入 "+n+"（Hermes、VS Code …）"; },
@@ -454,7 +454,7 @@ const I18N = {
   },
   ru:{
     seitentitel:"aiapicompare – сравнение цен AI API",
-    nav_kosten:"Калькулятор", nav_finder:"Подбор модели", fuss_index:"Индекс цен AI", fuss_widget:"Виджет для сайта", fuss_methodik:"Как мы сравниваем", nav_gratis:"Бесплатные модели", nav_best:"Рейтинг", nav_news:"Новости", arena_titel:function(p,b){ return "Место "+p+" в рейтинге Arena: "+b; }, arena_hinweis:"🏆 = место в рейтинге Arena (arena.ai, CC BY 4.0)", gratis:"бесплатно", nur_gratis:"Только бесплатные модели", neu:"НОВОЕ", vorher:function(p){ return "раньше "+p; }, theme:"Светлая / тёмная", api:"Данные в JSON", pro5s:"/ клип 5 с", gen:"за генерацию",
+    nav_kosten:"Калькулятор", nav_finder:"Подбор модели", fuss_index:"Индекс цен AI", fuss_widget:"Виджет для сайта", fuss_methodik:"Как мы сравниваем", nav_gratis:"Бесплатные модели", gratis_seite:"Бесплатные модели: отдельная страница →", nav_best:"Рейтинг", nav_news:"Новости", arena_titel:function(p,b){ return "Место "+p+" в рейтинге Arena: "+b; }, arena_hinweis:"🏆 = место в рейтинге Arena (arena.ai, CC BY 4.0)", gratis:"бесплатно", nur_gratis:"Только бесплатные модели", neu:"НОВОЕ", vorher:function(p){ return "раньше "+p; }, theme:"Светлая / тёмная", api:"Данные в JSON", pro5s:"/ клип 5 с", gen:"за генерацию",
     filter:"Фильтры", suche:"Поиск по модели, поставщику или ID …", sortieren:"Сортировка:",
     nav_vergleich:"Сравнение цен", nav_anbindung:"Подключение", impressum:"Импрессум", datenschutz:"Конфиденциальность",
     zum_anbieter:"К поставщику", einrichten:function(n){ return "Как подключить "+n+" (Hermes, VS Code …)"; },
@@ -497,6 +497,8 @@ QUELLEN.forEach(function(q){
     const outp = (typeof v.out === "number") ? v.out : null;
     const ab   = (inp === null && typeof v.price === "number") ? v.price : null;
     const mp   = (typeof v.media_preis === "number") ? v.media_preis : null;
+    // Kostenlose Angebote gehören auf die eigene Seite free.html – hier nur kostenpflichtige
+    if (v.gratis || /:free$/.test(kanon) || (inp === 0 && (outp === 0 || outp === null)) || (inp === null && ab === 0) || (inp === null && ab === null && mp === 0)) return;
     const roh  = v.roh_id || kanon;
     let url = v.url || "";
     if (!url && q.key === "openrouter")   url = "https://openrouter.ai/" + roh;
@@ -584,7 +586,7 @@ function ladeZustand(){
   if (p.has("dir"))  S.dir  = p.get("dir") === "desc" ? "desc" : "asc";
   S.best  = p.get("best") === "1";
   S.multi = p.get("multi") === "1";
-  S.gratis = p.get("gratis") === "1";
+  S.gratis = false;
   S.ohneAuff = p.get("ohneauff") === "1";
   if (p.has("view")) S.view = p.get("view");
 }
@@ -690,7 +692,7 @@ function renderSidebar(){
       '<div style="height:.6rem"></div>'+
       '<label class="toggle"><span>'+t.nur_mehrere+'</span><span class="switch"><input type="checkbox" id="multichk"'+(S.multi?" checked":"")+'><span></span></span></label>'+
       '<div style="height:.6rem"></div>'+
-      '<label class="toggle"><span>'+t.nur_gratis+'</span><span class="switch"><input type="checkbox" id="gratischk"'+(S.gratis?" checked":"")+'><span></span></span></label>'+
+      '<a href="'+(window.MODELLSEITEN ? sprachPfad() : "")+'free.html" style="font-size:.86rem">'+t.gratis_seite+'</a>'+
       '<div style="height:.6rem"></div>'+
       '<label class="toggle"><span>'+t.ohne_auff+'</span><span class="switch"><input type="checkbox" id="auffchk"'+(S.ohneAuff?" checked":"")+'><span></span></span></label></div>'+
     '<div class="fgroup">'+kopf(t.typ,"typ")+
