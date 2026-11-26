@@ -116,6 +116,12 @@
   .viewtog{display:flex;border:1px solid var(--border2);border-radius:.45rem;overflow:hidden}
   .viewtog button{padding:.38rem .6rem;background:var(--input);border:0;cursor:pointer;color:var(--muted)}
   .viewtog button.active{background:var(--panel2);color:var(--fg)}
+  .modus{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin:0 0 .7rem}
+  .modus .seg{display:inline-flex;border:1px solid var(--border2);border-radius:2rem;overflow:hidden}
+  .modus .seg button{padding:.42rem .95rem;border:0;background:var(--input);color:var(--muted);cursor:pointer;font-size:.86rem}
+  .modus .seg button.active{background:var(--accent-bg);color:var(--accent);font-weight:700}
+  .modus small{color:var(--dim);font-size:.78rem;line-height:1.4;flex:1 1 260px}
+  .rang{display:inline-block;min-width:1.9rem;padding:.05rem .35rem;margin-right:.35rem;border-radius:.3rem;background:rgba(245,158,11,.14);color:#f59e0b;font-family:var(--mono);font-size:.78rem;font-weight:700;text-align:center}
   .chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.8rem;min-height:0}
   .chip{display:inline-flex;align-items:center;gap:.35rem;padding:.2rem .55rem;font-size:.76rem;border:1px solid var(--border2);border-radius:1rem;background:var(--panel);cursor:pointer}
   .chip:hover{border-color:#f87171}
@@ -272,6 +278,7 @@
         </div>
       </div>
     </div>
+    <div class="modus" id="modus"></div>
     <div class="chips" id="chips"></div>
     <div class="meta" id="meta"></div>
     <div id="results"></div>
@@ -370,7 +377,8 @@ const I18N = {
     faeh_titel:"Fähigkeiten (Bild & Video)", faeh_hint:"Laut Katalog des jeweiligen Anbieters – dasselbe Modell kann je Anbieter unterschiedliche Optionen haben.", dauer_bis:"bis", spalte_faeh:"Fähigkeiten",
     nur_guenstig:"Nur günstigster Anbieter je Modell", nur_mehrere:"Nur Modelle mit mehreren Anbietern", ohne_auff:"Angebote weit unter Referenzpreis ausblenden",
     reset:"Alle Filter zurücksetzen",
-    sorts:{"preis-asc":"Input-Preis: niedrig → hoch","preis-desc":"Input-Preis: hoch → niedrig",
+    modus_top:"⭐ Top-Modelle", modus_alle:"Alle Angebote", modus_info_top:function(n){ return "Die "+n+" besten Textmodelle laut Arena-Bestenliste, jeweils beim günstigsten zuverlässigen Anbieter. Klick auf ein Modell zeigt alle Anbieter."; }, modus_info_alle:function(n){ return "Alle "+n.toLocaleString("de-DE")+" kostenpflichtigen Angebote aller Anbieter – mit Filtern links."; }, modus_suche:"Die Suche durchsucht alle Angebote.",
+    sorts:{"arena-asc":"Qualität (Arena-Platz)","preis-asc":"Input-Preis: niedrig → hoch","preis-desc":"Input-Preis: hoch → niedrig",
            "output-asc":"Output-Preis: niedrig → hoch","output-desc":"Output-Preis: hoch → niedrig",
            "kontext-desc":"Kontext: groß → klein","kontext-asc":"Kontext: klein → groß",
            "anbieter-asc":"Anbieter: A → Z","anbieter-desc":"Anbieter: Z → A",
@@ -402,7 +410,8 @@ const I18N = {
     faeh_titel:"Capabilities (image & video)", faeh_hint:"According to each provider’s catalogue – the same model may offer different options per provider.", dauer_bis:"up to", spalte_faeh:"Capabilities",
     nur_guenstig:"Cheapest provider per model only", nur_mehrere:"Only models with several providers", ohne_auff:"Hide offers far below reference price",
     reset:"Reset all filters",
-    sorts:{"preis-asc":"Input price: low → high","preis-desc":"Input price: high → low",
+    modus_top:"⭐ Top models", modus_alle:"All offers", modus_info_top:function(n){ return "The "+n+" best text models according to the Arena leaderboard, each at the cheapest reliable provider. Click a model to see all providers."; }, modus_info_alle:function(n){ return "All "+n.toLocaleString("en-US")+" paid offers from all providers – with filters on the left."; }, modus_suche:"Search covers all offers.",
+    sorts:{"arena-asc":"Quality (Arena rank)","preis-asc":"Input price: low → high","preis-desc":"Input price: high → low",
            "output-asc":"Output price: low → high","output-desc":"Output price: high → low",
            "kontext-desc":"Context: large → small","kontext-asc":"Context: small → large",
            "anbieter-asc":"Provider: A → Z","anbieter-desc":"Provider: Z → A",
@@ -434,7 +443,8 @@ const I18N = {
     faeh_titel:"功能（图像与视频）", faeh_hint:"依据各提供商目录——同一模型在不同提供商处的选项可能不同。", dauer_bis:"最长", spalte_faeh:"功能",
     nur_guenstig:"每个模型仅显示最便宜的提供商", nur_mehrere:"仅显示有多个提供商的模型", ohne_auff:"隐藏远低于参考价的报价",
     reset:"重置所有筛选",
-    sorts:{"preis-asc":"输入价格：从低到高","preis-desc":"输入价格：从高到低",
+    modus_top:"⭐ 顶级模型", modus_alle:"全部报价", modus_info_top:function(n){ return "根据 Arena 排行榜排名前 "+n+" 的文本模型，各取最便宜的可靠提供商。点击模型可查看全部提供商。"; }, modus_info_alle:function(n){ return "全部 "+n+" 个付费报价——左侧可筛选。"; }, modus_suche:"搜索将覆盖全部报价。",
+    sorts:{"arena-asc":"质量（Arena 排名）","preis-asc":"输入价格：从低到高","preis-desc":"输入价格：从高到低",
            "output-asc":"输出价格：从低到高","output-desc":"输出价格：从高到低",
            "kontext-desc":"上下文：从大到小","kontext-asc":"上下文：从小到大",
            "anbieter-asc":"提供商：A → Z","anbieter-desc":"提供商：Z → A",
@@ -466,7 +476,8 @@ const I18N = {
     faeh_titel:"Возможности (изображения и видео)", faeh_hint:"По каталогу поставщика – у одной модели опции могут отличаться в зависимости от поставщика.", dauer_bis:"до", spalte_faeh:"Возможности",
     nur_guenstig:"Только самый дешёвый поставщик", nur_mehrere:"Только модели у нескольких поставщиков", ohne_auff:"Скрыть предложения намного ниже эталона",
     reset:"Сбросить все фильтры",
-    sorts:{"preis-asc":"Цена входа: по возрастанию","preis-desc":"Цена входа: по убыванию",
+    modus_top:"⭐ Топ-модели", modus_alle:"Все предложения", modus_info_top:function(n){ return n+" лучших текстовых моделей по рейтингу Arena, у самого дешёвого надёжного поставщика. Нажмите на модель, чтобы увидеть всех поставщиков."; }, modus_info_alle:function(n){ return "Все "+n.toLocaleString("ru-RU")+" платных предложений всех поставщиков – фильтры слева."; }, modus_suche:"Поиск идёт по всем предложениям.",
+    sorts:{"arena-asc":"Качество (место в Arena)","preis-asc":"Цена входа: по возрастанию","preis-desc":"Цена входа: по убыванию",
            "output-asc":"Цена выхода: по возрастанию","output-desc":"Цена выхода: по убыванию",
            "kontext-desc":"Контекст: больше → меньше","kontext-asc":"Контекст: меньше → больше",
            "anbieter-asc":"Поставщик: А → Я","anbieter-desc":"Поставщик: Я → А",
@@ -560,9 +571,14 @@ Object.keys(gruppen).forEach(function(k){
   });
 });
 const MAXCTX = 2000000;
+// Top-Modelle: Platz in der Arena-Gesamtwertung („Allround“, Textmodelle)
+function arenaPlatz(z){ const m = window.STAERKEN && window.STAERKEN.modelle && window.STAERKEN.modelle[z.basis]; return m && m.allround ? m.allround : null; }
+zeilen.forEach(function(z){ z.rang = z.media ? null : arenaPlatz(z); });
+const HAT_TOP = zeilen.some(function(z){ return z.rang !== null; });
+function topAktiv(){ return S.modus === "top" && HAT_TOP && !S.q; }
 
 /* =================== Zustand (in URL gespeichert) =================== */
-const DEFAULT = {q:"", anb:[], typ:[], fam:[], cap:[], ctx:0, pmax:PREIS_STEPS.length-1, sort:"preis", dir:"asc", best:false, multi:false, gratis:false, ohneAuff:false, view:"table"};
+const DEFAULT = {q:"", anb:[], typ:[], fam:[], cap:[], ctx:0, pmax:PREIS_STEPS.length-1, sort:"arena", dir:"asc", modus:"top", best:false, multi:false, gratis:false, ohneAuff:false, view:"table"};
 let S = JSON.parse(JSON.stringify(DEFAULT));
 let lang = "de";
 let limit = 100;
@@ -571,7 +587,8 @@ const offen = {};   // aufgeklappte Vergleiche
 function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
 function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
 
-function ladeZustand(){
+function ladeZustand(){ ladeZustand0(); if (!HAT_TOP){ S.modus = "alle"; if (S.sort === "arena") S.sort = "preis"; } }
+function ladeZustand0(){
   lang = lsGet("lang") || ((navigator.language || "").slice(0,2) === "de" ? "de" : (navigator.language || "").slice(0,2) === "ru" ? "ru" : (navigator.language || "").slice(0,2) === "zh" ? "zh" : "en");
   if (!I18N[lang]) lang = "en";
   const v = lsGet("view"); if (v) S.view = v; else if (window.innerWidth < 700) S.view = "list";
@@ -589,6 +606,7 @@ function ladeZustand(){
   S.gratis = false;
   S.ohneAuff = p.get("ohneauff") === "1";
   if (p.has("view")) S.view = p.get("view");
+  if (p.get("alle") === "1") { S.modus = "alle"; if (!p.has("sort")) S.sort = "preis"; }
 }
 function speichereZustand(){
   const p = new URLSearchParams();
@@ -597,6 +615,7 @@ function speichereZustand(){
   if (S.ctx) p.set("ctx", S.ctx);
   if (S.pmax !== DEFAULT.pmax) p.set("pmax", S.pmax);
   if (S.sort !== DEFAULT.sort || S.dir !== DEFAULT.dir){ p.set("sort", S.sort); p.set("dir", S.dir); }
+  if (S.modus === "alle") p.set("alle","1");
   if (S.best) p.set("best","1");
   if (S.gratis) p.set("gratis","1");
   if (S.multi) p.set("multi","1");
@@ -637,11 +656,19 @@ function filtere(ohne){
     if (S.ohneAuff && z.auff) return false;
     if (S.multi && z.anz < 2) return false;
     if (S.gratis && !z.gratis) return false;
+    if (topAktiv() && (z.rang === null || !z.istMin)) return false;
     if (q && z.such.indexOf(q) < 0 && z.such.replace(/[.\s_]+/g, "-").indexOf(qn) < 0) return false;
     return true;
   });
 }
+function einmalJeModell(liste){
+  if (!topAktiv()) return liste;
+  const best = {};   // je Arena-Platz nur das günstigste Angebot (Varianten wie „-preview“ teilen sich den Platz)
+  liste.forEach(function(z){ const k = z.rang; if (!best[k] || z.preis < best[k].preis) best[k] = z; });
+  return liste.filter(function(z){ return best[z.rang] === z; });
+}
 function sortiere(liste){
+  liste = einmalJeModell(liste);
   const d = S.dir === "desc" ? -1 : 1;
   const num = function(a, b){   // fehlende Werte immer ans Ende
     const ma = (a === null || a === Infinity || a === 0 && S.sort === "kontext"), mb = (b === null || b === Infinity || b === 0 && S.sort === "kontext");
@@ -655,6 +682,7 @@ function sortiere(liste){
     kontext: function(a,b){ return num(a.context, b.context) || (a.preis - b.preis) || tie(a,b); },
     anbieter:function(a,b){ return a.quelle.localeCompare(b.quelle) * d || (a.preis - b.preis) || tie(a,b); },
     neu:     function(a,b){ return ((b.seit || "") < (a.seit || "") ? -1 : (b.seit || "") > (a.seit || "") ? 1 : 0) || tie(a,b); },
+    arena:   function(a,b){ return num(a.rang, b.rang) || num(a.preis, b.preis) || tie(a,b); },
     name:    function(a,b){ return a.name.localeCompare(b.name, undefined, {numeric:true}) * d || (a.preis - b.preis); }
   }[S.sort] || function(){ return 0; };
   return liste.sort(cmp);
@@ -745,13 +773,14 @@ function goLink(z, mitText){
   return C.linkHtml(z.qkey, z.url, mitText ? T().zum_anbieter + " ↗" : "↗", mitText ? "gotolink" : "extlink", z.quelle);
 }
 function mnameHtml(z){
+  const rb = (topAktiv() && z.rang) ? '<span class="rang" title="Arena">#'+z.rang+'</span>' : '';
   // Klick auf den Namen klappt den Anbieter-Vergleich auf (wenn es mehrere Anbieter gibt)
   const name = z.anz > 1
     ? '<span class="mname" role="button" tabindex="0" data-cmp="'+esc(z.id)+'" title="'+esc(T().cmp_titel)+'">'+esc(z.name)+'</span>'
     : '<span class="mname">'+esc(z.name)+'</span>';
   // Modellseiten gibt es nur in der zusammengebauten Website (build_pages.py setzt MODELLSEITEN)
-  if (window.OHNE_MODELLSEITEN || !window.MODELLSEITEN) return name;
-  return name + '<a class="mpage" href="'+sprachPfad()+'models/'+modellSlug(z.basis)+'.html" title="'+esc(T().modellseite)+'">ⓘ</a>';
+  if (window.OHNE_MODELLSEITEN || !window.MODELLSEITEN) return rb + name;
+  return rb + name + '<a class="mpage" href="'+sprachPfad()+'models/'+modellSlug(z.basis)+'.html" title="'+esc(T().modellseite)+'">ⓘ</a>';
 }
 function tagsHtml(z, t){
   let h = "";
@@ -799,8 +828,18 @@ function vergleichHtml(z, t){
     (RT && !medien && window.REFERENZ.ref(z.basis) ? '<p class="refzeile">'+esc(RT.ref)+': '+esc(window.REFERENZ.refText(z.basis, lang))+' · <a href="methodik.html">'+esc(RT.mehr)+'</a></p>' : '');
 }
 
+function renderModus(t){
+  const box = document.getElementById("modus");
+  if (!HAT_TOP){ box.innerHTML = ""; return; }
+  const nTop = zeilen.filter(function(z){ return z.rang !== null && z.istMin; }).reduce(function(a, z){ a[z.rang] = 1; return a; }, {});
+  const anzTop = Object.keys(nTop).length;
+  const info = S.modus === "top" ? (S.q ? t.modus_suche : t.modus_info_top(anzTop)) : t.modus_info_alle(zeilen.length);
+  box.innerHTML = '<div class="seg"><button data-modus="top" class="'+(S.modus==="top"?"active":"")+'">'+t.modus_top+'</button>'+
+    '<button data-modus="alle" class="'+(S.modus==="alle"?"active":"")+'">'+t.modus_alle+'</button></div><small>'+esc(info)+'</small>';
+}
 function renderResults(){
   const t = T();
+  renderModus(t);
   const liste = sortiere(filtere());
   document.getElementById("count").innerHTML = t.treffer(liste.length, zeilen.length);
   const box = document.getElementById("results");
@@ -908,6 +947,13 @@ document.addEventListener("keydown", function(e){
 });
 $("sortsel").addEventListener("change", function(e){
   const p = e.target.value.split("-"); S.sort = p[0]; S.dir = p[1]; render(true);
+});
+$("modus").addEventListener("click", function(e){
+  const b = e.target.closest("button[data-modus]"); if (!b || b.dataset.modus === S.modus) return;
+  S.modus = b.dataset.modus;
+  S.sort = S.modus === "top" ? "arena" : "preis"; S.dir = "asc";
+  if (window.aacEreignis) window.aacEreignis("Auswahl", {ansicht: S.modus});
+  render(true);
 });
 $("viewtog").addEventListener("click", function(e){
   const b = e.target.closest("button[data-view]"); if (!b) return;
